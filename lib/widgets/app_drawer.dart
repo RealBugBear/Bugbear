@@ -1,5 +1,3 @@
-// File: lib/widgets/app_drawer.dart
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +8,7 @@ class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
   void _navigate(BuildContext context, String routeName) {
+    Navigator.of(context).pop();
     Navigator.of(context).pushNamed(routeName);
   }
 
@@ -103,14 +102,20 @@ class AppDrawer extends StatelessWidget {
             onTap: () => _navigate(context, '/sound-settings'),
           ),
 
-          // Neuer Eintrag für das Quiz
+          // Quiz
           ListTile(
             leading: const Icon(Icons.quiz),
             title: Text(S.of(context).quizTitle),
             onTap: () => _navigate(context, '/quiz'),
           ),
 
-          // Debug-Audio Eintrag
+          // Reflex-Profil (statt Auswertung)
+          ListTile(
+            leading: const Icon(Icons.assessment),
+            title: const Text('Reflex-Profil'),
+            onTap: () => _navigate(context, '/saved-results'),
+          ),
+
           ListTile(
             leading: const Icon(Icons.bug_report),
             title: const Text('Audio Debug'),

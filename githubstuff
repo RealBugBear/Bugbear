@@ -18,17 +18,17 @@ git checkout -b feature/questioneer
 
 echo "Änderungen committen"
 git add .
-git commit -m "questioneer"
-git push -u origin feature/questioneer 
+git commit -m "questioneer1.2"
+git push -u origin feature/questioneer1.2 
 
 echo "Zurück auf main und mergen"
 git checkout main
-git merge feature/questioneer
+git merge feature/questioneer1.2
 git push origin main
 
 echo "Alten Branch löschen"
-git branch -d feature/initial-feature
-git push origin --delete feature/initial-feature
+git branch -d feature/questioneer1.2
+git push origin --delete feature/questioneer1.2
 
 echo "Sicherungs-Tag setzen"
 git tag -a v1.0 -m "Stabiler Stand"
