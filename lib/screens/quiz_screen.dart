@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:bugbear_app/models/quiz_model.dart';
 import 'package:bugbear_app/generated/l10n.dart';
 
@@ -18,10 +22,53 @@ class _QuizScreenState extends State<QuizScreen> {
     super.didChangeDependencies();
     if (!_didInit) {
       _didInit = true;
-      // Aktuelle Sprache ermitteln (z.B. "de" oder "en")
       final lang = Localizations.localeOf(context).languageCode;
-      // Quiz-Daten laden
       context.read<QuizModel>().loadAll(lang);
+    }
+  }
+
+  Future<void> _onAnswer(bool yes) async {
+    final quizModel = context.read<QuizModel>();
+    quizModel.answerCurrent(yes);
+
+    final isLast = quizModel.currentIndex + 1 == quizModel.questions.length;
+    if (!isLast) {
+      quizModel.next(context);
+      return;
+    }
+
+    // Finale Auswertung
+    quizModel.calculateScores();
+
+    // Frage zum Speichern
+    final save = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(S.of(context).quizTitle),
+        content: Text('Möchten Sie das Ergebnis speichern?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(S.of(context).no),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(S.of(context).yes),
+          ),
+        ],
+      ),
+    );
+
+    if (save == true) {
+      final prefs = await SharedPreferences.getInstance();
+      final jsonList = quizModel.categories
+          .map((c) => {'id': c.id, 'name': c.name, 'score': c.score})
+          .toList();
+      await prefs.setString('savedResults', jsonEncode(jsonList));
+    }
+
+    if (mounted) {
+      Navigator.of(context).pushReplacementNamed('/results');
     }
   }
 
@@ -29,16 +76,12 @@ class _QuizScreenState extends State<QuizScreen> {
   Widget build(BuildContext context) {
     final quizModel = context.watch<QuizModel>();
 
-    // Noch keine Fragen geladen?
     if (quizModel.questions.isEmpty) {
       return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
+        body: Center(child: CircularProgressIndicator()),
       );
     }
 
-    // Daten liegen vor – aktuelle Frage anzeigen
     final current = quizModel.questions[quizModel.currentIndex];
     final lang = Localizations.localeOf(context).languageCode;
     final questionText = current.text[lang] ?? '';
@@ -53,7 +96,6 @@ class _QuizScreenState extends State<QuizScreen> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            // Fortschrittsbalken
             LinearProgressIndicator(
               value: (quizModel.currentIndex + 1) /
                   quizModel.questions.length,
@@ -67,7 +109,6 @@ class _QuizScreenState extends State<QuizScreen> {
               ),
             ),
             const SizedBox(height: 12),
-            // Text mit aktuellem Fortschritt
             Text(
               S.of(context).quizProgress(
                 quizModel.currentIndex + 1,
@@ -76,66 +117,41 @@ class _QuizScreenState extends State<QuizScreen> {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: 24),
-            // Frage-Text
             Text(
               questionText,
               style: Theme.of(context).textTheme.titleLarge,
             ),
             const Spacer(),
-            // Antwort-Buttons
-            _AnswerButtons(
-              onYes: () {
-                quizModel.answerCurrent(true);
-                quizModel.next(context);
-              },
-              onNo: () {
-                quizModel.answerCurrent(false);
-                quizModel.next(context);
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () => _onAnswer(true),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondary,
+                  ),
+                  child: Text(S.of(context).yes),
+                ),
+                ElevatedButton(
+                  onPressed: () => _onAnswer(false),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.secondary,
+                  ),
+                  child: Text(S.of(context).no),
+                ),
+              ],
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class _AnswerButtons extends StatelessWidget {
-  final VoidCallback onYes;
-  final VoidCallback onNo;
-
-  const _AnswerButtons({
-    Key? key,
-    required this.onYes,
-    required this.onNo,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        ElevatedButton(
-          onPressed: onYes,
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            backgroundColor: Theme.of(context).colorScheme.secondary,
-          ),
-          child: Text(S.of(context).yes),
-        ),
-        ElevatedButton(
-          onPressed: onNo,
-          style: ElevatedButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            backgroundColor: Theme.of(context).colorScheme.secondary,
-          ),
-          child: Text(S.of(context).no),
-        ),
-      ],
     );
   }
 }

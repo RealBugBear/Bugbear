@@ -24,6 +24,7 @@ dependencies:
   json_annotation: ^4.9.0
   google_fonts: ^6.2.1
   cloud_firestore: ^5.6.5
+  shared_preferences: ^2.0.15    # ← neu hinzugefügt
 
 dev_dependencies:
   flutter_test:
@@ -40,16 +41,11 @@ flutter:
   uses-material-design: true
 
   assets:
-    # Quiz-Daten pro Locale
     - assets/quiz_questions_de.json
     - assets/quiz_questions_en.json
     - assets/reflex_categories_de.json
     - assets/reflex_categories_en.json
-
-    # Bilder
     - assets/images/
-
-    # Sounds
     - assets/sounds/
 
 flutter_intl:
