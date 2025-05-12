@@ -14,7 +14,7 @@ import 'package:bugbear_app/widgets/app_drawer.dart';
 import 'package:bugbear_app/generated/l10n.dart';
 
 /// Displays the user's calendar of completed sessions.
-/// 
+///
 /// Uses a [LocalStorageService] from the widget tree unless overridden for testing.
 class ProfileScreen extends StatelessWidget {
   final TrainingService trainingService;
@@ -95,9 +95,11 @@ class _ProfileView extends StatelessWidget {
         selectedDayPredicate: (date) => model.completedDates
             .contains(DateTime(date.year, date.month, date.day)),
         onDaySelected: (selectedDay, focusedDay) async {
-          final formatted = DateFormat.yMMMd(
-            Localizations.localeOf(context).toString(),
-          ).format(selectedDay);
+          // grab locale before any await:
+          final locale = Localizations.localeOf(context).toString();
+          final formatted =
+              DateFormat.yMMMd(locale).format(selectedDay);
+
           final confirmed = await showDialog<bool>(
             context: context,
             builder: (_) => ConfirmDialog(
@@ -108,6 +110,7 @@ class _ProfileView extends StatelessWidget {
               cancelLabel: S.of(context).no,
             ),
           );
+
           if (confirmed == true) {
             await model.toggleCompleted(selectedDay);
           }
@@ -124,27 +127,34 @@ class _ProfileView extends StatelessWidget {
 
   void _showPhaseSelection(BuildContext context) {
     final model = context.read<CalendarModel>();
+
     showModalBottomSheet(
       context: context,
-      builder: (_) => ListView(
-        children: allPrograms.map((prog) {
-          final idx = allPrograms.indexOf(prog);
-          final progress =
-              (model.completedDates.length / prog.plannedSessions)
-                  .clamp(0.0, 1.0);
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundColor: programColors[idx],
-              child: Text('${(progress * 100).toInt()}%'),
-            ),
-            title: Text(prog.name),
-            onTap: () async {
-              await model.setActiveProgram(prog.id);
-              Navigator.pop(context);
-            },
-          );
-        }).toList(),
-      ),
+      builder: (sheetContext) {
+        return ListView(
+          children: allPrograms.map((prog) {
+            final idx = allPrograms.indexOf(prog);
+            final progress =
+                (model.completedDates.length / prog.plannedSessions)
+                    .clamp(0.0, 1.0);
+
+            // Capture the NavigatorState *before* the async gap:
+            final navigator = Navigator.of(sheetContext);
+
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundColor: programColors[idx],
+                child: Text('${(progress * 100).toInt()}%'),
+              ),
+              title: Text(prog.name),
+              onTap: () async {
+                await model.setActiveProgram(prog.id);
+                navigator.pop();
+              },
+            );
+          }).toList(),
+        );
+      },
     );
   }
 }

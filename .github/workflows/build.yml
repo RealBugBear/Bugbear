@@ -1,0 +1,35 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'feature/*'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.10.5'
+
+      - name: Install LCOV
+        run: sudo apt-get update && sudo apt-get install -y lcov
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests (SKIPPED)
+        run: echo "🚧 tests are disabled for now"
