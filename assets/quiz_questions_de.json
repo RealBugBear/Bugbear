@@ -1,0 +1,303 @@
+[
+    {
+      "id": "q1",
+      "text": { "de": "Bist du überempfindlich gegenüber Licht oder Helligkeit?" },
+      "categoryIds": ["moro"]
+    },
+    {
+      "id": "q2",
+      "text": { "de": "Bist du überempfindlich gegenüber Berührungen?" },
+      "categoryIds": ["moro", "spinal_galant"]
+    },
+    {
+      "id": "q3",
+      "text": { "de": "Wirst du leicht oder übermäßig schnell ängstlich?" },
+      "categoryIds": ["moro"]
+    },
+    {
+      "id": "q4",
+      "text": { "de": "Neigst du zu Phobien?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q5",
+      "text": { "de": "Leidest du unter Trennungsangst?" },
+      "categoryIds": ["fear_paralysis", "moro"]
+    },
+    {
+      "id": "q6",
+      "text": { "de": "Erschreckst du dich leicht, selbst bei kleinen Geräuschen oder plötzlichen Bewegungen?" },
+      "categoryIds": ["moro"]
+    },
+    {
+      "id": "q7",
+      "text": { "de": "Hast du häufig Verspannungen im Nacken oder häufige Kopfschmerzen?" },
+      "categoryIds": ["tlr", "atnr"]
+    },
+    {
+      "id": "q8",
+      "text": { "de": "Hältst du den Stift beim Schreiben verkrampft?" },
+      "categoryIds": ["atnr", "stnr"]
+    },
+    {
+      "id": "q9",
+      "text": { "de": "Drückst du beim Schreiben zu fest auf das Papier?" },
+      "categoryIds": ["stnr", "atnr"]
+    },
+    {
+      "id": "q10",
+      "text": { "de": "Ist deine Handschrift oft unleserlich oder schwer zu lesen?" },
+      "categoryIds": ["atnr"]
+    },
+    {
+      "id": "q11",
+      "text": { "de": "Hast du wenig Lust zu schreiben oder wirst dabei schnell müde?" },
+      "categoryIds": ["atnr", "stnr"]
+    },
+    {
+      "id": "q12",
+      "text": { "de": "Lehnst du beim Sitzen oft deinen Kopf ab?" },
+      "categoryIds": ["tlr"]
+    },
+    {
+      "id": "q13",
+      "text": { "de": "Musst du dich beim Sitzen häufig strecken oder findest es schwierig, still zu sitzen?" },
+      "categoryIds": ["stnr"]
+    },
+    {
+      "id": "q14",
+      "text": { "de": "Leidest du unter Reisekrankheit, z. B. Schwindel in Autos oder auf Booten?" },
+      "categoryIds": ["tlr"]
+    },
+    {
+      "id": "q15",
+      "text": { "de": "Hast du eine schlechte Orientierung und verlierst dich leicht?" },
+      "categoryIds": ["tlr", "spinal_galant"]
+    },
+    {
+      "id": "q16",
+      "text": { "de": "Fällt es dir schwer, dich in neuen Gebäuden oder Orten zurechtzufinden?" },
+      "categoryIds": ["tlr", "spinal_galant"]
+    },
+    {
+      "id": "q17",
+      "text": { "de": "Hast du Schwierigkeiten mit Rechtschreibung?" },
+      "categoryIds": ["atnr"]
+    },
+    {
+      "id": "q18",
+      "text": { "de": "Hast du Schwierigkeiten mit Grammatik?" },
+      "categoryIds": ["stnr"]
+    },
+    {
+      "id": "q19",
+      "text": { "de": "Hast du Schwierigkeiten in Mathematik?" },
+      "categoryIds": ["stnr"]
+    },
+    {
+      "id": "q20",
+      "text": { "de": "Bist du leicht reizbar oder schnell wütend?" },
+      "categoryIds": ["moro"]
+    },
+    {
+      "id": "q21",
+      "text": { "de": "Stört dich enge Kleidung oder fühlst du dich schnell eingeengt?" },
+      "categoryIds": ["spinal_galant"]
+    },
+    {
+      "id": "q22",
+      "text": { "de": "Schlingst du beim Sitzen deine Beine um die Stuhlbeine?" },
+      "categoryIds": ["spinal_galant"]
+    },
+    {
+      "id": "q23",
+      "text": { "de": "Setzt du dich oft auf deine Beine oder steckst sie unter dich?" },
+      "categoryIds": ["tlr", "stnr"]
+    },
+    {
+      "id": "q24",
+      "text": { "de": "Hast du Schwierigkeiten, einen Ball zu fangen oder den Fang richtig zu timen?" },
+      "categoryIds": ["atnr"]
+    },
+    {
+      "id": "q25",
+      "text": { "de": "Bist du tollpatschig und stößt öfter gegen Gegenstände oder Personen als andere?" },
+      "categoryIds": ["tlr", "stnr"]
+    },
+    {
+      "id": "q26",
+      "text": { "de": "Fällt es dir schwer, schwimmen zu lernen, besonders Brustschwimmen?" },
+      "categoryIds": ["stnr"]
+    },
+    {
+      "id": "q27",
+      "text": { "de": "Sagen andere, dass du oft argwöhnisch oder misstrauisch wirkst, selbst wenn du es nicht bist?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q28",
+      "text": { "de": "Sagen Leute manchmal, du wirkst hochnäsig oder distanziert?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q29",
+      "text": { "de": "Liebst du Routinen und weichst ungern von ihnen ab?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q30",
+      "text": { "de": "Hast du Probleme mit Planänderungen oder Spontaneität?" },
+      "categoryIds": ["moro"]
+    },
+    {
+      "id": "q31",
+      "text": { "de": "Leidest du an Asthma oder Allergien?" },
+      "categoryIds": ["moro", "fear_paralysis"]
+    },
+    {
+      "id": "q32",
+      "text": { "de": "Hast du oft eine Erkältung oder Grippe?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {  
+      "id": "q33",
+      "text": { "de": "Hattest du Zahnspangen, um deine Zahnstellung zu korrigieren?" },
+      "categoryIds": ["babkin"]
+    },
+    {
+      "id": "q34",
+      "text": { "de": "Hast du übermäßigen Speichelfluss oder sabberst du viel?" },
+      "categoryIds": ["babkin", "sucking"]
+    },
+    {
+      "id": "q35",
+      "text": { "de": "Hast du als Kind lange am Daumen gesaugt?" },
+      "categoryIds": ["sucking"]
+    },
+    {
+      "id": "q36",
+      "text": { "de": "Hast du O-Beine oder X-Beine?" },
+      "categoryIds": ["tlr", "stnr"]
+    },
+    {
+      "id": "q37",
+      "text": { "de": "Versuchst du, Konflikte nach Möglichkeit zu vermeiden?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q38",
+      "text": { "de": "Bleibst du in beängstigenden Situationen oft wie gelähmt oder fühlst dich handlungsunfähig?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q39",
+      "text": { "de": "Hast du Schwierigkeiten, deine Gedanken schriftlich auszudrücken?" },
+      "categoryIds": ["atnr", "stnr"]
+    },
+    {
+      "id": "q40",
+      "text": { "de": "Fällt es dir schwer, deine Gefühle in Worte zu fassen?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q41",
+      "text": { "de": "Hast du häufig Probleme, dein Gleichgewicht beim Gehen oder Stehen zu halten?" },
+      "categoryIds": ["tlr", "stnr"]
+    },
+    {
+      "id": "q42",
+      "text": { "de": "Hast du ein schlechtes Zeitgefühl, kommst oft zu spät oder fühlst dich durch Zeitpläne gestresst?" },
+      "categoryIds": ["tlr"]
+    },
+    {
+      "id": "q43",
+      "text": { "de": "Hast du Schwierigkeiten, dir Dinge zu merken, selbst kurze Listen oder Aufgaben?" },
+      "categoryIds": ["tlr"]
+    },
+    {
+      "id": "q44",
+      "text": { "de": "Hast du Verdauungsprobleme, die sich verschlimmern, wenn du ängstlich oder angespannt bist?" },
+      "categoryIds": ["tlr", "moro"]
+    },
+    {
+      "id": "q45",
+      "text": { "de": "Hast du eine Skoliose oder eine auffällige Krümmung der Wirbelsäule?" },
+      "categoryIds": ["spinal_galant"]
+    },
+    {
+      "id": "q46",
+      "text": { "de": "Lehnst du dich nicht gerne an die Rückenlehne eines Stuhls, sondern sitzt lieber nach vorne gebeugt?" },
+      "categoryIds": ["spinal_galant"]
+    },
+    {
+      "id": "q47",
+      "text": { "de": "Hast du oft Rückenschmerzen, besonders im unteren Rückenbereich?" },
+      "categoryIds": ["spinal_galant", "tlr"]
+    },
+    {
+      "id": "q48",
+      "text": { "de": "Hast du das Krabbeln als Baby übersprungen und bist gleich gegangen?" },
+      "categoryIds": ["stnr", "tlr"]
+    },
+    {
+      "id": "q49",
+      "text": { "de": "Fällt es dir schwer, Entscheidungen zu treffen, und fühlst du dich von der Auswahl gelähmt?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q50",
+      "text": { "de": "Hast du Probleme mit Fern- oder Nahsicht, was das Lesen oder Autofahren erschwert?" },
+      "categoryIds": ["tlr", "atnr"]
+    },
+    {
+      "id": "q51",
+      "text": { "de": "Hast du wenig Selbstvertrauen oder fühlst dich in sozialen Situationen ängstlich?" },
+      "categoryIds": ["fear_paralysis", "moro"]
+    },
+    {
+      "id": "q52",
+      "text": { "de": "Hast du Probleme beim Sprechen oder bei der Artikulation, wie lallendes Sprechen oder falsche Aussprache?" },
+      "categoryIds": ["babkin", "sucking"]
+    },
+    {
+      "id": "q53",
+      "text": { "de": "Hast du Probleme mit grobmotorischen Fähigkeiten, wie Laufen, Springen oder Koordination größerer Bewegungen?" },
+      "categoryIds": ["tlr", "stnr", "atnr"]
+    },
+    {
+      "id": "q54",
+      "text": { "de": "Hast du Probleme mit feinmotorischen Fähigkeiten, wie dem Umgang mit kleinen Gegenständen oder dem Schließen von Knöpfen?" },
+      "categoryIds": ["atnr", "babkin"]
+    },
+    {
+      "id": "q55",
+      "text": { "de": "Reißt dein großer Zeh regelmäßig durch Socken oder Schuhe, weil er sich einrollt oder Druck ausübt?" },
+      "categoryIds": ["babinski"]
+    },
+    {
+      "id": "q56",
+      "text": { "de": "Bist du steif oder unflexibel in deinen Bewegungen und fühlst dich in deiner Bewegungsfreiheit eingeschränkt?" },
+      "categoryIds": ["tlr", "moro"]
+    },
+    {
+      "id": "q57",
+      "text": { "de": "Hattest du eine schwierige Pubertät mit starken Stimmungsschwankungen oder körperlicher Anspannung?" },
+      "categoryIds": ["moro", "fear_paralysis"]
+    },
+    {
+      "id": "q58",
+      "text": { "de": "Fällt es dir schwer, seitwärts auf dem Boden zu rollen, und fühlst du dich unkoordiniert oder schwindelig?" },
+      "categoryIds": ["tlr", "amphibian"]
+    },
+    {
+      "id": "q59",
+      "text": { "de": "Hast du manchmal das Gefühl, dein Körper reagiert im Erwachsenenalter mit ‚kindischen‘ Reflexen, z. B. Zehenkrallen oder Faustballen bei Erschrecken?" },
+      "categoryIds": ["babinski", "grasping", "moro"]
+    },
+    {
+      "id": "q60",
+      "text": { "de": "Ist dir jemals aufgefallen, dass du in stark stressigen Momenten auf kindliche Bewältigungsstrategien zurückgreifst (z. B. Daumenlutschen oder Aufbeißen von Gegenständen)?" },
+      "categoryIds": ["sucking", "babkin", "fear_paralysis"]
+    }
+  ]
+  

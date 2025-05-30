@@ -1,0 +1,303 @@
+[
+    {
+      "id": "q1",
+      "text": { "en": "Are you overly sensitive to light or brightness?" },
+      "categoryIds": ["moro"]
+    },
+    {
+      "id": "q2",
+      "text": { "en": "Are you overly sensitive to touch?" },
+      "categoryIds": ["moro", "spinal_galant"]
+    },
+    {
+      "id": "q3",
+      "text": { "en": "Are you easily or overly scared?" },
+      "categoryIds": ["moro"]
+    },
+    {
+      "id": "q4",
+      "text": { "en": "Do you tend to have phobias?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q5",
+      "text": { "en": "Do you have separation anxiety?" },
+      "categoryIds": ["fear_paralysis", "moro"]
+    },
+    {
+      "id": "q6",
+      "text": { "en": "Are you easily startled, even by small noises or sudden movements?" },
+      "categoryIds": ["moro"]
+    },
+    {
+      "id": "q7",
+      "text": { "en": "Do you often have tightness in the neck or frequent headaches?" },
+      "categoryIds": ["tlr", "atnr"]
+    },
+    {
+      "id": "q8",
+      "text": { "en": "Are you holding the pen in a tense grip while writing?" },
+      "categoryIds": ["atnr", "stnr"]
+    },
+    {
+      "id": "q9",
+      "text": { "en": "Do you press down on the paper too hard when writing?" },
+      "categoryIds": ["stnr", "atnr"]
+    },
+    {
+      "id": "q10",
+      "text": { "en": "Is your handwriting often illegible or difficult to read?" },
+      "categoryIds": ["atnr"]
+    },
+    {
+      "id": "q11",
+      "text": { "en": "Do you have little desire to write, or do you tire quickly while doing so?" },
+      "categoryIds": ["atnr", "stnr"]
+    },
+    {
+      "id": "q12",
+      "text": { "en": "Do you often like to rest your head while sitting?" },
+      "categoryIds": ["tlr"]
+    },
+    {
+      "id": "q13",
+      "text": { "en": "Do you often need to stretch while sitting, or do you find it difficult to sit still?" },
+      "categoryIds": ["stnr"]
+    },
+    {
+      "id": "q14",
+      "text": { "en": "Do you suffer from motion sickness, such as feeling dizzy in cars or on boats?" },
+      "categoryIds": ["tlr"]
+    },
+    {
+      "id": "q15",
+      "text": { "en": "Do you have a poor sense of direction, getting lost easily?" },
+      "categoryIds": ["tlr", "spinal_galant"]
+    },
+    {
+      "id": "q16",
+      "text": { "en": "Do you have difficulty finding your way around new buildings or places?" },
+      "categoryIds": ["tlr", "spinal_galant"]
+    },
+    {
+      "id": "q17",
+      "text": { "en": "Do you have difficulties with spelling?" },
+      "categoryIds": ["atnr"]
+    },
+    {
+      "id": "q18",
+      "text": { "en": "Do you have difficulties with grammar?" },
+      "categoryIds": ["stnr"]
+    },
+    {
+      "id": "q19",
+      "text": { "en": "Do you have difficulty with math?" },
+      "categoryIds": ["stnr"]
+    },
+    {
+      "id": "q20",
+      "text": { "en": "Are you easily irritated or quick to anger?" },
+      "categoryIds": ["moro"]
+    },
+    {
+      "id": "q21",
+      "text": { "en": "Do you mind tight clothing or feel easily bothered by constrictive outfits?" },
+      "categoryIds": ["spinal_galant"]
+    },
+    {
+      "id": "q22",
+      "text": { "en": "Do you wrap your legs around the chair legs while sitting?" },
+      "categoryIds": ["spinal_galant"]
+    },
+    {
+      "id": "q23",
+      "text": { "en": "Do you often sit on your legs or tuck them underneath you?" },
+      "categoryIds": ["tlr", "stnr"]
+    },
+    {
+      "id": "q24",
+      "text": { "en": "Do you have trouble catching a ball or timing your catch properly?" },
+      "categoryIds": ["atnr"]
+    },
+    {
+      "id": "q25",
+      "text": { "en": "Are you clumsy, bumping into objects or people more than others do?" },
+      "categoryIds": ["tlr", "stnr"]
+    },
+    {
+      "id": "q26",
+      "text": { "en": "Do you have trouble learning to swim, especially with breaststroke?" },
+      "categoryIds": ["stnr"]
+    },
+    {
+      "id": "q27",
+      "text": { "en": "Do others say that you often look suspicious or wary, even when you’re not?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q28",
+      "text": { "en": "Do people sometimes say you come across as snobbish or distant?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q29",
+      "text": { "en": "Do you love routines and prefer not to deviate from them?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q30",
+      "text": { "en": "Do you have trouble with changes in plans or spontaneity?" },
+      "categoryIds": ["moro"]
+    },
+    {
+      "id": "q31",
+      "text": { "en": "Do you suffer from asthma or allergies?" },
+      "categoryIds": ["moro", "fear_paralysis"]
+    },
+    {
+      "id": "q32",
+      "text": { "en": "Do you often have a cold or the flu?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q33",
+      "text": { "en": "Did you have braces to correct your teeth alignment?" },
+      "categoryIds": ["babkin"]
+    },
+    {
+      "id": "q34",
+      "text": { "en": "Do you have excessive salivation or drooling?" },
+      "categoryIds": ["babkin", "sucking"]
+    },
+    {
+      "id": "q35",
+      "text": { "en": "Did you suck your thumbs for a long time as a child?" },
+      "categoryIds": ["sucking"]
+    },
+    {
+      "id": "q36",
+      "text": { "en": "Do you have bow legs (O-legs) or knock knees (X-legs)?" },
+      "categoryIds": ["tlr", "stnr"]
+    },
+    {
+      "id": "q37",
+      "text": { "en": "Do you try to avoid conflicts whenever possible?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q38",
+      "text": { "en": "Do you often freeze or feel unable to act in scary situations?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q39",
+      "text": { "en": "Do you have trouble putting your thoughts into writing?" },
+      "categoryIds": ["atnr", "stnr"]
+    },
+    {
+      "id": "q40",
+      "text": { "en": "Do you have trouble expressing your feelings in words?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q41",
+      "text": { "en": "Do you often have trouble maintaining your balance when walking or standing?" },
+      "categoryIds": ["tlr", "stnr"]
+    },
+    {
+      "id": "q42",
+      "text": { "en": "Do you have a poor sense of time, often running late or feeling stressed by schedules?" },
+      "categoryIds": ["tlr"]
+    },
+    {
+      "id": "q43",
+      "text": { "en": "Do you have trouble remembering things, even short lists or tasks?" },
+      "categoryIds": ["tlr"]
+    },
+    {
+      "id": "q44",
+      "text": { "en": "Do you have digestive problems that worsen when you’re anxious or tense?" },
+      "categoryIds": ["tlr", "moro"]
+    },
+    {
+      "id": "q45",
+      "text": { "en": "Do you have scoliosis or a noticeable curvature in your spine?" },
+      "categoryIds": ["spinal_galant"]
+    },
+    {
+      "id": "q46",
+      "text": { "en": "Do you dislike leaning against the backrest of a chair, preferring to sit forward?" },
+      "categoryIds": ["spinal_galant"]
+    },
+    {
+      "id": "q47",
+      "text": { "en": "Do you often have back pain, especially in the lower back region?" },
+      "categoryIds": ["spinal_galant", "tlr"]
+    },
+    {
+      "id": "q48",
+      "text": { "en": "Did you skip crawling as a baby, going straight to walking?" },
+      "categoryIds": ["stnr", "tlr"]
+    },
+    {
+      "id": "q49",
+      "text": { "en": "Do you find it difficult to make decisions, feeling paralyzed by choices?" },
+      "categoryIds": ["fear_paralysis"]
+    },
+    {
+      "id": "q50",
+      "text": { "en": "Do you have problems with distance or near vision, making reading or driving challenging?" },
+      "categoryIds": ["tlr", "atnr"]
+    },
+    {
+      "id": "q51",
+      "text": { "en": "Do you have low self-confidence or feel anxious in social settings?" },
+      "categoryIds": ["fear_paralysis", "moro"]
+    },
+    {
+      "id": "q52",
+      "text": { "en": "Do you have problems with speaking or articulation, such as slurring or mispronouncing words?" },
+      "categoryIds": ["babkin", "sucking"]
+    },
+    {
+      "id": "q53",
+      "text": { "en": "Do you have problems with gross motor skills, like running, jumping, or coordinating larger movements?" },
+      "categoryIds": ["tlr", "stnr", "atnr"]
+    },
+    {
+      "id": "q54",
+      "text": { "en": "Do you have problems with fine motor skills, like handling small objects or fastening buttons?" },
+      "categoryIds": ["atnr", "babkin"]
+    },
+    {
+      "id": "q55",
+      "text": { "en": "Does your big toe regularly tear through your socks or shoes from curling or pressure?" },
+      "categoryIds": ["babinski"]
+    },
+    {
+      "id": "q56",
+      "text": { "en": "Are you stiff or inflexible in your movements, feeling limited in your range of motion?" },
+      "categoryIds": ["tlr", "moro"]
+    },
+    {
+      "id": "q57",
+      "text": { "en": "Did you have a difficult puberty, experiencing intense emotional swings or physical tension?" },
+      "categoryIds": ["moro", "fear_paralysis"]
+    },
+    {
+      "id": "q58",
+      "text": { "en": "Do you find it difficult to roll on the floor sideways, feeling uncoordinated or dizzy?" },
+      "categoryIds": ["tlr", "amphibian"]
+    },
+    {
+      "id": "q59",
+      "text": { "en": "Do you sometimes feel your body reacts with ’babyish’ reflexes in adulthood? For example, curling your toes or clenching your fists involuntarily when startled?" },
+      "categoryIds": ["babinski", "grasping", "moro"]
+    },
+    {
+      "id": "q60",
+      "text": { "en": "Have you ever noticed that in highly stressful moments, you revert to childhood coping habits (e.g., sucking on your thumb or biting objects)?" },
+      "categoryIds": ["sucking", "babkin", "fear_paralysis"]
+    }
+  ]
+  

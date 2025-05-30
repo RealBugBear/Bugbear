@@ -1,0 +1,14 @@
+[
+    { "id": "moro",            "name": "Moro-Reflex" },
+    { "id": "spinal_galant",   "name": "Spinal-Galant-Reflex" },
+    { "id": "fear_paralysis",  "name": "Furchtlähmungs-Reflex" },
+    { "id": "tlr",             "name": "Tonischer Labyrinthreflex (TLR)" },
+    { "id": "atnr",            "name": "Asymmetrischer tonischer Nackenreflex (ATNR)" },
+    { "id": "stnr",            "name": "Symmetrischer tonischer Nackenreflex (STNR)" },
+    { "id": "babkin",          "name": "Babkin-Reflex" },
+    { "id": "sucking",         "name": "Saugreflex" },
+    { "id": "babinski",        "name": "Babinski-Reflex" },
+    { "id": "grasping",        "name": "Greifreflex" },
+    { "id": "amphibian",       "name": "Amphibien-Reflex" }
+  ]
+  
