@@ -8,6 +8,7 @@ import '../models/calendar_event.dart';
 import '../dialogs/edit_training_day_dialog.dart';
 import '../notifier/calendar_notifier.dart';
 import '../services/calendar_service.dart';
+import 'package:bugbear_app/widgets/app_drawer.dart';
 
 /// CalendarScreen
 ///
@@ -75,6 +76,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent>
     final dayEvents = notifier.eventsForSelectedDay;
 
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Dein Trainingskalender')),
       body: Column(
         children: [
