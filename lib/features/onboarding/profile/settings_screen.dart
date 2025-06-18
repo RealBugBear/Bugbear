@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bugbear_app/features/onboarding/services/auth_service.dart';
+import 'package:bugbear_app/widgets/app_drawer.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -22,6 +23,7 @@ class SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Einstellungen')),
       body: ListView(
         padding: const EdgeInsets.all(16),

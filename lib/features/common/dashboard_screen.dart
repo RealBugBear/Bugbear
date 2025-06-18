@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:bugbear_app/features/training/training_screen.dart';
 import 'package:bugbear_app/features/calendar/screens/calendar_screen.dart';
+import 'package:bugbear_app/widgets/app_drawer.dart';
 
 /// DashboardScreen
 ///
@@ -13,6 +14,7 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Dashboard')),
       body: Center(
         child: Column(

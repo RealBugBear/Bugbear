@@ -16,6 +16,8 @@ import 'package:bugbear_app/features/onboarding/screens/register_screen.dart';
 import 'package:bugbear_app/features/onboarding/screens/role_selection_screen.dart';
 import 'package:bugbear_app/features/common/dashboard_screen.dart';
 import 'package:bugbear_app/features/onboarding/profile/settings_screen.dart';
+import 'package:bugbear_app/features/training/training_screen.dart';
+import 'package:bugbear_app/features/calendar/screens/calendar_screen.dart';
 
 import 'package:bugbear_app/features/training/models/session_state.dart';
 import 'package:bugbear_app/features/training/models/session_state_adapter.dart';
@@ -128,6 +130,8 @@ class MyApp extends StatelessWidget {
           '/select-role': (c) => const RoleSelectionScreen(),
           '/dashboard': (c) => const DashboardScreen(),
           '/settings': (c) => const SettingsScreen(),
+          '/training': (c) => const TrainingScreen(),
+          '/calendar': (c) => const CalendarScreen(),
         },
       ),
     );
