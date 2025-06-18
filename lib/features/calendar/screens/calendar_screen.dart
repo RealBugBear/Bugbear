@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:bugbear_app/features/common/app_drawer.dart';
 
 import '../models/calendar_event.dart';
 import '../dialogs/edit_training_day_dialog.dart';
@@ -76,6 +77,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent>
 
     return Scaffold(
       appBar: AppBar(title: const Text('Dein Trainingskalender')),
+      drawer: const AppDrawer(),
       body: Column(
         children: [
           TableCalendar<CalendarEvent>(

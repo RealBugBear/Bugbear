@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:bugbear_app/features/training/services/exercise_repository.dart';
 import 'package:bugbear_app/features/training/notifier/session_notifier.dart';
+import 'package:bugbear_app/features/common/app_drawer.dart';
 
 class PhaseSelectionScreen extends StatelessWidget {
   const PhaseSelectionScreen({super.key});
@@ -11,6 +12,7 @@ class PhaseSelectionScreen extends StatelessWidget {
     final phases = context.read<ExerciseRepository>().phaseIds;
     return Scaffold(
       appBar: AppBar(title: const Text('Phase auswählen')),
+      drawer: const AppDrawer(),
       body: ListView.builder(
         itemCount: phases.length,
         itemBuilder: (ctx, i) {
