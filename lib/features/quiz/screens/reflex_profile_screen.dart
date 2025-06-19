@@ -16,8 +16,8 @@ class ReflexProfileScreen extends StatelessWidget {
       builder: (ctx, snap) {
         if (!snap.hasData) {
           return Scaffold(
-            appBar: AppBar(title: Text('Profil')),
-            body: Center(child: CircularProgressIndicator()),
+            appBar: const AppBar(title: Text('Profil')),
+            body: const Center(child: CircularProgressIndicator()),
           );
         }
         final names = {for (var c in snap.data!) c.id: c.name};
