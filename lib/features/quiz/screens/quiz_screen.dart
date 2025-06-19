@@ -33,9 +33,9 @@ class _QuizContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final notifier = context.watch<QuizNotifier>();
     if (notifier.questions.isEmpty) {
-      return const Scaffold(
-        appBar: AppBar(title: Text('Quiz')),
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        appBar: AppBar(title: const Text('Quiz')),
+        body: const Center(child: CircularProgressIndicator()),
       );
     }
 
