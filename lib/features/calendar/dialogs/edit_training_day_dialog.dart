@@ -119,13 +119,14 @@ class _EditTrainingDayDialogState
               final CalendarService service = context.read<CalendarService>();
               final CalendarNotifier notifier = context.read<CalendarNotifier>();
 
+              final navigator = Navigator.of(context);
               await service.saveTrainingDay(updated);
               if (!mounted) return;
 
               await notifier.loadMonth(notifier.focusedDay);
               if (!mounted) return;
 
-              Navigator.of(context).pop(updated);
+              navigator.pop(updated);
             }
           },
           child: const Text('Speichern'),

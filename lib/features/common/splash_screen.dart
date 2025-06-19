@@ -26,6 +26,7 @@ class _SplashScreenState extends State<SplashScreen> {
     final loggedIn = await _secureStorage.isLoggedIn;
     final firebaseUser = FirebaseAuth.instance.currentUser;
 
+    if (!mounted) return;
     if (loggedIn && firebaseUser != null) {
       Navigator.pushReplacementNamed(context, '/dashboard');
     } else {
