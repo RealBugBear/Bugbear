@@ -119,10 +119,11 @@ class _EditTrainingDayDialogState
               await context
                   .read<CalendarService>()
                   .saveTrainingDay(updated);
+              if (!mounted) return;
               await context
                   .read<CalendarNotifier>()
                   .loadMonth(context.read<CalendarNotifier>().focusedDay);
-
+              if (!mounted) return;
               Navigator.of(context).pop(updated);
             }
           },

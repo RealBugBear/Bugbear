@@ -176,7 +176,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent>
     return Container(
       margin: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: sel ? scheduledColor.withOpacity(0.2) : null,
+        color: sel ? scheduledColor.withAlpha((0.2 * 255).round()) : null,
         border: isToday ? Border.all(color: scheduledColor, width: 2) : null,
         borderRadius: BorderRadius.circular(8),
       ),
