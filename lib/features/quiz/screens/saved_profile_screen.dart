@@ -15,14 +15,14 @@ class SavedProfileScreen extends StatelessWidget {
       builder: (ctx, snap) {
         if (!snap.hasData) {
           return Scaffold(
-            appBar: const AppBar(title: Text('Reflexprofil')),
+            appBar: AppBar(title: const Text('Reflexprofil')),
             body: const Center(child: CircularProgressIndicator()),
           );
         }
         final profile = snap.data;
         if (profile == null) {
           return Scaffold(
-            appBar: const AppBar(title: Text('Reflexprofil')),
+            appBar: AppBar(title: const Text('Reflexprofil')),
             body: const Center(child: Text('Kein Profil gespeichert.')),
           );
         }
