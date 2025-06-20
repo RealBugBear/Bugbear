@@ -18,6 +18,9 @@ import 'package:bugbear_app/features/common/dashboard_screen.dart';
 import 'package:bugbear_app/features/onboarding/profile/settings_screen.dart';
 import 'package:bugbear_app/features/training/training_screen.dart';
 import 'package:bugbear_app/features/calendar/screens/calendar_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/language_selection_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/questionnaire_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/result_screen.dart';
 
 import 'package:bugbear_app/features/training/models/session_state.dart';
 import 'package:bugbear_app/features/training/models/session_state_adapter.dart';
@@ -25,13 +28,23 @@ import 'package:bugbear_app/features/training/services/session_repository.dart';
 import 'package:bugbear_app/features/training/services/sync_service.dart';
 import 'package:bugbear_app/features/training/services/exercise_repository.dart';
 import 'package:bugbear_app/features/training/notifier/session_notifier.dart';
+import 'package:bugbear_app/features/questionnaire/services/questionnaire_repository.dart';
+import 'package:bugbear_app/features/questionnaire/notifier/questionnaire_notifier.dart';
+import 'package:bugbear_app/features/questionnaire/models/questionnaire_progress.dart';
+import 'package:bugbear_app/features/questionnaire/screens/questionnaire_language_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/questionnaire_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/reflexe_profil_temp.dart';
 
 import 'package:bugbear_app/features/calendar/models/calendar_event.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event_adapter.dart';
 import 'package:bugbear_app/features/calendar/services/calendar_service.dart';
+
 import 'package:bugbear_app/features/reflexe/services/reflex_profile_service.dart';
 import 'package:bugbear_app/features/reflexe/screens/reflexe_profil.dart';
 import 'package:bugbear_app/features/reflexe/screens/reflexe_profil_temp.dart';
+
+import 'package:bugbear_app/features/questionnaire/models/questionnaire_state.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,9 +58,23 @@ Future<void> main() async {
   Hive.registerAdapter(SessionStateAdapter());
   await Hive.openBox<SessionState>('session_state');
 
+  // Questionnaire persistence
+  Hive.registerAdapter(AnswerTypeAdapter());
+  Hive.registerAdapter(QuestionnaireLanguageAdapter());
+  Hive.registerAdapter(QuestionnaireStateAdapter());
+  await Hive.openBox<QuestionnaireState>('questionnaire_state');
+
   // CalendarEvent persistence
   Hive.registerAdapter(CalendarEventAdapter());
   await Hive.openBox<CalendarEvent>('calendar_events');
+
+  // Questionnaire persistence
+  await Hive.openBox('questionnaire_state');
+
+  final questionnaireRepository = QuestionnaireRepository();
+  final savedProgress = await questionnaireRepository.loadProgress();
+  final initialProgress = savedProgress ??
+      QuestionnaireProgress(language: 'de', index: 0, answers: {});
 
 
   final sessionRepository = SessionRepository();
@@ -66,6 +93,8 @@ Future<void> main() async {
     MyApp(
       sessionRepository: sessionRepository,
       initialSessionState: initialState,
+      questionnaireRepository: questionnaireRepository,
+      initialProgress: initialProgress,
     ),
   );
 }
@@ -73,11 +102,15 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   final SessionRepository sessionRepository;
   final SessionState initialSessionState;
+  final QuestionnaireRepository questionnaireRepository;
+  final QuestionnaireProgress initialProgress;
 
   const MyApp({
     super.key,
     required this.sessionRepository,
     required this.initialSessionState,
+    required this.questionnaireRepository,
+    required this.initialProgress,
   });
 
   @override
@@ -110,6 +143,15 @@ class MyApp extends StatelessWidget {
         Provider<ExerciseRepository>(
           create: (_) => ExerciseRepository(),
         ),
+        Provider<QuestionnaireRepository>.value(
+          value: questionnaireRepository,
+        ),
+        ChangeNotifierProvider<QuestionnaireNotifier>(
+          create: (_) => QuestionnaireNotifier(
+            questionnaireRepository,
+            initialProgress,
+          )..loadQuestions(),
+        ),
         ChangeNotifierProvider<SessionNotifier>(
           create: (ctx) {
             final exRepo = ctx.read<ExerciseRepository>();
@@ -140,6 +182,13 @@ class MyApp extends StatelessWidget {
           '/training': (c) => const TrainingScreen(),
           '/calendar': (c) => const CalendarScreen(),
           '/reflex-profil': (c) => const ReflexeProfilScreen(),
+          '/questionnaire-language': (c) => const QuestionnaireLanguageScreen(),
+          '/questionnaire': (c) => const QuestionnaireScreen(),
+          '/reflexe_profil_temp': (c) => const ReflexeProfilTemp(),
+          '/select-language': (c) => const LanguageSelectionScreen(),
+          '/questionnaire': (c) => const QuestionnaireScreen(),
+          '/result': (c) => const ResultScreen(),
+
         },
       ),
     );
