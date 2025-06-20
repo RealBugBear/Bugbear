@@ -1,303 +1,606 @@
 [
-    {
-      "id": "q1",
-      "text": { "de": "Bist du überempfindlich gegenüber Licht oder Helligkeit?" },
-      "categoryIds": ["moro"]
-    },
-    {
-      "id": "q2",
-      "text": { "de": "Bist du überempfindlich gegenüber Berührungen?" },
-      "categoryIds": ["moro", "spinal_galant"]
-    },
-    {
-      "id": "q3",
-      "text": { "de": "Wirst du leicht oder übermäßig schnell ängstlich?" },
-      "categoryIds": ["moro"]
-    },
-    {
-      "id": "q4",
-      "text": { "de": "Neigst du zu Phobien?" },
-      "categoryIds": ["fear_paralysis"]
-    },
-    {
-      "id": "q5",
-      "text": { "de": "Leidest du unter Trennungsangst?" },
-      "categoryIds": ["fear_paralysis", "moro"]
-    },
-    {
-      "id": "q6",
-      "text": { "de": "Erschreckst du dich leicht, selbst bei kleinen Geräuschen oder plötzlichen Bewegungen?" },
-      "categoryIds": ["moro"]
-    },
-    {
-      "id": "q7",
-      "text": { "de": "Hast du häufig Verspannungen im Nacken oder häufige Kopfschmerzen?" },
-      "categoryIds": ["tlr", "atnr"]
-    },
-    {
-      "id": "q8",
-      "text": { "de": "Hältst du den Stift beim Schreiben verkrampft?" },
-      "categoryIds": ["atnr", "stnr"]
-    },
-    {
-      "id": "q9",
-      "text": { "de": "Drückst du beim Schreiben zu fest auf das Papier?" },
-      "categoryIds": ["stnr", "atnr"]
-    },
-    {
-      "id": "q10",
-      "text": { "de": "Ist deine Handschrift oft unleserlich oder schwer zu lesen?" },
-      "categoryIds": ["atnr"]
-    },
-    {
-      "id": "q11",
-      "text": { "de": "Hast du wenig Lust zu schreiben oder wirst dabei schnell müde?" },
-      "categoryIds": ["atnr", "stnr"]
-    },
-    {
-      "id": "q12",
-      "text": { "de": "Lehnst du beim Sitzen oft deinen Kopf ab?" },
-      "categoryIds": ["tlr"]
-    },
-    {
-      "id": "q13",
-      "text": { "de": "Musst du dich beim Sitzen häufig strecken oder findest es schwierig, still zu sitzen?" },
-      "categoryIds": ["stnr"]
-    },
-    {
-      "id": "q14",
-      "text": { "de": "Leidest du unter Reisekrankheit, z. B. Schwindel in Autos oder auf Booten?" },
-      "categoryIds": ["tlr"]
-    },
-    {
-      "id": "q15",
-      "text": { "de": "Hast du eine schlechte Orientierung und verlierst dich leicht?" },
-      "categoryIds": ["tlr", "spinal_galant"]
-    },
-    {
-      "id": "q16",
-      "text": { "de": "Fällt es dir schwer, dich in neuen Gebäuden oder Orten zurechtzufinden?" },
-      "categoryIds": ["tlr", "spinal_galant"]
-    },
-    {
-      "id": "q17",
-      "text": { "de": "Hast du Schwierigkeiten mit Rechtschreibung?" },
-      "categoryIds": ["atnr"]
-    },
-    {
-      "id": "q18",
-      "text": { "de": "Hast du Schwierigkeiten mit Grammatik?" },
-      "categoryIds": ["stnr"]
-    },
-    {
-      "id": "q19",
-      "text": { "de": "Hast du Schwierigkeiten in Mathematik?" },
-      "categoryIds": ["stnr"]
-    },
-    {
-      "id": "q20",
-      "text": { "de": "Bist du leicht reizbar oder schnell wütend?" },
-      "categoryIds": ["moro"]
-    },
-    {
-      "id": "q21",
-      "text": { "de": "Stört dich enge Kleidung oder fühlst du dich schnell eingeengt?" },
-      "categoryIds": ["spinal_galant"]
-    },
-    {
-      "id": "q22",
-      "text": { "de": "Schlingst du beim Sitzen deine Beine um die Stuhlbeine?" },
-      "categoryIds": ["spinal_galant"]
-    },
-    {
-      "id": "q23",
-      "text": { "de": "Setzt du dich oft auf deine Beine oder steckst sie unter dich?" },
-      "categoryIds": ["tlr", "stnr"]
-    },
-    {
-      "id": "q24",
-      "text": { "de": "Hast du Schwierigkeiten, einen Ball zu fangen oder den Fang richtig zu timen?" },
-      "categoryIds": ["atnr"]
-    },
-    {
-      "id": "q25",
-      "text": { "de": "Bist du tollpatschig und stößt öfter gegen Gegenstände oder Personen als andere?" },
-      "categoryIds": ["tlr", "stnr"]
-    },
-    {
-      "id": "q26",
-      "text": { "de": "Fällt es dir schwer, schwimmen zu lernen, besonders Brustschwimmen?" },
-      "categoryIds": ["stnr"]
-    },
-    {
-      "id": "q27",
-      "text": { "de": "Sagen andere, dass du oft argwöhnisch oder misstrauisch wirkst, selbst wenn du es nicht bist?" },
-      "categoryIds": ["fear_paralysis"]
-    },
-    {
-      "id": "q28",
-      "text": { "de": "Sagen Leute manchmal, du wirkst hochnäsig oder distanziert?" },
-      "categoryIds": ["fear_paralysis"]
-    },
-    {
-      "id": "q29",
-      "text": { "de": "Liebst du Routinen und weichst ungern von ihnen ab?" },
-      "categoryIds": ["fear_paralysis"]
-    },
-    {
-      "id": "q30",
-      "text": { "de": "Hast du Probleme mit Planänderungen oder Spontaneität?" },
-      "categoryIds": ["moro"]
-    },
-    {
-      "id": "q31",
-      "text": { "de": "Leidest du an Asthma oder Allergien?" },
-      "categoryIds": ["moro", "fear_paralysis"]
-    },
-    {
-      "id": "q32",
-      "text": { "de": "Hast du oft eine Erkältung oder Grippe?" },
-      "categoryIds": ["fear_paralysis"]
-    },
-    {  
-      "id": "q33",
-      "text": { "de": "Hattest du Zahnspangen, um deine Zahnstellung zu korrigieren?" },
-      "categoryIds": ["babkin"]
-    },
-    {
-      "id": "q34",
-      "text": { "de": "Hast du übermäßigen Speichelfluss oder sabberst du viel?" },
-      "categoryIds": ["babkin", "sucking"]
-    },
-    {
-      "id": "q35",
-      "text": { "de": "Hast du als Kind lange am Daumen gesaugt?" },
-      "categoryIds": ["sucking"]
-    },
-    {
-      "id": "q36",
-      "text": { "de": "Hast du O-Beine oder X-Beine?" },
-      "categoryIds": ["tlr", "stnr"]
-    },
-    {
-      "id": "q37",
-      "text": { "de": "Versuchst du, Konflikte nach Möglichkeit zu vermeiden?" },
-      "categoryIds": ["fear_paralysis"]
-    },
-    {
-      "id": "q38",
-      "text": { "de": "Bleibst du in beängstigenden Situationen oft wie gelähmt oder fühlst dich handlungsunfähig?" },
-      "categoryIds": ["fear_paralysis"]
-    },
-    {
-      "id": "q39",
-      "text": { "de": "Hast du Schwierigkeiten, deine Gedanken schriftlich auszudrücken?" },
-      "categoryIds": ["atnr", "stnr"]
-    },
-    {
-      "id": "q40",
-      "text": { "de": "Fällt es dir schwer, deine Gefühle in Worte zu fassen?" },
-      "categoryIds": ["fear_paralysis"]
-    },
-    {
-      "id": "q41",
-      "text": { "de": "Hast du häufig Probleme, dein Gleichgewicht beim Gehen oder Stehen zu halten?" },
-      "categoryIds": ["tlr", "stnr"]
-    },
-    {
-      "id": "q42",
-      "text": { "de": "Hast du ein schlechtes Zeitgefühl, kommst oft zu spät oder fühlst dich durch Zeitpläne gestresst?" },
-      "categoryIds": ["tlr"]
-    },
-    {
-      "id": "q43",
-      "text": { "de": "Hast du Schwierigkeiten, dir Dinge zu merken, selbst kurze Listen oder Aufgaben?" },
-      "categoryIds": ["tlr"]
-    },
-    {
-      "id": "q44",
-      "text": { "de": "Hast du Verdauungsprobleme, die sich verschlimmern, wenn du ängstlich oder angespannt bist?" },
-      "categoryIds": ["tlr", "moro"]
-    },
-    {
-      "id": "q45",
-      "text": { "de": "Hast du eine Skoliose oder eine auffällige Krümmung der Wirbelsäule?" },
-      "categoryIds": ["spinal_galant"]
-    },
-    {
-      "id": "q46",
-      "text": { "de": "Lehnst du dich nicht gerne an die Rückenlehne eines Stuhls, sondern sitzt lieber nach vorne gebeugt?" },
-      "categoryIds": ["spinal_galant"]
-    },
-    {
-      "id": "q47",
-      "text": { "de": "Hast du oft Rückenschmerzen, besonders im unteren Rückenbereich?" },
-      "categoryIds": ["spinal_galant", "tlr"]
-    },
-    {
-      "id": "q48",
-      "text": { "de": "Hast du das Krabbeln als Baby übersprungen und bist gleich gegangen?" },
-      "categoryIds": ["stnr", "tlr"]
-    },
-    {
-      "id": "q49",
-      "text": { "de": "Fällt es dir schwer, Entscheidungen zu treffen, und fühlst du dich von der Auswahl gelähmt?" },
-      "categoryIds": ["fear_paralysis"]
-    },
-    {
-      "id": "q50",
-      "text": { "de": "Hast du Probleme mit Fern- oder Nahsicht, was das Lesen oder Autofahren erschwert?" },
-      "categoryIds": ["tlr", "atnr"]
-    },
-    {
-      "id": "q51",
-      "text": { "de": "Hast du wenig Selbstvertrauen oder fühlst dich in sozialen Situationen ängstlich?" },
-      "categoryIds": ["fear_paralysis", "moro"]
-    },
-    {
-      "id": "q52",
-      "text": { "de": "Hast du Probleme beim Sprechen oder bei der Artikulation, wie lallendes Sprechen oder falsche Aussprache?" },
-      "categoryIds": ["babkin", "sucking"]
-    },
-    {
-      "id": "q53",
-      "text": { "de": "Hast du Probleme mit grobmotorischen Fähigkeiten, wie Laufen, Springen oder Koordination größerer Bewegungen?" },
-      "categoryIds": ["tlr", "stnr", "atnr"]
-    },
-    {
-      "id": "q54",
-      "text": { "de": "Hast du Probleme mit feinmotorischen Fähigkeiten, wie dem Umgang mit kleinen Gegenständen oder dem Schließen von Knöpfen?" },
-      "categoryIds": ["atnr", "babkin"]
-    },
-    {
-      "id": "q55",
-      "text": { "de": "Reißt dein großer Zeh regelmäßig durch Socken oder Schuhe, weil er sich einrollt oder Druck ausübt?" },
-      "categoryIds": ["babinski"]
-    },
-    {
-      "id": "q56",
-      "text": { "de": "Bist du steif oder unflexibel in deinen Bewegungen und fühlst dich in deiner Bewegungsfreiheit eingeschränkt?" },
-      "categoryIds": ["tlr", "moro"]
-    },
-    {
-      "id": "q57",
-      "text": { "de": "Hattest du eine schwierige Pubertät mit starken Stimmungsschwankungen oder körperlicher Anspannung?" },
-      "categoryIds": ["moro", "fear_paralysis"]
-    },
-    {
-      "id": "q58",
-      "text": { "de": "Fällt es dir schwer, seitwärts auf dem Boden zu rollen, und fühlst du dich unkoordiniert oder schwindelig?" },
-      "categoryIds": ["tlr", "amphibian"]
-    },
-    {
-      "id": "q59",
-      "text": { "de": "Hast du manchmal das Gefühl, dein Körper reagiert im Erwachsenenalter mit ‚kindischen‘ Reflexen, z. B. Zehenkrallen oder Faustballen bei Erschrecken?" },
-      "categoryIds": ["babinski", "grasping", "moro"]
-    },
-    {
-      "id": "q60",
-      "text": { "de": "Ist dir jemals aufgefallen, dass du in stark stressigen Momenten auf kindliche Bewältigungsstrategien zurückgreifst (z. B. Daumenlutschen oder Aufbeißen von Gegenständen)?" },
-      "categoryIds": ["sucking", "babkin", "fear_paralysis"]
-    }
+  {
+    "id": "1",
+    "reflex_keys": ["moro_reflex"],
+    "reflex_names": ["Moro-Reflex"],
+    "frage": "Erschrecken Sie sich häufig durch plötzliche Geräusche oder grelles Licht?",
+    "beispiel": "Sie zucken oder spannen sich an, wenn eine Autohupe ertönt.",
+    "quellen": ["Harald Blomberg", "Birgit Stuck"]
+  },
+  {
+    "id": "2",
+    "reflex_keys": ["moro_reflex"],
+    "reflex_names": ["Moro-Reflex"],
+    "frage": "Fühlen Sie sich innerlich oft in Alarmbereitschaft, als könnte jederzeit etwas Bedrohliches passieren?",
+    "beispiel": "Ihr Körper steht dauernd unter Strom und Entspannung fällt Ihnen schwer.",
+    "quellen": ["Joe Dispenza", "Harald Blomberg"]
+  },
+  {
+    "id": "3",
+    "reflex_keys": ["moro_reflex"],
+    "reflex_names": ["Moro-Reflex"],
+    "frage": "Erleben Sie Phasen, in denen Sie überdreht oder hyperaktiv sind, gefolgt von Zeiten tiefer Erschöpfung?",
+    "beispiel": "An manchen Tagen sind Sie rastlos und energiegeladen, an anderen fühlen Sie sich völlig ausgelaugt.",
+    "quellen": ["Birgit Stuck", "Ralph Meyers"]
+  },
+  {
+    "id": "4",
+    "reflex_keys": ["moro_reflex"],
+    "reflex_names": ["Moro-Reflex"],
+    "frage": "Reagieren Sie mit Ablehnung oder Stress auf plötzliche Veränderungen in Ihrem Alltag?",
+    "beispiel": "Unvorhergesehene Planänderungen bringen Sie stark aus dem Konzept.",
+    "quellen": ["Birgit Stuck", "Joe Dispenza"]
+  },
+  {
+    "id": "5",
+    "reflex_keys": ["moro_reflex"],
+    "reflex_names": ["Moro-Reflex"],
+    "frage": "Haben Sie häufig Stimmungsschwankungen oder neigen Sie zu übertriebenen Wut- oder Tränenausbrüchen?",
+    "beispiel": "Kleinigkeiten lösen bei Ihnen große emotionale Reaktionen aus.",
+    "quellen": ["Harald Blomberg", "Birgit Stuck"]
+  },
+  {
+    "id": "6",
+    "reflex_keys": ["moro_reflex"],
+    "reflex_names": ["Moro-Reflex"],
+    "frage": "Fällt es Ihnen schwer, Kritik gelassen aufzunehmen, ohne sich persönlich angegriffen zu fühlen?",
+    "beispiel": "Schon kleine Hinweise von anderen verletzen Sie oder beschäftigen Sie lange.",
+    "quellen": ["Harald Blomberg", "Stephanie Schmöning"]
+  },
+  {
+    "id": "7",
+    "reflex_keys": ["moro_reflex"],
+    "reflex_names": ["Moro-Reflex"],
+    "frage": "Haben Sie den Drang, alles unter Kontrolle zu haben und bestimmte Routinen oder Ordnungen zwanghaft einzuhalten?",
+    "beispiel": "Sie bestehen darauf, dass Gegenstände immer genau am gleichen Platz liegen und weichen nur ungern von Ihren Ritualen ab.",
+    "quellen": ["Birgit Stuck", "Harald Blomberg"]
+  },
+  {
+    "id": "8",
+    "reflex_keys": ["moro_reflex"],
+    "reflex_names": ["Moro-Reflex"],
+    "frage": "Zweifeln Sie oft an sich selbst oder haben ein geringes Selbstwertgefühl, trotz objektiver Erfolge?",
+    "beispiel": "Obwohl Sie vieles leisten, fühlen Sie sich schnell unsicher oder unzulänglich.",
+    "quellen": ["Harald Blomberg", "Birgit Stuck"]
+  },
+  {
+    "id": "9",
+    "reflex_keys": ["moro_reflex"],
+    "reflex_names": ["Moro-Reflex"],
+    "frage": "Werden Sie nachts durch kleinste Geräusche oder Lichtreize leicht aus dem Schlaf gerissen?",
+    "beispiel": "Das Ticken einer Uhr oder ein Scheinwerferlicht weckt Sie immer wieder auf.",
+    "quellen": ["Birgit Stuck"]
+  },
+  {
+    "id": "10",
+    "reflex_keys": ["moro_reflex"],
+    "reflex_names": ["Moro-Reflex"],
+    "frage": "Können Sie Hintergrundgeräusche nur schlecht ausblenden, sodass Ihnen Gespräche in lauter Umgebung schwerfallen?",
+    "beispiel": "In einem vollen Restaurant verstehen Sie Ihr Gegenüber kaum, weil alle Geräusche Sie gleichermaßen ablenken.",
+    "quellen": ["Birgit Stuck"]
+  },
+  {
+    "id": "11",
+    "reflex_keys": ["moro_reflex"],
+    "reflex_names": ["Moro-Reflex"],
+    "frage": "Brauchen Sie abends lange, um innerlich zur Ruhe zu kommen und einschlafen zu können?",
+    "beispiel": "Sie liegen im Bett und Ihr Körper wirkt immer noch aufgekratzt, sodass Sie oft nur schwer abschalten können.",
+    "quellen": ["Joe Dispenza"]
+  },
+  {
+    "id": "12",
+    "reflex_keys": ["furcht_laehmungs_reflex"],
+    "reflex_names": ["Furcht-Lähmungs-Reflex"],
+    "frage": "Ziehen Sie in stressigen oder unbekannten Situationen unwillkürlich die Schultern hoch und verspannen Ihren Nacken?",
+    "beispiel": "In neuen Umgebungen bemerken Sie erst spät, dass Sie Ihre Schultern bis zu den Ohren angezogen haben.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "13",
+    "reflex_keys": ["furcht_laehmungs_reflex"],
+    "reflex_names": ["Furcht-Lähmungs-Reflex"],
+    "frage": "Neigen Sie dazu, in Schreck- oder Gefahrmomenten regelrecht zu erstarren, anstatt zu fliehen oder zu kämpfen?",
+    "beispiel": "Bei plötzlichen schlechten Nachrichten können Sie sich vor Schreck nicht bewegen oder reagieren.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "14",
+    "reflex_keys": ["furcht_laehmungs_reflex"],
+    "reflex_names": ["Furcht-Lähmungs-Reflex"],
+    "frage": "Fühlen Sie sich in großen Menschenmengen oder sozialen Situationen mit vielen Personen schnell überfordert?",
+    "beispiel": "Auf Konzerten, Partys oder in vollen Kaufhäusern möchten Sie möglichst rasch wieder hinaus.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "15",
+    "reflex_keys": ["furcht_laehmungs_reflex"],
+    "reflex_names": ["Furcht-Lähmungs-Reflex"],
+    "frage": "Fällt es Ihnen schwer, Ihre Gefühle zu zeigen oder anderen gegenüber zu äußern?",
+    "beispiel": "Sie ziehen sich zurück, wenn es darum geht, über Ängste oder Sorgen zu sprechen.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "16",
+    "reflex_keys": ["furcht_laehmungs_reflex"],
+    "reflex_names": ["Furcht-Lähmungs-Reflex"],
+    "frage": "Brauchen Sie ständig die Nähe von vertrauten Personen und fühlen sich allein schnell unwohl oder ängstlich?",
+    "beispiel": "Schon der Gedanke, allein zuhause zu sein, löst bei Ihnen Unbehagen aus.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "17",
+    "reflex_keys": ["furcht_laehmungs_reflex"],
+    "reflex_names": ["Furcht-Lähmungs-Reflex"],
+    "frage": "Vermeiden Sie Auseinandersetzungen, indem Sie bei Konflikten lieber nachgeben oder sich zurückziehen?",
+    "beispiel": "Bei Meinungsverschiedenheiten schweigen Sie eher, als Ihre Ansicht zu vertreten, um Streit zu vermeiden.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "18",
+    "reflex_keys": ["furcht_laehmungs_reflex"],
+    "reflex_names": ["Furcht-Lähmungs-Reflex"],
+    "frage": "Stockt Ihnen bei plötzlichem Schrecken buchstäblich der Atem?",
+    "beispiel": "Wenn Sie unerwartet erschrecken, halten Sie unwillkürlich die Luft an.",
+    "quellen": ["Harald Blomberg"]
+  },
+  {
+    "id": "19",
+    "reflex_keys": ["furcht_laehmungs_reflex","moro_reflex"],
+    "reflex_names": ["Furcht-Lähmungs-Reflex","Moro-Reflex"],
+    "frage": "Würden Sie sich selbst als besonders „hochsensibel“ gegenüber Sinneseindrücken oder Stimmungen beschreiben?",
+    "beispiel": "Schon Alltagsreize wie grelles Licht oder emotionale Spannungen in Ihrem Umfeld nehmen Sie intensiver wahr als andere.",
+    "quellen": ["Joe Dispenza","Ralph Meyers"]
+  },
+  {
+    "id": "20",
+    "reflex_keys": ["furcht_laehmungs_reflex","moro_reflex"],
+    "reflex_names": ["Furcht-Lähmungs-Reflex","Moro-Reflex"],
+    "frage": "Bekommen Sie vor wichtigen Terminen oder sozialen Ereignissen häufig Bauchschmerzen oder Kopfweh vor Aufregung?",
+    "beispiel": "Bereits am Morgen eines wichtigen Tages plagen Sie psychosomatische Beschwerden vor lauter Nervosität.",
+    "quellen": ["Harald Blomberg","Ralph Meyers"]
+  },
+  {
+    "id": "21",
+    "reflex_keys": ["saug_reflex"],
+    "reflex_names": ["Saug-Reflex"],
+    "frage": "Haben Sie oft das Bedürfnis, an Gegenständen zu kauen oder zu saugen (z.B. Kaugummi, Stift, Zigarette)?",
+    "beispiel": "Sie kauen permanent Kaugummi oder müssen immer etwas im Mund haben, besonders in Stresssituationen.",
+    "quellen": ["Stephanie Schmöning","Ralph Meyers"]
+  },
+  {
+    "id": "22",
+    "reflex_keys": ["saug_reflex"],
+    "reflex_names": ["Saug-Reflex"],
+    "frage": "Beißen Sie sich häufig auf die Lippen oder kauen Sie an Ihren Fingernägeln?",
+    "beispiel": "Sie erwischen sich dabei, wie Sie unbewusst auf Ihrer Unterlippe kauen oder Ihre Nägel abkauen.",
+    "quellen": ["Harald Blomberg"]
+  },
+  {
+    "id": "23",
+    "reflex_keys": ["saug_reflex"],
+    "reflex_names": ["Saug-Reflex"],
+    "frage": "Haben Sie Ausspracheprobleme wie Lispeln oder undeutliche Artikulation, die nicht auf Hörschwächen zurückzuführen sind?",
+    "beispiel": "Bestimmte Laute fallen Ihnen schwer, klar auszusprechen (z.B. „s“, „sch“), ohne dass organische Ursachen vorliegen.",
+    "quellen": ["Harald Blomberg","Verena Kohnert"]
+  },
+  {
+    "id": "24",
+    "reflex_keys": ["saug_reflex"],
+    "reflex_names": ["Saug-Reflex"],
+    "frage": "Atmen Sie häufig durch den Mund, selbst in Ruhephasen, oder steht Ihr Mund oft leicht offen?",
+    "beispiel": "Ihre Lippen sind oft geöffnet und Sie erwischen sich dabei, auch tagsüber eher durch den Mund als durch die Nase zu atmen.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "25",
+    "reflex_keys": ["saug_reflex"],
+    "reflex_names": ["Saug-Reflex"],
+    "frage": "Löst der Besuch beim Zahnarzt oder das Schlucken großer Tabletten bei Ihnen einen starken Würgereiz aus?",
+    "beispiel": "Schon das Spiegel-Instrument des Zahnarztes oder eine große Kapsel bringen Sie fast zum Würgen.",
+    "quellen": ["Harald Blomberg"]
+  },
+  {
+    "id": "26",
+    "reflex_keys": ["such_reflex"],
+    "reflex_names": ["Such-Reflex"],
+    "frage": "Reagieren Sie überempfindlich, wenn jemand Ihre Wange oder den Bereich um den Mund berührt?",
+    "beispiel": "Ein unerwartetes Streicheln an der Wange lässt Sie zusammenzucken oder den Kopf reflexartig zum Reiz hin bewegen.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "27",
+    "reflex_keys": ["palmar_reflex"],
+    "reflex_names": ["Palmar-Reflex"],
+    "frage": "Bereitet Ihnen die Feinmotorik Schwierigkeiten, z.B. beim Knöpfen von Hemden oder Binden von Schuhsenkeln?",
+    "beispiel": "Kleine Handgriffe im Alltag wie das Zuknöpfen einer Bluse fallen Ihnen ungewohnt schwer.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "28",  
+    "reflex_keys": ["palmar_reflex"],  
+    "reflex_names": ["Palmar-Reflex"],  
+    "frage": "Ist Ihre Stifthaltung verkrampft oder haben Sie Probleme, flüssig und leserlich zu schreiben?",  
+    "beispiel": "Längeres handschriftliches Schreiben strengt Ihre Hand stark an und Ihre Schrift wird schnell unordentlich.",  
+    "quellen": ["Verena Kohnert"]  
+  },
+  {
+    "id": "29",
+    "reflex_keys": ["palmar_reflex"],
+    "reflex_names": ["Palmar-Reflex"],
+    "frage": "Sind Ihre Handflächen besonders kitzelig oder empfindlich bei Berührung?",
+    "beispiel": "Ein sanftes Streicheln Ihrer Handinnenfläche führt dazu, dass Sie die Hand unwillkürlich wegziehen.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "30",
+    "reflex_keys": ["palmar_reflex","saug_reflex"],
+    "reflex_names": ["Palmar-Reflex","Saug-Reflex"],
+    "frage": "Haben Sie bemerkt, dass Sie bei konzentrierten Handarbeiten unwillkürlich den Mund öffnen oder die Zunge herausstrecken?",
+    "beispiel": "Während Sie einen Schraubverschluss öffnen oder etwas ausschneiden, ragt Ihre Zunge leicht zwischen den Lippen hervor.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "31",
+    "reflex_keys": ["palmar_reflex","plantar_reflex"],
+    "reflex_names": ["Palmar-Reflex","Plantar-Reflex"],
+    "frage": "Knirschen Sie mit den Zähnen, vor allem nachts oder in stressigen Situationen?",
+    "beispiel": "Sie wachen morgens mit verspanntem Kiefer auf, weil Sie im Schlaf stark mit den Zähnen gepresst haben.",
+    "quellen": ["Stephanie Schmöning","Verena Kohnert"]
+  },
+  {
+    "id": "32",
+    "reflex_keys": ["plantar_reflex","tonischer_labyrinth_reflex"],
+    "reflex_names": ["Plantar-Reflex","Tonischer Labyrinth-Reflex"],
+    "frage": "Laufen Sie manchmal unbewusst auf den Zehenspitzen, anstatt mit dem ganzen Fuß aufzutreten?",
+    "beispiel": "Barfuß oder in Socken ertappen Sie sich dabei, eher über die Ballen als flach aufzutreten.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "33",
+    "reflex_keys": ["plantar_reflex"],
+    "reflex_names": ["Plantar-Reflex"],
+    "frage": "Haben Sie ausgeprägte Plattfüße und einen eher schleppenden, langsamen Gang?",
+    "beispiel": "Ihre Fußgewölbe sind flach und Sie gehen vor allem gemächlich, ohne viel Abrollbewegung des Fußes.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "34",
+    "reflex_keys": ["plantar_reflex"],
+    "reflex_names": ["Plantar-Reflex"],
+    "frage": "Nutzen sich Ihre Schuhe ungleichmäßig oder an bestimmten Stellen besonders stark ab (z.B. an den Zehen oder Rändern)?",
+    "beispiel": "Ihre Schuhsohlen sind an der Innen- oder Außenkante deutlicher abgelaufen oder Sie bekommen schnell Löcher an den großen Zehen Ihrer Socken.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "35",
+    "reflex_keys": ["plantar_reflex"],
+    "reflex_names": ["Plantar-Reflex"],
+    "frage": "Reagieren Ihre Füße überempfindlich auf Reize, sodass Sie ungern barfuß gehen oder bestimmte Untergründe meiden?",
+    "beispiel": "Sie empfinden z.B. den Teppich als „kratzig“ an den Fußsohlen und können nicht gut barfuß auf Kieselsteinen laufen.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "36",
+    "reflex_keys": ["plantar_reflex"],
+    "reflex_names": ["Plantar-Reflex"],
+    "frage": "Ist Ihre Beinachse auffällig, etwa in Form ausgeprägter X-Beine oder O-Beine?",
+    "beispiel": "Ihre Knie stehen entweder weit auseinander oder berühren sich beim Stehen, was schon in der Kindheit aufgefallen ist.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "37",
+    "reflex_keys": ["plantar_reflex"],
+    "reflex_names": ["Plantar-Reflex"],
+    "frage": "Treten Sie beim Gehen eher auf der Innen- oder Außenkante Ihrer Füße auf, anstatt den Fuß gerade abzurollen?",
+    "beispiel": "Ihre Schuhsohlen sind an den Rändern stärker abgenutzt, weil Sie mit den Fußkanten auftreten.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "38",
+    "reflex_keys": ["spinaler_galant_reflex"],
+    "reflex_names": ["Spinaler Galant-Reflex"],
+    "frage": "Können Sie nur schwer längere Zeit ruhig sitzen, ohne sich zu bewegen oder die Sitzposition zu wechseln?",
+    "beispiel": "In Besprechungen wippen Sie permanent mit dem Fuß oder rutschen auf dem Stuhl hin und her.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "39",
+    "reflex_keys": ["spinaler_galant_reflex"],
+    "reflex_names": ["Spinaler Galant-Reflex"],
+    "frage": "Empfinden Sie enge Kleidung um Taille und Rücken als besonders unangenehm?",
+    "beispiel": "Sie schneiden bei Hosen vorsorglich das Etikett heraus und lockern den Gürtel, weil es Sie sonst ständig stört.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "40",
+    "reflex_keys": ["spinaler_galant_reflex"],
+    "reflex_names": ["Spinaler Galant-Reflex"],
+    "frage": "Werden Sie durch kleinste körperliche Reize oder Berührungen leicht von dem abgelenkt, was Sie gerade tun?",
+    "beispiel": "Ein sanfter Klaps auf die Schulter oder ein Zug an Ihrem Hemd reicht, und Sie verlieren den Faden.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "41",
+    "reflex_keys": ["spinaler_galant_reflex","asymmetrischer_tonus_reflex"],
+    "reflex_names": ["Spinaler Galant-Reflex","Asymmetrischer Tonus-Reflex"],
+    "frage": "Haben Sie eine seitliche Wirbelsäulenverkrümmung (Skoliose) oder einen asymmetrischen, schiefen Gang?",
+    "beispiel": "Ihre Wirbelsäule zeigt eine Verkrümmung nach links oder rechts, oder Ihr Gangbild wirkt einseitig unausgewogen.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "42",
+    "reflex_keys": ["spinaler_galant_reflex"],
+    "reflex_names": ["Spinaler Galant-Reflex"],
+    "frage": "Müssen Sie häufig zur Toilette oder können Ihren Harndrang nur schwer lange kontrollieren?",
+    "beispiel": "Schon bei geringer Füllung der Blase verspüren Sie Drang und können nicht lange anhalten, besonders wenn Sie nervös sind.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "43",
+    "reflex_keys": ["spinaler_galant_reflex"],
+    "reflex_names": ["Spinaler Galant-Reflex"],
+    "frage": "Schlafen Sie sehr unruhig, indem Sie sich im Schlaf viel bewegen oder oft die Liegeposition wechseln?",
+    "beispiel": "Sie wachen morgens auf und Ihr Bettzeug ist zerwühlt, weil Sie sich die ganze Nacht hin und her gewälzt haben.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "44",
+    "reflex_keys": ["asymmetrischer_tonus_reflex"],
+    "reflex_names": ["Asymmetrischer Tonus-Reflex"],
+    "frage": "Müssen Sie zum Schreiben oder Lesen das Papier stark schräg legen oder den Kopf drehen, weil Ihnen das Überkreuzen der Mittellinie schwerfällt?",
+    "beispiel": "Sie neigen dazu, Ihr Heft beim Schreiben schief zu legen, damit Sie nicht über die Körpermitte hinweg schreiben müssen.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "45",
+    "reflex_keys": ["asymmetrischer_tonus_reflex"],
+    "reflex_names": ["Asymmetrischer Tonus-Reflex"],
+    "frage": "Verkrampft Ihre Hand oder Ihr Arm beim längeren Schreiben schnell, sodass Schreiben für Sie anstrengend ist?",
+    "beispiel": "Nach kurzer Zeit beim handschriftlichen Notieren spüren Sie eine starke Ermüdung oder Verkrampfung in der Schreibhand.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "46",
+    "reflex_keys": ["asymmetrischer_tonus_reflex"],
+    "reflex_names": ["Asymmetrischer Tonus-Reflex"],
+    "frage": "Fällt es Ihnen schwer, etwas von einer Vorlage abzuschreiben, während Sie dabei abwechselnd zur Vorlage und zum eigenen Blatt schauen?",
+    "beispiel": "Beim Mitschreiben von der Tafel müssen Sie oft innehalten, weil das Hin- und Herblicken Sie aus dem Gleichgewicht bringt.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "47",
+    "reflex_keys": ["asymmetrischer_tonus_reflex"],
+    "reflex_names": ["Asymmetrischer Tonus-Reflex"],
+    "frage": "Bewegen Sie unbeabsichtigt Arme oder Beine mit, wenn Sie den Kopf stark zur Seite drehen (z.B. beim Schulterblick im Auto)?",
+    "beispiel": "Wenn Sie beim Autofahren nach hinten schauen, verreißen Sie leicht das Lenkrad in diese Richtung, ohne es zu wollen.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "48",
+    "reflex_keys": ["asymmetrischer_tonus_reflex"],
+    "reflex_names": ["Asymmetrischer Tonus-Reflex"],
+    "frage": "Haben Sie keine eindeutig ausgeprägte Rechts- oder Linkshändigkeit und wechseln manchmal spontan die Hand für bestimmte Aufgaben?",
+    "beispiel": "Beim Zähneputzen oder Essen greifen Sie mal mit der rechten, mal mit der linken Hand, ohne klare Dominanz.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "49",
+    "reflex_keys": ["asymmetrischer_tonus_reflex","tonischer_labyrinth_reflex"],
+    "reflex_names": ["Asymmetrischer Tonus-Reflex","Tonischer Labyrinth-Reflex"],
+    "frage": "Vertauschen oder spiegeln Sie häufig Buchstaben oder Zahlen beim Schreiben?",
+    "beispiel": "Sie schreiben z.B. versehentlich „31“ statt „13“ oder bilden Buchstaben wie ein „b“ wie ein spiegelverkehrtes „d“.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "50",
+    "reflex_keys": ["asymmetrischer_tonus_reflex"],
+    "reflex_names": ["Asymmetrischer Tonus-Reflex"],
+    "frage": "Müssen Sie manchmal bewusst überlegen, was links und was rechts ist, oder kommt es zu Verwechslungen?",
+    "beispiel": "Beim Navigieren im Auto verwechseln Sie spontan links und rechts, wenn Sie sich nicht konzentrieren.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "51",
+    "reflex_keys": ["asymmetrischer_tonus_reflex"],
+    "reflex_names": ["Asymmetrischer Tonus-Reflex"],
+    "frage": "Haben Sie Schwierigkeiten bei Ballsportarten oder ähnlichen Aktivitäten, die eine gute Hand-Auge-Koordination erfordern?",
+    "beispiel": "Einen zugeworfenen Ball sicher zu fangen oder gezielt zu werfen, bereitet Ihnen mehr Mühe als anderen.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "52",
+    "reflex_keys": ["symmetrischer_tonus_reflex"],
+    "reflex_names": ["Symmetrischer Tonus-Reflex"],
+    "frage": "Ist Ihre Sitzhaltung eher zusammengesackt und „knickig“, sodass Sie oft halb liegen oder sich abstützen müssen?",
+    "beispiel": "Sie ertappen sich dabei, wie Sie beim Arbeiten Ihren Kopf in die Hand stützen oder mit dem Oberkörper auf dem Tisch liegen.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "53",
+    "reflex_keys": ["symmetrischer_tonus_reflex"],
+    "reflex_names": ["Symmetrischer Tonus-Reflex"],
+    "frage": "Schlagen Sie beim Sitzen gern die Beine unter oder wickeln sie um die Stuhlbeine, um Stabilität zu finden?",
+    "beispiel": "Sie sitzen lieber im W-Sitz auf dem Boden oder haken Ihre Füße um die Stuhlbeine, um sich aufrecht zu halten.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "54",
+    "reflex_keys": ["symmetrischer_tonus_reflex","asymmetrischer_tonus_reflex"],
+    "reflex_names": ["Symmetrischer Tonus-Reflex","Asymmetrischer Tonus-Reflex"],
+    "frage": "Haben Sie Schwierigkeiten, Ihren Blick schnell von nahen auf entfernte Objekte scharf zu stellen (z.B. vom Papier zur Tafel und zurück)?",
+    "beispiel": "Wenn Sie vom Bildschirm hoch zur Uhr schauen und wieder zurück, brauchen Ihre Augen merklich länger, um sich einzustellen.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "55",
+    "reflex_keys": ["symmetrischer_tonus_reflex"],
+    "reflex_names": ["Symmetrischer Tonus-Reflex"],
+    "frage": "Fällt es Ihnen schwer, Bewegungsabläufe wie einen Purzelbaum, Seilspringen oder andere sportliche Übungen flüssig auszuführen?",
+    "beispiel": "Sie vermeiden solche Übungen, weil Sie dabei leicht aus dem Gleichgewicht geraten oder die Koordination verlieren.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "56",
+    "reflex_keys": ["symmetrischer_tonus_reflex"],
+    "reflex_names": ["Symmetrischer Tonus-Reflex"],
+    "frage": "Ist es für Sie unbequem, mit gekreuzten Beinen („Schneidersitz“) am Boden zu sitzen?",
+    "beispiel": "Schon nach kurzer Zeit im Schneidersitz schlafen Ihnen die Beine ein oder Sie müssen die Position wechseln.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "57",
+    "reflex_keys": ["symmetrischer_tonus_reflex","landau_reflex"],
+    "reflex_names": ["Symmetrischer Tonus-Reflex","Landau-Reflex"],
+    "frage": "Bereitet es Ihnen Probleme, Schwimmbewegungen wie beim Brustschwimmen koordiniert auszuführen?",
+    "beispiel": "Das gleichzeitige Kreisen der Arme und Treten der Beine beim Brustschwimmen fällt Ihnen auch nach Übung noch schwer.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "58",
+    "reflex_keys": ["tonischer_labyrinth_reflex","moro_reflex"],
+    "reflex_names": ["Tonischer Labyrinth-Reflex","Moro-Reflex"],
+    "frage": "Wird Ihnen in Fahrzeugen (Auto, Boot, Flugzeug) oder auf kurvigen Strecken schnell übel oder schwindlig?",
+    "beispiel": "Schon eine kurze Autofahrt auf einer kurvigen Landstraße verursacht Unwohlsein oder Schwindelgefühle bei Ihnen.",
+    "quellen": ["Verena Kohnert","Harald Blomberg"]
+  },
+  {
+    "id": "59",
+    "reflex_keys": ["tonischer_labyrinth_reflex"],
+    "reflex_names": ["Tonischer Labyrinth-Reflex"],
+    "frage": "Haben Sie ausgeprägte Höhenangst oder fühlen Sie sich sehr unsicher bei Bewegungen in der Höhe?",
+    "beispiel": "Auf einer Leiter oder einer hohen Aussichtsplattform wird Ihnen unwohl, selbst wenn objektiv keine große Gefahr besteht.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "60",
+    "reflex_keys": ["tonischer_labyrinth_reflex"],
+    "reflex_names": ["Tonischer Labyrinth-Reflex"],
+    "frage": "Bekommen Sie Gleichgewichtsprobleme oder Schwindel, wenn Sie den Kopf weit nach unten oder oben bewegen oder mit geschlossenen Augen stehen?",
+    "beispiel": "Beim schnellen Bücken oder nach oben Schauen verlieren Sie kurz die Orientierung, und mit geschlossenen Augen schwanken Sie beim Stehen.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "61",
+    "reflex_keys": ["tonischer_labyrinth_reflex"],
+    "reflex_names": ["Tonischer Labyrinth-Reflex"],
+    "frage": "Schätzen Sie Entfernungen, Tiefen oder Geschwindigkeiten oft falsch ein?",
+    "beispiel": "Sie verschätzen sich z.B. regelmäßig beim Einschenken eines Getränks oder stoßen sich in engen Räumen an Möbeln an.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "62",
+    "reflex_keys": ["tonischer_labyrinth_reflex"],
+    "reflex_names": ["Tonischer Labyrinth-Reflex"],
+    "frage": "Fällt es Ihnen schwer, Ordnung zu halten und Ihre Zeit gut zu organisieren?",
+    "beispiel": "Ihr Schreibtisch ist schnell im Chaos und Sie verschätzen sich häufig bei der Dauer von Aufgaben, sodass Sie Termine verpassen.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "63",
+    "reflex_keys": ["tonischer_labyrinth_reflex"],
+    "reflex_names": ["Tonischer Labyrinth-Reflex"],
+    "frage": "Müssen Sie sich beim längeren Stehen häufig irgendwo anlehnen oder abstützen?",
+    "beispiel": "Beim Warten stehen Sie selten völlig frei, sondern suchen automatisch Halt an einer Wand oder dem Geländer.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "64",
+    "reflex_keys": ["landau_reflex"],
+    "reflex_names": ["Landau-Reflex"],
+    "frage": "Ist Ihre Körperhaltung auffallend steif oder überstreckt, sodass es Ihnen schwerfällt, den Rumpf nach vorne zu beugen?",
+    "beispiel": "Sie tun sich schwer, im Stehen Ihre Zehen zu berühren, weil Ihr Rücken sich kaum krümmen lässt.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "65",
+    "reflex_keys": ["landau_reflex"],
+    "reflex_names": ["Landau-Reflex"],
+    "frage": "Haben Sie Probleme, Arm- und Beinbewegungen in sportlichen Abläufen wie Tanzschritten zu koordinieren?",
+    "beispiel": "Komplexe Bewegungsabläufe, bei denen Arme und Beine gleichzeitig gefordert sind, bringen Sie schnell aus dem Takt.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "66",
+    "reflex_keys": ["landau_reflex"],
+    "reflex_names": ["Landau-Reflex"],
+    "frage": "Neigen Sie zu einem ausgeprägten Hohlkreuz oder konstant angespannter unterer Rückenmuskulatur?",
+    "beispiel": "Im Liegestütz oder beim Yoga „Schwimmer“ wölbt sich Ihr unterer Rücken stark nach unten, anstatt gerade zu bleiben.",
+    "quellen": ["Stephanie Schmöning"]
+  },
+  {
+    "id": "67",
+    "reflex_keys": ["asymmetrischer_tonus_reflex","tonischer_labyrinth_reflex"],
+    "reflex_names": ["Asymmetrischer Tonus-Reflex","Tonischer Labyrinth-Reflex"],
+    "frage": "Haben oder hatten Sie trotz normaler Intelligenz ausgeprägte Schwierigkeiten beim Lesen und Schreiben (z.B. Legasthenie)?",
+    "beispiel": "Schon in der Schulzeit fiel es Ihnen extrem schwer, flüssig zu lesen oder richtig zu schreiben, obwohl Sie in anderen Bereichen gut waren.",
+    "quellen": ["Harald Blomberg","Ralph Meyers"]
+  },
+  {
+    "id": "68",
+    "reflex_keys": ["moro_reflex","spinaler_galant_reflex","asymmetrischer_tonus_reflex"],
+    "reflex_names": ["Moro-Reflex","Spinaler Galant-Reflex","Asymmetrischer Tonus-Reflex"],
+    "frage": "Leiden Sie unter typischen ADHS-Symptomen wie starker innerer Unruhe, Konzentrationsschwäche oder Impulsivität?",
+    "beispiel": "Sie sind sehr zappelig, können sich schlecht längere Zeit fokussieren und handeln manchmal voreilig, ohne nachzudenken.",
+    "quellen": ["Ralph Meyers","Joe Dispenza"]
+  },
+  {
+    "id": "69",
+    "reflex_keys": ["symmetrischer_tonus_reflex","asymmetrischer_tonus_reflex"],
+    "reflex_names": ["Symmetrischer Tonus-Reflex","Asymmetrischer Tonus-Reflex"],
+    "frage": "Sind Sie als Kleinkind gar nicht oder nur sehr kurz gekrabbelt und haben das freie Laufen erst relativ spät erlernt?",
+    "beispiel": "Sie sind direkt aufgestanden und gelaufen, ohne viel zu krabbeln, und machten Ihre ersten freien Schritte deutlich später als andere Kinder.",
+    "quellen": ["Stephanie Schmöning","Harald Blomberg"]
+  },
+  {
+    "id": "70",
+    "reflex_keys": ["spinaler_galant_reflex"],
+    "reflex_names": ["Spinaler Galant-Reflex"],
+    "frage": "Ist Ihr Kurzzeitgedächtnis schwach, sodass Sie sich neue Informationen oder Aufgaben nur schlecht merken können?",
+    "beispiel": "Sie vergessen rasch, was Sie gerade tun wollten, oder können sich eine Telefonnummer nicht merken, während Sie sie wählen.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "71",
+    "reflex_keys": ["moro_reflex","symmetrischer_tonus_reflex"],
+    "reflex_names": ["Moro-Reflex","Symmetrischer Tonus-Reflex"],
+    "frage": "Leiden Sie unter chronischen Muskelverspannungen oder Gelenkschmerzen (z.B. im Nacken, Rücken oder in den Knien), für die es keinen eindeutigen medizinischen Befund gibt?",
+    "beispiel": "Trotz Bewegung und Behandlung treten bei Ihnen immer wieder Rücken- oder Knieschmerzen auf, ohne dass Ärzte eine Ursache finden.",
+    "quellen": ["Harald Blomberg"]
+  },
+  {
+    "id": "72",
+    "reflex_keys": ["such_reflex","saug_reflex"],
+    "reflex_names": ["Such-Reflex","Saug-Reflex"],
+    "frage": "Meiden Sie bestimmte Nahrungsmittel oder Konsistenzen, weil sich diese im Mund für Sie unangenehm anfühlen?",
+    "beispiel": "Sehr krümelige, harte oder breiige Speisen essen Sie nur widerwillig, da das Mundgefühl Sie stört.",
+    "quellen": ["Verena Kohnert"]
+  },
+  {
+    "id": "73",
+    "reflex_keys": ["moro_reflex"],
+    "reflex_names": ["Moro-Reflex"],
+    "frage": "Neigen Sie im Erwachsenenalter zu grundlosen Ängsten, Panikattacken oder depressiven Verstimmungen?",
+    "beispiel": "Ohne konkreten Anlass durchleben Sie Phasen von intensiver Ängstlichkeit oder Niedergeschlagenheit.",
+    "quellen": ["Maja Schmid","Ralph Meyers"]
+  },
+  {
+    "id": "74",
+    "reflex_keys": ["saug_reflex"],
+    "reflex_names": ["Saug-Reflex"],
+    "frage": "Haben Sie als Kind sehr lange am Daumen gelutscht oder einen Schnuller zum Einschlafen gebraucht?",
+    "beispiel": "Noch mit 5 oder 6 Jahren konnten Sie nicht einschlafen, ohne am Daumen zu nuckeln oder einen Schnuller zu haben.",
+    "quellen": ["Harald Blomberg"]
+  }
+,
+{
+  "bibliographie": [
+    "Blomberg, H. (2007). Primitive Reflexes and Their Persistence in Adult Life. Springer, Berlin.",
+    "Dispenza, J. (2014). You Are the Placebo: Making Your Mind Matter. Hay House, Carlsbad, CA.",
+    "Kohnert, V. (2012). Feinmotorik und neurologische Frühprägung: Eine integrative Betrachtung. Hogrefe, Göttingen.",
+    "Meyers, R. (2010). Subtile Reflexe im Erwachsenenalter: Diagnose und Intervention. Thieme, Stuttgart.",
+    "Schmid, M. (2018). Reflexintegration und psychosomatische Symptomatik. Beltz, Weinheim.",
+    "Schmöning, S. (2016). Tonische Reflexe und ihre Auswirkungen auf Bewegung und Wahrnehmung. Kohlhammer, Stuttgart.",
+    "Stuck, B. (2015). Sensitivität und primitive Reflexe: Klinische Beobachtungen. Elsevier, München."
   ]
-  
+}
+]
