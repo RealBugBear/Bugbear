@@ -51,6 +51,14 @@ class AppDrawer extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.quiz),
+              title: const Text('Fragebogen'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/questionnaire');
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.playlist_play),
               title: const Text('Phase ausw\u00e4hlen'),
               onTap: () {
