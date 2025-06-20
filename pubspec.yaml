@@ -57,6 +57,8 @@ flutter:
   assets:
     - assets/images/
     - assets/sounds/
+    - assets/quiz_questions_en.json
+    - assets/quiz_questions_de.json
 
 flutter_intl:
   enabled: true
