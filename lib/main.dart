@@ -28,6 +28,12 @@ import 'package:bugbear_app/features/training/services/session_repository.dart';
 import 'package:bugbear_app/features/training/services/sync_service.dart';
 import 'package:bugbear_app/features/training/services/exercise_repository.dart';
 import 'package:bugbear_app/features/training/notifier/session_notifier.dart';
+import 'package:bugbear_app/features/questionnaire/services/questionnaire_repository.dart';
+import 'package:bugbear_app/features/questionnaire/notifier/questionnaire_notifier.dart';
+import 'package:bugbear_app/features/questionnaire/models/questionnaire_progress.dart';
+import 'package:bugbear_app/features/questionnaire/screens/questionnaire_language_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/questionnaire_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/reflexe_profil_temp.dart';
 
 import 'package:bugbear_app/features/calendar/models/calendar_event.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event_adapter.dart';
@@ -57,6 +63,14 @@ Future<void> main() async {
   Hive.registerAdapter(CalendarEventAdapter());
   await Hive.openBox<CalendarEvent>('calendar_events');
 
+  // Questionnaire persistence
+  await Hive.openBox('questionnaire_state');
+
+  final questionnaireRepository = QuestionnaireRepository();
+  final savedProgress = await questionnaireRepository.loadProgress();
+  final initialProgress = savedProgress ??
+      QuestionnaireProgress(language: 'de', index: 0, answers: {});
+
 
   final sessionRepository = SessionRepository();
   final saved = await sessionRepository.load();
@@ -74,6 +88,8 @@ Future<void> main() async {
     MyApp(
       sessionRepository: sessionRepository,
       initialSessionState: initialState,
+      questionnaireRepository: questionnaireRepository,
+      initialProgress: initialProgress,
     ),
   );
 }
@@ -81,11 +97,15 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   final SessionRepository sessionRepository;
   final SessionState initialSessionState;
+  final QuestionnaireRepository questionnaireRepository;
+  final QuestionnaireProgress initialProgress;
 
   const MyApp({
     super.key,
     required this.sessionRepository,
     required this.initialSessionState,
+    required this.questionnaireRepository,
+    required this.initialProgress,
   });
 
   @override
@@ -114,6 +134,15 @@ class MyApp extends StatelessWidget {
         ),
         Provider<ExerciseRepository>(
           create: (_) => ExerciseRepository(),
+        ),
+        Provider<QuestionnaireRepository>.value(
+          value: questionnaireRepository,
+        ),
+        ChangeNotifierProvider<QuestionnaireNotifier>(
+          create: (_) => QuestionnaireNotifier(
+            questionnaireRepository,
+            initialProgress,
+          )..loadQuestions(),
         ),
         ChangeNotifierProvider<SessionNotifier>(
           create: (ctx) {
@@ -144,9 +173,14 @@ class MyApp extends StatelessWidget {
           '/settings': (c) => const SettingsScreen(),
           '/training': (c) => const TrainingScreen(),
           '/calendar': (c) => const CalendarScreen(),
+
+          '/questionnaire-language': (c) => const QuestionnaireLanguageScreen(),
+          '/questionnaire': (c) => const QuestionnaireScreen(),
+          '/reflexe_profil_temp': (c) => const ReflexeProfilTemp(),
           '/select-language': (c) => const LanguageSelectionScreen(),
           '/questionnaire': (c) => const QuestionnaireScreen(),
           '/result': (c) => const ResultScreen(),
+
         },
       ),
     );
