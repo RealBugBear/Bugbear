@@ -18,6 +18,9 @@ import 'package:bugbear_app/features/common/dashboard_screen.dart';
 import 'package:bugbear_app/features/onboarding/profile/settings_screen.dart';
 import 'package:bugbear_app/features/training/training_screen.dart';
 import 'package:bugbear_app/features/calendar/screens/calendar_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/language_selection_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/questionnaire_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/result_screen.dart';
 
 import 'package:bugbear_app/features/training/models/session_state.dart';
 import 'package:bugbear_app/features/training/models/session_state_adapter.dart';
@@ -29,6 +32,8 @@ import 'package:bugbear_app/features/training/notifier/session_notifier.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event_adapter.dart';
 import 'package:bugbear_app/features/calendar/services/calendar_service.dart';
+import 'package:bugbear_app/features/questionnaire/models/questionnaire_state.dart';
+import 'package:bugbear_app/features/questionnaire/models/questionnaire_state_adapter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +46,12 @@ Future<void> main() async {
   Hive.registerAdapter(SessionStatusAdapter());
   Hive.registerAdapter(SessionStateAdapter());
   await Hive.openBox<SessionState>('session_state');
+
+  // Questionnaire persistence
+  Hive.registerAdapter(AnswerTypeAdapter());
+  Hive.registerAdapter(QuestionnaireLanguageAdapter());
+  Hive.registerAdapter(QuestionnaireStateAdapter());
+  await Hive.openBox<QuestionnaireState>('questionnaire_state');
 
   // CalendarEvent persistence
   Hive.registerAdapter(CalendarEventAdapter());
@@ -133,6 +144,9 @@ class MyApp extends StatelessWidget {
           '/settings': (c) => const SettingsScreen(),
           '/training': (c) => const TrainingScreen(),
           '/calendar': (c) => const CalendarScreen(),
+          '/select-language': (c) => const LanguageSelectionScreen(),
+          '/questionnaire': (c) => const QuestionnaireScreen(),
+          '/result': (c) => const ResultScreen(),
         },
       ),
     );
