@@ -28,11 +28,15 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
 
     if (state.isInitialized && state.questions.isEmpty) {
       // Sprache wählen, wenn noch keine Fragen geladen wurden.
-      Future.microtask(() => _showLanguageDialog(context));
+      Future.microtask(() {
+        if (mounted) _showLanguageDialog();
+      });
     }
 
     if (state.isCompleted) {
-      Future.microtask(() => _gotoResult(context));
+      Future.microtask(() {
+        if (mounted) _gotoResult();
+      });
     }
 
     final q = state.currentQuestion;
@@ -87,7 +91,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
               right: 16,
               child: Material(
                 elevation: 4,
-                color: Theme.of(context).dialogBackgroundColor,
+                color: Theme.of(context).dialogTheme.backgroundColor,
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
@@ -143,8 +147,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     );
   }
 
-  Future<void> _showLanguageDialog(BuildContext context) async {
-    final state = context.read<QuestionnaireState>();
+  Future<void> _showLanguageDialog() async {
     final lang = await showDialog<String>(
       context: context,
       barrierDismissible: false,
@@ -162,12 +165,15 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
         ],
       ),
     );
+    if (!mounted) return;
     if (lang != null) {
+      final state = context.read<QuestionnaireState>();
       await state.setLanguage(lang);
     }
   }
 
-  void _gotoResult(BuildContext context) {
+  void _gotoResult() {
+    if (!mounted) return;
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (_) => const ReflexeProfilTemp()),

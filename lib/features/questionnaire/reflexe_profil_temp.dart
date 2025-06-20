@@ -36,11 +36,11 @@ class ReflexeProfilTemp extends StatelessWidget {
                   ],
                 ),
               );
+              if (!context.mounted) return;
               if (confirmed == true) {
                 await context.read<QuestionnaireState>().saveResult();
-                if (context.mounted) {
-                  Navigator.pushReplacementNamed(context, '/reflexe-profil');
-                }
+                if (!context.mounted) return;
+                Navigator.pushReplacementNamed(context, '/reflexe-profil');
               } else {
                 Navigator.pop(context);
               }
