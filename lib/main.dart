@@ -38,8 +38,13 @@ import 'package:bugbear_app/features/questionnaire/screens/reflexe_profil_temp.d
 import 'package:bugbear_app/features/calendar/models/calendar_event.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event_adapter.dart';
 import 'package:bugbear_app/features/calendar/services/calendar_service.dart';
+
+import 'package:bugbear_app/features/reflexe/services/reflex_profile_service.dart';
+import 'package:bugbear_app/features/reflexe/screens/reflexe_profil.dart';
+import 'package:bugbear_app/features/reflexe/screens/reflexe_profil_temp.dart';
+
 import 'package:bugbear_app/features/questionnaire/models/questionnaire_state.dart';
-import 'package:bugbear_app/features/questionnaire/models/questionnaire_state_adapter.dart';
+
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -132,6 +137,9 @@ class MyApp extends StatelessWidget {
         Provider<CalendarService>(
           create: (_) => CalendarService(),
         ),
+        Provider<ReflexProfileService>(
+          create: (_) => ReflexProfileService(),
+        ),
         Provider<ExerciseRepository>(
           create: (_) => ExerciseRepository(),
         ),
@@ -173,7 +181,7 @@ class MyApp extends StatelessWidget {
           '/settings': (c) => const SettingsScreen(),
           '/training': (c) => const TrainingScreen(),
           '/calendar': (c) => const CalendarScreen(),
-
+          '/reflex-profil': (c) => const ReflexeProfilScreen(),
           '/questionnaire-language': (c) => const QuestionnaireLanguageScreen(),
           '/questionnaire': (c) => const QuestionnaireScreen(),
           '/reflexe_profil_temp': (c) => const ReflexeProfilTemp(),
