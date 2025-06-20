@@ -14,12 +14,21 @@ class QuestionnaireScreen extends StatefulWidget {
   State<QuestionnaireScreen> createState() => _QuestionnaireScreenState();
 }
 
-class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
+class _QuestionnaireScreenState extends State<QuestionnaireScreen>
+    with SingleTickerProviderStateMixin {
+  late final TabController _tabController;
   @override
   void initState() {
     super.initState();
     final state = context.read<QuestionnaireState>();
     state.init();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -40,109 +49,136 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
     }
 
     final q = state.currentQuestion;
-    return Scaffold(
-      drawer: const AppDrawer(),
-      appBar: AppBar(
-        title: Text('${state.currentIndex + 1}/${state.questions.length}'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.help_outline),
-            onPressed: state.toggleHelp,
+
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        drawer: const AppDrawer(),
+        appBar: AppBar(
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Fragebogen'),
+              Tab(text: 'Reflexe-Profil'),
+            ],
           ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          if (q != null)
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Text(
-                  q.question,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 18),
-                ),
-              ),
-            ),
-          Positioned.fill(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: state.currentIndex == 0 ? null : state.previous,
-              ),
-            ),
-          ),
-          Positioned.fill(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: IconButton(
-                icon: const Icon(Icons.arrow_forward),
-                onPressed: state.currentIndex >= state.questions.length - 1
-                    ? null
-                    : state.next,
-              ),
-            ),
-          ),
-          if (state.helpVisible && q != null)
-            Positioned(
-              top: 80,
-              left: 16,
-              right: 16,
-              child: Material(
-                elevation: 4,
-                color: Theme.of(context).dialogTheme.backgroundColor,
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        q.reflexNames.join(', '),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(q.example),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  state.answerCurrent(QuestionAnswer.yes);
-                },
-                child: const Text('Ja'),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  state.answerCurrent(QuestionAnswer.skip);
-                },
-                child: const Text('X'),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: ElevatedButton(
-                onPressed: () {
-                  state.answerCurrent(QuestionAnswer.no);
-                },
-                child: const Text('Nein'),
-              ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.help_outline),
+              onPressed: state.toggleHelp,
             ),
           ],
         ),
+        body: TabBarView(
+          controller: _tabController,
+          physics: const NeverScrollableScrollPhysics(),
+          children: [
+            _buildQuestionTab(q, state),
+            const ReflexeProfilTemp(),
+          ],
+        ),
+        bottomNavigationBar: _tabController.index == 0
+            ? _buildAnswerButtons(state)
+            : null,
+      ),
+    );
+  }
+
+  Widget _buildQuestionTab(Question? q, QuestionnaireState state) {
+    return Stack(
+      children: [
+        if (q != null)
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Text(
+                q.question,
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 18),
+              ),
+            ),
+          ),
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: state.currentIndex == 0 ? null : state.previous,
+            ),
+          ),
+        ),
+        Positioned.fill(
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_forward),
+              onPressed: state.currentIndex >= state.questions.length - 1
+                  ? null
+                  : state.next,
+            ),
+          ),
+        ),
+        if (state.helpVisible && q != null)
+          Positioned(
+            top: 80,
+            left: 16,
+            right: 16,
+            child: Material(
+              elevation: 4,
+              color: Theme.of(context).dialogTheme.backgroundColor,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      q.reflexNames.join(', '),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(q.example),
+                  ],
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildAnswerButtons(QuestionnaireState state) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                state.answerCurrent(QuestionAnswer.yes);
+              },
+              child: const Text('Ja'),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                state.answerCurrent(QuestionAnswer.skip);
+              },
+              child: const Text('X'),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: ElevatedButton(
+              onPressed: () {
+                state.answerCurrent(QuestionAnswer.no);
+              },
+              child: const Text('Nein'),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -174,10 +210,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
 
   void _gotoResult() {
     if (!mounted) return;
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const ReflexeProfilTemp()),
-    );
+    _tabController.animateTo(1);
   }
 }
 
