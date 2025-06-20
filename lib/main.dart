@@ -27,6 +27,8 @@ import 'package:bugbear_app/features/training/notifier/session_notifier.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event_adapter.dart';
 import 'package:bugbear_app/features/calendar/services/calendar_service.dart';
+import 'package:bugbear_app/features/questionnaire/questionnaire_screen.dart';
+import 'package:bugbear_app/features/questionnaire/reflexe_profil_temp.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +41,9 @@ Future<void> main() async {
   Hive.registerAdapter(SessionStatusAdapter());
   Hive.registerAdapter(SessionStateAdapter());
   await Hive.openBox<SessionState>('session_state');
+
+  // Fragebogen-Fortschritt
+  await Hive.openBox('questionnaire_progress');
 
   // CalendarEvent persistence
   Hive.registerAdapter(CalendarEventAdapter());
@@ -116,6 +121,7 @@ class MyApp extends StatelessWidget {
             );
           },
         ),
+        createQuestionnaireProvider(),
       ],
       child: MaterialApp(
         title: 'BugBear App',
@@ -130,6 +136,8 @@ class MyApp extends StatelessWidget {
           '/settings': (c) => const SettingsScreen(),
           '/training': (c) => const TrainingScreen(),
           '/calendar': (c) => const CalendarScreen(),
+          '/questionnaire': (c) => const QuestionnaireScreen(),
+          '/reflexe-profil-temp': (c) => const ReflexeProfilTemp(),
         },
       ),
     );
