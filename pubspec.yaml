@@ -55,10 +55,6 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/quiz_questions_de.json
-    - assets/quiz_questions_en.json
-    - assets/reflex_categories_de.json
-    - assets/reflex_categories_en.json
     - assets/images/
     - assets/sounds/
 

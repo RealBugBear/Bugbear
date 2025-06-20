@@ -43,22 +43,6 @@ class AppDrawer extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.quiz),
-              title: const Text('Reflexe-Quiz'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/quiz');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.person),
-              title: const Text('Reflexprofil'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.pushNamed(context, '/profile');
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.settings),
               title: const Text('Einstellungen'),
               onTap: () {

@@ -29,11 +29,6 @@ import 'package:bugbear_app/features/training/notifier/session_notifier.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event_adapter.dart';
 import 'package:bugbear_app/features/calendar/services/calendar_service.dart';
-import 'package:bugbear_app/features/quiz/models/reflex_profile.dart';
-import 'package:bugbear_app/features/quiz/models/reflex_profile_adapter.dart';
-import 'package:bugbear_app/features/quiz/screens/quiz_screen.dart';
-import 'package:bugbear_app/features/quiz/screens/saved_profile_screen.dart';
-import 'package:bugbear_app/features/quiz/services/reflex_profile_service.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,9 +46,6 @@ Future<void> main() async {
   Hive.registerAdapter(CalendarEventAdapter());
   await Hive.openBox<CalendarEvent>('calendar_events');
 
-  // ReflexProfile persistence
-  Hive.registerAdapter(ReflexProfileAdapter());
-  await Hive.openBox<ReflexProfile>('reflex_profile');
 
   final sessionRepository = SessionRepository();
   final saved = await sessionRepository.load();
@@ -109,9 +101,6 @@ class MyApp extends StatelessWidget {
         Provider<CalendarService>(
           create: (_) => CalendarService(),
         ),
-        Provider<ReflexProfileService>(
-          create: (_) => ReflexProfileService(),
-        ),
         Provider<ExerciseRepository>(
           create: (_) => ExerciseRepository(),
         ),
@@ -144,8 +133,6 @@ class MyApp extends StatelessWidget {
           '/settings': (c) => const SettingsScreen(),
           '/training': (c) => const TrainingScreen(),
           '/calendar': (c) => const CalendarScreen(),
-          '/quiz': (c) => const QuizScreen(),
-          '/profile': (c) => const SavedProfileScreen(),
         },
       ),
     );
