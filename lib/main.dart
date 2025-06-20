@@ -29,6 +29,8 @@ import 'package:bugbear_app/features/training/notifier/session_notifier.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event_adapter.dart';
 import 'package:bugbear_app/features/calendar/services/calendar_service.dart';
+import 'package:bugbear_app/features/questionnaire/models/questionnaire_state.dart';
+import 'package:bugbear_app/features/questionnaire/models/questionnaire_state_adapter.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,6 +43,12 @@ Future<void> main() async {
   Hive.registerAdapter(SessionStatusAdapter());
   Hive.registerAdapter(SessionStateAdapter());
   await Hive.openBox<SessionState>('session_state');
+
+  // Questionnaire persistence
+  Hive.registerAdapter(AnswerTypeAdapter());
+  Hive.registerAdapter(QuestionnaireLanguageAdapter());
+  Hive.registerAdapter(QuestionnaireStateAdapter());
+  await Hive.openBox<QuestionnaireState>('questionnaire_state');
 
   // CalendarEvent persistence
   Hive.registerAdapter(CalendarEventAdapter());
