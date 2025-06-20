@@ -1,6 +1,10 @@
 import 'package:hive_flutter/hive_flutter.dart';
 
+
 import 'package:bugbear_app/features/questionnaire/models/questionnaire_state.dart';
+
+import '../models/questionnaire_state.dart';
+
 
 class QuestionnaireRepository {
   static const String _boxName = 'questionnaire_state';

@@ -18,6 +18,9 @@ import 'package:bugbear_app/features/common/dashboard_screen.dart';
 import 'package:bugbear_app/features/onboarding/profile/settings_screen.dart';
 import 'package:bugbear_app/features/training/training_screen.dart';
 import 'package:bugbear_app/features/calendar/screens/calendar_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/language_selection_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/questionnaire_screen.dart';
+import 'package:bugbear_app/features/questionnaire/screens/result_screen.dart';
 
 import 'package:bugbear_app/features/training/models/session_state.dart';
 import 'package:bugbear_app/features/training/models/session_state_adapter.dart';
@@ -141,6 +144,9 @@ class MyApp extends StatelessWidget {
           '/settings': (c) => const SettingsScreen(),
           '/training': (c) => const TrainingScreen(),
           '/calendar': (c) => const CalendarScreen(),
+          '/select-language': (c) => const LanguageSelectionScreen(),
+          '/questionnaire': (c) => const QuestionnaireScreen(),
+          '/result': (c) => const ResultScreen(),
         },
       ),
     );

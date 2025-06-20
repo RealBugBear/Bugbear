@@ -1,6 +1,10 @@
 import 'package:hive/hive.dart';
 
+
 import 'package:bugbear_app/features/questionnaire/models/questionnaire_state.dart';
+
+import 'questionnaire_state.dart';
+
 
 class AnswerTypeAdapter extends TypeAdapter<AnswerType> {
   @override

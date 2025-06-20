@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
-
 import 'package:bugbear_app/features/questionnaire/models/question_item.dart';
+import 'question_item.dart';
+
 
 class QuestionItemAdapter extends TypeAdapter<QuestionItem> {
   @override
