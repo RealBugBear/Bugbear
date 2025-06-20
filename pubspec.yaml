@@ -60,6 +60,7 @@ flutter:
       - assets/quiz_questions_de.json
       - assets/quiz_questions_en.json
 
+
 flutter_intl:
   enabled: true
   arb_dir: lib/l10n
