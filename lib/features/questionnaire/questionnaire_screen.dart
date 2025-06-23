@@ -48,6 +48,12 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen>
       });
     }
 
+    if (state.skipWarningNeeded) {
+      Future.microtask(() {
+        if (mounted) _showSkipWarning(state);
+      });
+    }
+
     final q = state.currentQuestion;
 
     return DefaultTabController(
@@ -85,19 +91,39 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen>
   }
 
   Widget _buildQuestionTab(Question? q, QuestionnaireState state) {
+    final progress = state.questions.isEmpty
+        ? 0.0
+        : (state.currentIndex.clamp(0, state.questions.length) /
+            state.questions.length);
+    final questionLabel =
+        'Frage ${state.currentIndex.clamp(0, state.questions.length) + 1} von ${state.questions.length}';
+
     return Stack(
       children: [
-        if (q != null)
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Text(
-                q.question,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 18),
-              ),
+        Column(
+          children: [
+            const SizedBox(height: 16),
+            Text(questionLabel),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
+              child: LinearProgressIndicator(value: progress),
             ),
-          ),
+            const SizedBox(height: 24),
+            if (q != null)
+              Expanded(
+                child: Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Text(
+                      q.question,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
         Positioned.fill(
           child: Align(
             alignment: Alignment.centerLeft,
@@ -181,6 +207,26 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen>
         ],
       ),
     );
+  }
+
+  Future<void> _showSkipWarning(QuestionnaireState state) async {
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Zu viele Fragen übersprungen'),
+        content: const Text(
+            'Du hast bereits mehr als 20% der Fragen übersprungen. '
+            'Das Ergebnis könnte dadurch ungenau werden.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    state.markSkipWarningShown();
   }
 
   Future<void> _showLanguageDialog() async {

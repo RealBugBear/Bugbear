@@ -46,6 +46,7 @@ class QuestionnaireState extends ChangeNotifier {
   int _index = 0;
   Map<String, QuestionAnswer> _answers = {};
   bool _helpVisible = false;
+  bool _skipWarningShown = false;
   bool _isGerman = true;
   bool _initialized = false;
 
@@ -57,6 +58,19 @@ class QuestionnaireState extends ChangeNotifier {
   List<Question> get questions => _questions;
   Question? get currentQuestion =>
       (_index >= 0 && _index < _questions.length) ? _questions[_index] : null;
+
+  double get skipRatio {
+    if (_questions.isEmpty) return 0;
+    final skipped =
+        _answers.values.where((a) => a == QuestionAnswer.skip).length;
+    return skipped / _questions.length;
+  }
+
+  bool get skipWarningNeeded => !_skipWarningShown && skipRatio > 0.2;
+
+  void markSkipWarningShown() {
+    _skipWarningShown = true;
+  }
 
   /// Initialisiert State aus persistierten Daten.
   Future<void> init() async {
@@ -126,6 +140,7 @@ class QuestionnaireState extends ChangeNotifier {
     if (q == null) return;
     _answers[q.id] = answer;
     _index++;
+    if (_index > _questions.length) _index = _questions.length;
     _hideHelp();
     _save();
     notifyListeners();
