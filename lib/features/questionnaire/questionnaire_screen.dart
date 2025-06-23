@@ -105,7 +105,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen>
             const SizedBox(height: 16),
             Text(questionLabel),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
               child: LinearProgressIndicator(value: progress),
             ),
             const SizedBox(height: 24),
