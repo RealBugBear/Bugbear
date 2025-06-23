@@ -49,7 +49,9 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
 
   Future<void> _save(BuildContext context, String name) async {
     final trimmed = name.trim().isEmpty ? 'Reflexprofil' : name.trim();
-    await context.read<QuestionnaireState>().saveResult(name: trimmed);
+    await context
+        .read<QuestionnaireState>()
+        .saveResult(name: trimmed, context: context);
     if (!context.mounted) return;
     Navigator.pushNamedAndRemoveUntil(
       context,
