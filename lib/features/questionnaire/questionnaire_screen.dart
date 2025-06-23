@@ -153,7 +153,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen>
               elevation: 4,
               color: Theme.of(context).dialogTheme.backgroundColor,
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
