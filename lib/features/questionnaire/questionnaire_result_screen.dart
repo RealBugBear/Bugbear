@@ -45,33 +45,37 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Ergebnis')),
+
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
+
           children: [
-            Expanded(
-              child: ListView(
-                children: summary.entries.map((e) {
-                  final name = e.key;
-                  final yes = e.value[0];
-                  final total = e.value[1];
-                  final ratio = total == 0 ? 0.0 : yes / total;
-                  final percent = (ratio * 100).round();
-                  return ListTile(
-                    title: Text(name),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.only(top: 4.0),
-                      child: LinearProgressIndicator(
-                        value: ratio,
-                        color: _colorForPercent(ratio),
-                        backgroundColor: Colors.grey.shade300,
-                      ),
-                    ),
-                    trailing: Text('$percent%'),
-                  );
-                }).toList(),
-              ),
-            ),
+            ...summary.entries.map((e) {
+              final name = e.key;
+              final yes = e.value[0];
+              final total = e.value[1];
+              final ratio = total == 0 ? 0.0 : yes / total;
+              final percent = (ratio * 100).round();
+              return ListTile(
+                title: Text(name),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(top: 4.0),
+                  child: LinearProgressIndicator(
+                    value: ratio,
+                    color: _colorForPercent(ratio),
+                    backgroundColor: Colors.grey.shade300,
+                  ),
+                ),
+                trailing: Text('$percent%'),
+              );
+            }),
+            const SizedBox(height: 24),
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(
@@ -87,14 +91,20 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
               },
               title: const Text('Als Hauptprofil festlegen'),
             ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () => _save(context),
-              child: const Text('Speichern'),
-            ),
           ],
         ),
       ),
+
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ElevatedButton(
+            onPressed: () => _save(context),
+            child: const Text('Speichern'),
+          ),
+        ),
+      ),
+
     );
   }
 }

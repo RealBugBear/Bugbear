@@ -38,7 +38,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
       });
     }
 
-    if (state.isCompleted) {
+    if (state.isInitialized && state.isCompleted) {
       Future.microtask(() {
         if (mounted) _gotoResult();
       });
