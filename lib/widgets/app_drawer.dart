@@ -59,6 +59,14 @@ class AppDrawer extends StatelessWidget {
               },
             ),
             ListTile(
+              leading: const Icon(Icons.person),
+              title: const Text('Reflexprofile'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, '/reflexe-profil');
+              },
+            ),
+            ListTile(
               leading: const Icon(Icons.playlist_play),
               title: const Text('Phase ausw\u00e4hlen'),
               onTap: () {
