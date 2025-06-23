@@ -43,9 +43,11 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
   Widget build(BuildContext context) {
     final summary = context.watch<QuestionnaireState>().calculateReflexSummary();
 
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(title: const Text('Ergebnis')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           children: [
             Expanded(
               child: ListView(
@@ -92,6 +94,7 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
             ),
           ],
         ),
+      ),
     );
   }
 }
