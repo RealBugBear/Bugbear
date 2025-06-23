@@ -88,7 +88,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen>
         bottomNavigationBar: _tabController.index == 0
             ? _buildAnswerButtons(state)
             : null,
-      ),
+      
     );
   }
 
