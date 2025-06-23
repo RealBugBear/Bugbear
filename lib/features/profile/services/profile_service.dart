@@ -40,6 +40,12 @@ class ProfileService {
         .map((doc) => doc.data()?['mainProfileId'] as String?);
   }
 
+  /// Retrieves the main profile id for the user once.
+  Future<String?> getMainProfileId(String userId) async {
+    final doc = await _db.collection('users').doc(userId).get();
+    return doc.data()?['mainProfileId'] as String?;
+  }
+
   /// Entfernt ein Profil endgültig.
   Future<void> deleteProfile(String userId, String profileId) {
     return _db
