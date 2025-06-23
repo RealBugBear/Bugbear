@@ -37,7 +37,7 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
     await context
         .read<QuestionnaireState>()
         .saveResult(name: name, isMainProfile: _isMainProfile);
-    if (!mounted) return;
+    if (!context.mounted) return;
     Navigator.pushReplacementNamed(context, '/reflexe-profil');
   }
 
