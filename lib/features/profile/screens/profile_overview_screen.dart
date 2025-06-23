@@ -67,6 +67,11 @@ class ProfileOverviewScreen extends StatelessWidget {
                                     : const Icon(Icons.person),
                                 title: Text(p.name),
                                 subtitle: Text(DateFormat('dd.MM.yyyy').format(p.createdAt)),
+                                onTap: () => Navigator.pushNamed(
+                                  context,
+                                  '/reflexe-profil/detail',
+                                  arguments: p,
+                                ),
 
                                 tileColor: isMain
                                     ? Colors.orange
