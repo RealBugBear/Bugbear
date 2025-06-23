@@ -139,7 +139,7 @@ class MyApp extends StatelessWidget {
           '/calendar': (c) => const CalendarScreen(),
           '/questionnaire': (c) => const QuizIntroScreen(),
           '/questionnaire/questions': (c) => const QuestionnaireScreen(),
-          '/reflexe-profil-temp': (c) => const QuestionnaireResultScreen(),
+          '/reflexe-profil': (c) => const QuestionnaireResultScreen(),
         },
       ),
     );
