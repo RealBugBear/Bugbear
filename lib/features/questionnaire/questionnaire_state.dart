@@ -174,10 +174,20 @@ class QuestionnaireState extends ChangeNotifier {
   /// Speichert Ergebnis in Firestore und leert den lokalen Fortschritt.
   Future<void> saveResult({
     String name = 'Reflexprofil',
-    bool isMainProfile = false,
   }) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
+
+    final service = ProfileService();
+    final mainProfileId = await service.getMainProfileId(uid);
+    final profileQuery = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('profiles')
+        .limit(1)
+        .get();
+    final hasProfiles = profileQuery.docs.isNotEmpty;
+    final isMainProfile = mainProfileId == null || !hasProfiles;
 
     final summary = calculateReflexSummary()
         .map((k, v) => MapEntry(k, {'yes': v[0], 'total': v[1]}));
@@ -199,7 +209,6 @@ class QuestionnaireState extends ChangeNotifier {
       answers: answers,
     );
 
-    final service = ProfileService();
     await service.saveProfile(profile);
     if (isMainProfile) {
       await service.setMainProfile(uid, profile.id);
