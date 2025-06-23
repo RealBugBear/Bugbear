@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:hive/hive.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -174,45 +175,58 @@ class QuestionnaireState extends ChangeNotifier {
   /// Speichert Ergebnis in Firestore und leert den lokalen Fortschritt.
   Future<void> saveResult({
     String name = 'Reflexprofil',
+    BuildContext? context,
   }) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
 
-    final service = ProfileService();
-    final mainProfileId = await service.getMainProfileId(uid);
-    final profileQuery = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .collection('profiles')
-        .limit(1)
-        .get();
-    final hasProfiles = profileQuery.docs.isNotEmpty;
-    final isMainProfile = mainProfileId == null || !hasProfiles;
+    try {
+      final service = ProfileService();
+      final mainProfileId = await service.getMainProfileId(uid);
+      final profileQuery = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('profiles')
+          .limit(1)
+          .get();
+      final hasProfiles = profileQuery.docs.isNotEmpty;
+      final isMainProfile = mainProfileId == null || !hasProfiles;
 
-    final summary = calculateReflexSummary()
-        .map((k, v) => MapEntry(k, {'yes': v[0], 'total': v[1]}));
-    final answers = _answers.map((k, v) => MapEntry(k, v.name));
+      final summary = calculateReflexSummary()
+          .map((k, v) => MapEntry(k, {'yes': v[0], 'total': v[1]}));
+      final answers = _answers.map((k, v) => MapEntry(k, v.name));
 
-    final docRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .collection('profiles')
-        .doc();
+      final docRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('profiles')
+          .doc();
 
-    final profile = ReflexProfile(
-      id: docRef.id,
-      userId: uid,
-      name: name,
-      createdAt: DateTime.now(),
-      isMainProfile: isMainProfile,
-      reflexScores: summary,
-      answers: answers,
-    );
+      final profile = ReflexProfile(
+        id: docRef.id,
+        userId: uid,
+        name: name,
+        createdAt: DateTime.now(),
+        isMainProfile: isMainProfile,
+        reflexScores: summary,
+        answers: answers,
+      );
 
-    await service.saveProfile(profile);
-    if (isMainProfile) {
-      await service.setMainProfile(uid, profile.id);
+      await service.saveProfile(profile);
+      if (isMainProfile) {
+        await service.setMainProfile(uid, profile.id);
+      }
+      await _box.clear();
+    } catch (e, st) {
+      debugPrint('Error saving questionnaire result: $e');
+      debugPrintStack(stackTrace: st);
+      if (context != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Fehler beim Speichern. Bitte erneut versuchen.'),
+          ),
+        );
+      }
     }
-    await _box.clear();
   }
 }
