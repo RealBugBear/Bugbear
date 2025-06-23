@@ -5,6 +5,8 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:hive/hive.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:bugbear_app/features/profile/models/reflex_profile.dart';
+import 'package:bugbear_app/features/profile/services/profile_service.dart';
 
 /// Einzelne Frage des Fragebogens.
 class Question {
@@ -158,18 +160,28 @@ class QuestionnaireState extends ChangeNotifier {
   Future<void> saveResult() async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
-    final summary = calculateReflexSummary().map((k, v) =>
-        MapEntry(k, {'yes': v[0], 'total': v[1]}));
+
+    final summary = calculateReflexSummary()
+        .map((k, v) => MapEntry(k, {'yes': v[0], 'total': v[1]}));
     final answers = _answers.map((k, v) => MapEntry(k, v.name));
-    await FirebaseFirestore.instance
+
+    final docRef = FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
-        .collection('tracking')
-        .add({
-      'timestamp': Timestamp.now(),
-      'answers': answers,
-      'summary': summary,
-    });
+        .collection('profiles')
+        .doc();
+
+    final profile = ReflexProfile(
+      id: docRef.id,
+      userId: uid,
+      name: 'Reflexprofil',
+      createdAt: DateTime.now(),
+      isMainProfile: false,
+      reflexScores: summary,
+      answers: answers,
+    );
+
+    await ProfileService().saveProfile(profile);
     await _box.clear();
   }
 }
