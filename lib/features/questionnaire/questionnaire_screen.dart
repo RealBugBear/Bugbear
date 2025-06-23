@@ -4,7 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:bugbear_app/widgets/app_drawer.dart';
 
 import 'questionnaire_state.dart';
-import 'reflexe_profil_temp.dart';
+import 'questionnaire_result_screen.dart';
 
 /// Hauptscreen des Fragebogens.
 class QuestionnaireScreen extends StatefulWidget {
@@ -80,7 +80,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen>
           physics: const NeverScrollableScrollPhysics(),
           children: [
             _buildQuestionTab(q, state),
-            const ReflexeProfilTemp(),
+            const QuestionnaireResultScreen(),
           ],
         ),
         bottomNavigationBar: _tabController.index == 0

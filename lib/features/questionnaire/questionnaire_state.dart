@@ -172,7 +172,10 @@ class QuestionnaireState extends ChangeNotifier {
   }
 
   /// Speichert Ergebnis in Firestore und leert den lokalen Fortschritt.
-  Future<void> saveResult() async {
+  Future<void> saveResult({
+    String name = 'Reflexprofil',
+    bool isMainProfile = false,
+  }) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
 
@@ -189,14 +192,18 @@ class QuestionnaireState extends ChangeNotifier {
     final profile = ReflexProfile(
       id: docRef.id,
       userId: uid,
-      name: 'Reflexprofil',
+      name: name,
       createdAt: DateTime.now(),
-      isMainProfile: false,
+      isMainProfile: isMainProfile,
       reflexScores: summary,
       answers: answers,
     );
 
-    await ProfileService().saveProfile(profile);
+    final service = ProfileService();
+    await service.saveProfile(profile);
+    if (isMainProfile) {
+      await service.setMainProfile(uid, profile.id);
+    }
     await _box.clear();
   }
 }
