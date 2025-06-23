@@ -102,10 +102,6 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
 
               if (!context.mounted || name == null) return;
               await _save(context, name);
-
-              if (name != null) {
-                await _save(context, name);
-              }
             },
             child: const Text('Speichern'),
           ),
