@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:bugbear_app/widgets/app_drawer.dart';
-
 import 'questionnaire_state.dart';
 
 /// Displays questionnaire results with percentages per reflex and allows
@@ -45,14 +43,9 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
   Widget build(BuildContext context) {
     final summary = context.watch<QuestionnaireState>().calculateReflexSummary();
 
-    return Scaffold(
-      drawer: const AppDrawer(),
-      appBar: AppBar(
-        title: const Text('Reflexe Profil'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
           children: [
             Expanded(
               child: ListView(
@@ -99,7 +92,6 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
             ),
           ],
         ),
-      ),
     );
   }
 }
