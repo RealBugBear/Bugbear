@@ -174,7 +174,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent>
     final selectedDay = context.read<CalendarNotifier>().selectedDay;
     final sel = isSameDay(cellDate, selectedDay);
     return Container(
-      margin: const EdgeInsets.all(4),
+      margin: const EdgeInsets.all(4.0),
       decoration: BoxDecoration(
         color: sel
             ? scheduledColor.withAlpha((0.2 * 255).round())
