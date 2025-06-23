@@ -42,6 +42,8 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
         ],
       ),
     );
+    controller.dispose();
+
     return name;
   }
 
@@ -97,6 +99,10 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
           child: ElevatedButton(
             onPressed: () async {
               final name = await _promptProfileName();
+
+              if (!context.mounted || name == null) return;
+              await _save(context, name);
+
               if (name != null) {
                 await _save(context, name);
               }
