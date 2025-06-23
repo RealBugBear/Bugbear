@@ -51,7 +51,11 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
     final trimmed = name.trim().isEmpty ? 'Reflexprofil' : name.trim();
     await context.read<QuestionnaireState>().saveResult(name: trimmed);
     if (!context.mounted) return;
-    Navigator.pushReplacementNamed(context, '/reflexe-profil');
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      '/reflexe-profil',
+      ModalRoute.withName('/'),
+    );
   }
 
   @override
