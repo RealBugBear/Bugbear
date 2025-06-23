@@ -17,16 +17,20 @@ class QuestionnaireScreen extends StatefulWidget {
 class _QuestionnaireScreenState extends State<QuestionnaireScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+  late final VoidCallback _tabListener;
   @override
   void initState() {
     super.initState();
     final state = context.read<QuestionnaireState>();
     state.init();
     _tabController = TabController(length: 2, vsync: this);
+    _tabListener = () => setState(() {});
+    _tabController.addListener(_tabListener);
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_tabListener);
     _tabController.dispose();
     super.dispose();
   }
@@ -56,9 +60,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen>
 
     final q = state.currentQuestion;
 
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
+    return Scaffold(
         drawer: const AppDrawer(),
         appBar: AppBar(
           bottom: TabBar(
@@ -174,37 +176,39 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen>
   }
 
   Widget _buildAnswerButtons(QuestionnaireState state) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () {
-                state.answerCurrent(QuestionAnswer.yes);
-              },
-              child: const Text('Ja'),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+        child: Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  state.answerCurrent(QuestionAnswer.yes);
+                },
+                child: const Text('Ja'),
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () {
-                state.answerCurrent(QuestionAnswer.skip);
-              },
-              child: const Text('X'),
+            const SizedBox(width: 8),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  state.answerCurrent(QuestionAnswer.skip);
+                },
+                child: const Text('X'),
+              ),
             ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: ElevatedButton(
-              onPressed: () {
-                state.answerCurrent(QuestionAnswer.no);
-              },
-              child: const Text('Nein'),
+            const SizedBox(width: 8),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: () {
+                  state.answerCurrent(QuestionAnswer.no);
+                },
+                child: const Text('Nein'),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
