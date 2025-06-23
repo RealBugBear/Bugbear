@@ -17,20 +17,17 @@ class QuestionnaireScreen extends StatefulWidget {
 class _QuestionnaireScreenState extends State<QuestionnaireScreen>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
-  late final VoidCallback _tabListener;
   @override
   void initState() {
     super.initState();
     final state = context.read<QuestionnaireState>();
     state.init();
     _tabController = TabController(length: 2, vsync: this);
-    _tabListener = () => setState(() {});
-    _tabController.addListener(_tabListener);
+    _tabController.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
-    _tabController.removeListener(_tabListener);
     _tabController.dispose();
     super.dispose();
   }
