@@ -84,7 +84,8 @@ class ProfileOverviewScreen extends StatelessWidget {
                                 ),
 
                                 tileColor: isMain
-                                    ? Colors.orange.withOpacity(0.2)
+                                    ? Colors.orange
+                                        .withAlpha((0.2 * 255).round())
                                     : null,
 
                                 trailing: Row(
