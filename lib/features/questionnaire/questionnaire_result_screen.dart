@@ -13,14 +13,6 @@ class QuestionnaireResultScreen extends StatefulWidget {
 }
 
 class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
-  final TextEditingController _nameController = TextEditingController();
-  bool _isMainProfile = false;
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
-  }
 
   Color _colorForPercent(double p) {
     if (p >= 0.75) return Colors.green;
@@ -28,13 +20,35 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
     return Colors.red;
   }
 
-  Future<void> _save(BuildContext context) async {
-    final name = _nameController.text.trim().isEmpty
-        ? 'Reflexprofil'
-        : _nameController.text.trim();
-    await context
-        .read<QuestionnaireState>()
-        .saveResult(name: name, isMainProfile: _isMainProfile);
+  Future<String?> _promptProfileName() async {
+    final controller = TextEditingController();
+    final name = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Profilname'),
+        content: TextField(
+          controller: controller,
+          decoration: const InputDecoration(labelText: 'Profilname'),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Abbrechen'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, controller.text.trim()),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+    controller.dispose();
+    return name;
+  }
+
+  Future<void> _save(BuildContext context, String name) async {
+    final trimmed = name.trim().isEmpty ? 'Reflexprofil' : name.trim();
+    await context.read<QuestionnaireState>().saveResult(name: trimmed);
     if (!context.mounted) return;
     Navigator.pushReplacementNamed(context, '/reflexe-profil');
   }
@@ -46,45 +60,33 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Ergebnis')),
 
-      body: SingleChildScrollView(
+      body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ...summary.entries.map((e) {
-              final name = e.key;
-              final yes = e.value[0];
-              final total = e.value[1];
-              final ratio = total == 0 ? 0.0 : yes / total;
-              final percent = (ratio * 100).round();
-              return ListTile(
-                title: Text(name),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 4.0),
-                  child: LinearProgressIndicator(
-                    value: ratio,
-                    color: _colorForPercent(ratio),
-                    backgroundColor: Colors.grey.shade300,
-                  ),
-                ),
-                trailing: Text('$percent%'),
-              );
-            }),
-            const SizedBox(height: 24),
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Profilname',
+            Expanded(
+              child: ListView(
+                children: summary.entries.map((e) {
+                  final name = e.key;
+                  final yes = e.value[0];
+                  final total = e.value[1];
+                  final ratio = total == 0 ? 0.0 : yes / total;
+                  final percent = (ratio * 100).round();
+                  return ListTile(
+                    title: Text(name),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: LinearProgressIndicator(
+                        value: ratio,
+                        color: _colorForPercent(ratio),
+                        backgroundColor: Colors.grey.shade300,
+                      ),
+                    ),
+                    trailing: Text('$percent%'),
+                  );
+                }).toList(),
               ),
-            ),
-            CheckboxListTile(
-              value: _isMainProfile,
-              onChanged: (val) {
-                setState(() {
-                  _isMainProfile = val ?? false;
-                });
-              },
-              title: const Text('Als Hauptprofil festlegen'),
             ),
           ],
         ),
@@ -94,7 +96,11 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: ElevatedButton(
-            onPressed: () => _save(context),
+            onPressed: () async {
+              final name = await _promptProfileName();
+              if (!context.mounted || name == null) return;
+              await _save(context, name);
+            },
             child: const Text('Speichern'),
           ),
         ),
