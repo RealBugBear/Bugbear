@@ -67,7 +67,10 @@ class ProfileOverviewScreen extends StatelessWidget {
                                     : const Icon(Icons.person),
                                 title: Text(p.name),
                                 subtitle: Text(DateFormat('dd.MM.yyyy').format(p.createdAt)),
-                                tileColor: isMain ? Colors.orange.withOpacity(0.2) : null,
+                                tileColor: isMain
+                                    ? Colors.orange
+                                        .withValues(alpha: (0.2 * 255).round())
+                                    : null,
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
