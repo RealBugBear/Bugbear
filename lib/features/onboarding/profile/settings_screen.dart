@@ -26,7 +26,7 @@ class SettingsScreenState extends State<SettingsScreen> {
       drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Einstellungen')),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         children: [
           ListTile(
             leading: const Icon(Icons.logout),

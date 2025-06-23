@@ -27,7 +27,7 @@ class RoleSelectionScreenState extends State<RoleSelectionScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('Rolle auswählen')),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

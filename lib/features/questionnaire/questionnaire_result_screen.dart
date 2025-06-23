@@ -51,7 +51,7 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
         title: const Text('Reflexe Profil'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             Expanded(

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
@@ -67,10 +70,14 @@ class ProfileOverviewScreen extends StatelessWidget {
                                     : const Icon(Icons.person),
                                 title: Text(p.name),
                                 subtitle: Text(DateFormat('dd.MM.yyyy').format(p.createdAt)),
+
+                                tileColor: isMain ? Colors.orange.withOpacity(0.2) : null,
+
                                 tileColor: isMain
                                     ? Colors.orange
                                         .withValues(alpha: (0.2 * 255).round())
                                     : null,
+
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
