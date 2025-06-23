@@ -40,10 +40,20 @@ class ProfileOverviewScreen extends StatelessWidget {
     return StreamBuilder<String?>(
       stream: service.watchMainProfileId(uid),
       builder: (context, mainSnap) {
+        if (mainSnap.hasError) {
+          return const Scaffold(
+            body: Center(child: Text('Fehler beim Laden der Profile')),
+          );
+        }
         final mainId = mainSnap.data;
         return StreamBuilder<List<ReflexProfile>>(
           stream: service.watchProfiles(uid),
           builder: (context, snap) {
+            if (snap.hasError) {
+              return const Scaffold(
+                body: Center(child: Text('Fehler beim Laden der Profile')),
+              );
+            }
             if (!snap.hasData) {
               return const Scaffold(body: Center(child: CircularProgressIndicator()));
             }
