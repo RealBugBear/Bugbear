@@ -1,0 +1,105 @@
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
+
+import 'package:bugbear_app/widgets/app_drawer.dart';
+import '../models/reflex_profile.dart';
+import '../services/profile_service.dart';
+
+class ProfileOverviewScreen extends StatelessWidget {
+  const ProfileOverviewScreen({super.key});
+
+  Future<void> _deleteProfile(BuildContext context, String userId, String profileId, bool isMain) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Profil löschen?'),
+        content: const Text('Möchtest du dieses Profil unwiderruflich löschen?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Abbrechen')),
+          TextButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Löschen')),
+        ],
+      ),
+    );
+    if (confirm == true) {
+      final service = ProfileService();
+      await service.deleteProfile(userId, profileId);
+      if (isMain) {
+        await service.setMainProfile(userId, null);
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      return const Scaffold(body: Center(child: Text('Nicht angemeldet')));
+    }
+    final service = ProfileService();
+    return StreamBuilder<String?>(
+      stream: service.watchMainProfileId(uid),
+      builder: (context, mainSnap) {
+        final mainId = mainSnap.data;
+        return StreamBuilder<List<ReflexProfile>>(
+          stream: service.watchProfiles(uid),
+          builder: (context, snap) {
+            if (!snap.hasData) {
+              return const Scaffold(body: Center(child: CircularProgressIndicator()));
+            }
+            final profiles = snap.data!;
+            return Scaffold(
+              drawer: const AppDrawer(),
+              appBar: AppBar(title: const Text('Reflexprofile')),
+              body: Column(
+                children: [
+                  Expanded(
+                    child: profiles.isEmpty
+                        ? const Center(child: Text('Keine Profile vorhanden'))
+                        : ListView.builder(
+                            itemCount: profiles.length,
+                            itemBuilder: (ctx, i) {
+                              final p = profiles[i];
+                              final isMain = p.id == mainId;
+                              return ListTile(
+                                leading: isMain
+                                    ? const Icon(Icons.star, color: Colors.orange)
+                                    : const Icon(Icons.person),
+                                title: Text(p.name),
+                                subtitle: Text(DateFormat('dd.MM.yyyy').format(p.createdAt)),
+                                tileColor: isMain ? Colors.orange.withOpacity(0.2) : null,
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    if (!isMain)
+                                      IconButton(
+                                        icon: const Icon(Icons.star_border),
+                                        onPressed: () => service.setMainProfile(uid, p.id),
+                                      ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete),
+                                      onPressed: () => _deleteProfile(context, uid, p.id, isMain),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pushNamed(context, '/questionnaire'),
+                      child: const Text('Neues Quiz starten'),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+}

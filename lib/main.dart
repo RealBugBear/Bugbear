@@ -29,7 +29,7 @@ import 'package:bugbear_app/features/calendar/models/calendar_event_adapter.dart
 import 'package:bugbear_app/features/calendar/services/calendar_service.dart';
 import 'package:bugbear_app/features/questionnaire/questionnaire_screen.dart';
 import 'package:bugbear_app/features/questionnaire/quiz_intro_screen.dart';
-import 'package:bugbear_app/features/questionnaire/questionnaire_result_screen.dart';
+import 'package:bugbear_app/features/profile/screens/profile_overview_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -139,7 +139,7 @@ class MyApp extends StatelessWidget {
           '/calendar': (c) => const CalendarScreen(),
           '/questionnaire': (c) => const QuizIntroScreen(),
           '/questionnaire/questions': (c) => const QuestionnaireScreen(),
-          '/reflexe-profil': (c) => const QuestionnaireResultScreen(),
+          '/reflexe-profil': (c) => const ProfileOverviewScreen(),
         },
       ),
     );
