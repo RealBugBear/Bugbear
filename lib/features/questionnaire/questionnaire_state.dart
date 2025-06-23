@@ -219,7 +219,7 @@ class QuestionnaireState extends ChangeNotifier {
     } catch (e, st) {
       debugPrint('Error saving questionnaire result: $e');
       debugPrintStack(stackTrace: st);
-      if (context != null) {
+      if (context != null && context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Fehler beim Speichern. Bitte erneut versuchen.'),
