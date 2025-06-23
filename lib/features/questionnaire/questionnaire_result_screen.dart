@@ -45,10 +45,16 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Ergebnis')),
+
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
+
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+
           children: [
             ...summary.entries.map((e) {
               final name = e.key;
@@ -88,6 +94,7 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
           ],
         ),
       ),
+
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -97,6 +104,7 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
           ),
         ),
       ),
+
     );
   }
 }
