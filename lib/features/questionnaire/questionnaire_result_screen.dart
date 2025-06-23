@@ -50,11 +50,6 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-
           children: [
             ...summary.entries.map((e) {
               final name = e.key;
