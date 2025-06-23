@@ -14,21 +14,16 @@ class QuestionnaireScreen extends StatefulWidget {
   State<QuestionnaireScreen> createState() => _QuestionnaireScreenState();
 }
 
-class _QuestionnaireScreenState extends State<QuestionnaireScreen>
-    with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
+class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
   @override
   void initState() {
     super.initState();
     final state = context.read<QuestionnaireState>();
     state.init();
-    _tabController = TabController(length: 2, vsync: this);
-    _tabController.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
     super.dispose();
   }
 
@@ -58,34 +53,19 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen>
     final q = state.currentQuestion;
 
     return Scaffold(
-        drawer: const AppDrawer(),
-        appBar: AppBar(
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: 'Fragebogen'),
-              Tab(text: 'Reflexe-Profil'),
-            ],
+      drawer: const AppDrawer(),
+      appBar: AppBar(
+        title: const Text('Fragebogen'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.help_outline),
+            onPressed: state.toggleHelp,
           ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.help_outline),
-              onPressed: state.toggleHelp,
-            ),
-          ],
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          physics: const NeverScrollableScrollPhysics(),
-          children: [
-            _buildQuestionTab(q, state),
-            const QuestionnaireResultScreen(),
-          ],
-        ),
-        bottomNavigationBar: _tabController.index == 0
-            ? _buildAnswerButtons(state)
-            : null,
-      
+        ],
+      ),
+      body: _buildQuestionTab(q, state),
+      bottomNavigationBar:
+          state.isCompleted ? null : _buildAnswerButtons(state),
     );
   }
 
@@ -257,7 +237,12 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen>
 
   void _gotoResult() {
     if (!mounted) return;
-    _tabController.animateTo(1);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const QuestionnaireResultScreen(),
+      ),
+    );
   }
 }
 
