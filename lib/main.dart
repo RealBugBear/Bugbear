@@ -30,6 +30,8 @@ import 'package:bugbear_app/features/calendar/services/calendar_service.dart';
 import 'package:bugbear_app/features/questionnaire/questionnaire_screen.dart';
 import 'package:bugbear_app/features/questionnaire/quiz_intro_screen.dart';
 import 'package:bugbear_app/features/profile/screens/profile_overview_screen.dart';
+import 'package:bugbear_app/features/profile/screens/reflex_profile_detail_screen.dart';
+import 'package:bugbear_app/features/profile/models/reflex_profile.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -140,6 +142,10 @@ class MyApp extends StatelessWidget {
           '/questionnaire': (c) => const QuizIntroScreen(),
           '/questionnaire/questions': (c) => const QuestionnaireScreen(),
           '/reflexe-profil': (c) => const ProfileOverviewScreen(),
+          '/reflexe-profil/detail': (c) {
+            final profile = ModalRoute.of(c)!.settings.arguments as ReflexProfile;
+            return ReflexProfileDetailScreen(profile: profile);
+          },
         },
       ),
     );
