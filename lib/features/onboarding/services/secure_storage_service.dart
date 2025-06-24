@@ -23,6 +23,7 @@ class SecureStorageService {
   /// Entfernt den gespeicherten Login-Status (bei Logout)
   Future<void> clear() async {
     await _storage.delete(key: _keyLoggedIn);
+    await _storage.delete(key: _keyEncryption);
   }
 
   /// Persists the given Hive encryption key.

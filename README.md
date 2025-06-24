@@ -31,6 +31,9 @@ This key is persisted with `FlutterSecureStorage` so it remains available across
 app restarts. On subsequent launches the stored key is loaded again and reused to
 decrypt the boxes. The key only changes when the app data is cleared or the
 `FlutterSecureStorage` entry is removed.
+Signing out triggers `AuthService.signOut()`, which clears `SecureStorageService`
+and deletes the stored encryption key so a fresh key is generated on the next
+launch.
 
 ## Firebase API Key Restrictions
 
