@@ -236,6 +236,7 @@ class QuestionnaireState extends ChangeNotifier {
         await service.setMainProfile(uid, profile.id);
       }
       await _box.clear();
+      resetState();
     } catch (e, st) {
       debugPrint('Error saving questionnaire result: $e');
       debugPrintStack(stackTrace: st);
