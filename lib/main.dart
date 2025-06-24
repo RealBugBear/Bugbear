@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive/hive.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:bugbear_app/firebase_options.dart';
 import 'package:bugbear_app/features/onboarding/services/auth_service.dart';
+import 'package:bugbear_app/features/onboarding/services/secure_storage_service.dart';
 import 'package:bugbear_app/features/onboarding/state/auth_provider.dart';
 import 'package:bugbear_app/features/common/splash_screen.dart';
 import 'package:bugbear_app/features/onboarding/screens/login_screen.dart';
@@ -40,17 +42,22 @@ Future<void> main() async {
   );
 
   await Hive.initFlutter();
+  final storage = SecureStorageService();
+  final encryptionKey = await storage.getEncryptionKey();
   // SessionState persistence
   Hive.registerAdapter(SessionStatusAdapter());
   Hive.registerAdapter(SessionStateAdapter());
-  await Hive.openBox<SessionState>('session_state');
+  await Hive.openBox<SessionState>('session_state',
+      encryptionCipher: HiveAesCipher(encryptionKey));
 
   // Fragebogen-Fortschritt
-  await Hive.openBox('questionnaire_progress');
+  await Hive.openBox('questionnaire_progress',
+      encryptionCipher: HiveAesCipher(encryptionKey));
 
   // CalendarEvent persistence
   Hive.registerAdapter(CalendarEventAdapter());
-  await Hive.openBox<CalendarEvent>('calendar_events');
+  await Hive.openBox<CalendarEvent>('calendar_events',
+      encryptionCipher: HiveAesCipher(encryptionKey));
 
   final sessionRepository = SessionRepository();
   final savedSession = await sessionRepository.load();
