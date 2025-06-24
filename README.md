@@ -23,3 +23,12 @@ Security rules for Cloud Firestore are stored in `firestore.rules`. After making
 firebase deploy
 ```
 
+## Encryption Key Lifecycle
+
+The app encrypts all Hive boxes using a secret key. The first time the
+application runs, `SecureStorageService` generates a new key using `Hive.generateSecureKey()`.
+This key is persisted with `FlutterSecureStorage` so it remains available across
+app restarts. On subsequent launches the stored key is loaded again and reused to
+decrypt the boxes. The key only changes when the app data is cleared or the
+`FlutterSecureStorage` entry is removed.
+
