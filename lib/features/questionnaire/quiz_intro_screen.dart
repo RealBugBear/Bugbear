@@ -24,9 +24,8 @@ class QuizIntroScreen extends StatelessWidget {
 
     if (storedIndex >= questionCount && questionCount > 0) {
       await box.clear();
-      if (context.mounted) {
-        state.resetState();
-      }
+      if (!context.mounted) return;
+      state.resetState();
     }
 
     bool continueQuiz = true;
