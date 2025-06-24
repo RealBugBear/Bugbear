@@ -13,7 +13,14 @@ class RoleSelectionScreen extends StatefulWidget {
 
 class RoleSelectionScreenState extends State<RoleSelectionScreen> {
   Future<void> _setRoleAndContinue(String selectedRole) async {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      if (!mounted) return;
+      Navigator.pushReplacementNamed(context, '/login');
+      return;
+    }
+
+    final uid = currentUser.uid;
     await FirebaseFirestore.instance
         .collection('users')
         .doc(uid)
