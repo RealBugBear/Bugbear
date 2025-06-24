@@ -32,3 +32,20 @@ app restarts. On subsequent launches the stored key is loaded again and reused t
 decrypt the boxes. The key only changes when the app data is cleared or the
 `FlutterSecureStorage` entry is removed.
 
+## Firebase API Key Restrictions
+
+API keys in `lib/firebase_options.dart` should be restricted in the Google Cloud
+console to prevent unauthorized use. When generating new keys, apply the
+following restrictions:
+
+1. **Android** – Restrict to the Android package name
+   `com.example.bugbear_recovery` and add the appropriate SHA-1/SHA-256 signing
+   certificate fingerprints.
+2. **iOS** – Restrict to the bundle ID `com.example.bugbearRecovery`.
+3. **Web** – Authorize the domains used by the web app such as
+   `https://bugbear-9d720.web.app`, `https://bugbear-9d720.firebaseapp.com` and
+   any local development hosts (for example `http://localhost:5000`).
+
+After creating restricted keys, replace the values in
+`lib/firebase_options.dart` with the new keys.
+
