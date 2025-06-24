@@ -155,6 +155,17 @@ class QuestionnaireState extends ChangeNotifier {
     await _box.put('lang', _isGerman ? 'de' : 'en');
   }
 
+  /// Resets all questionnaire progress and internal state.
+  void resetState() {
+    _index = 0;
+    _answers.clear();
+    _helpVisible = false;
+    _skipWarningShown = false;
+    _initialized = false;
+    _questions = [];
+    notifyListeners();
+  }
+
   /// Berechnet für jedes Reflex-Label Anzahl Ja-Antworten und Gesamtfragen.
   Map<String, List<int>> calculateReflexSummary() {
     final result = <String, List<int>>{}; // [ja, gesamt]

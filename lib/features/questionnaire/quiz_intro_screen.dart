@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 import 'package:bugbear_app/widgets/app_drawer.dart';
+
+import 'questionnaire_state.dart';
 
 /// Einf\u00fchrungsseite f\u00fcr den Fragebogen mit DSGVO-Hinweis.
 class QuizIntroScreen extends StatelessWidget {
@@ -31,7 +34,12 @@ class QuizIntroScreen extends StatelessWidget {
       );
       if (!context.mounted) return;
       continueQuiz = result ?? false;
-      if (!continueQuiz) await box.clear();
+      if (!continueQuiz) {
+        await box.clear();
+        if (context.mounted) {
+          context.read<QuestionnaireState>().resetState();
+        }
+      }
     }
 
     if (!context.mounted) return;
