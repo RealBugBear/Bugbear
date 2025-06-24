@@ -41,18 +41,20 @@ class ProfileOverviewScreen extends StatelessWidget {
       stream: service.watchMainProfileId(uid),
       builder: (context, mainSnap) {
         if (mainSnap.hasError) {
-          return const Scaffold(
-            body: Center(child: Text('Fehler beim Laden der Profile')),
-          );
+          final msg = FirebaseAuth.instance.currentUser == null
+              ? 'Nicht angemeldet'
+              : mainSnap.error.toString();
+          return Scaffold(body: Center(child: Text(msg)));
         }
         final mainId = mainSnap.data;
         return StreamBuilder<List<ReflexProfile>>(
           stream: service.watchProfiles(uid),
           builder: (context, snap) {
             if (snap.hasError) {
-              return const Scaffold(
-                body: Center(child: Text('Fehler beim Laden der Profile')),
-              );
+              final msg = FirebaseAuth.instance.currentUser == null
+                  ? 'Nicht angemeldet'
+                  : snap.error.toString();
+              return Scaffold(body: Center(child: Text(msg)));
             }
             if (!snap.hasData) {
               return const Scaffold(body: Center(child: CircularProgressIndicator()));
