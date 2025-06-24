@@ -46,7 +46,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '729792119936',
     projectId: 'bugbear-9d720',
     authDomain: 'bugbear-9d720.firebaseapp.com',
-    storageBucket: 'bugbear-9d720.firebasestorage.app',
+    storageBucket: 'bugbear-9d720.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
     appId: '1:729792119936:android:4a0693745974f2e0935265',
     messagingSenderId: '729792119936',
     projectId: 'bugbear-9d720',
-    storageBucket: 'bugbear-9d720.firebasestorage.app',
+    storageBucket: 'bugbear-9d720.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
@@ -62,7 +62,7 @@ class DefaultFirebaseOptions {
     appId: '1:729792119936:ios:9d68ed97aed03948935265',
     messagingSenderId: '729792119936',
     projectId: 'bugbear-9d720',
-    storageBucket: 'bugbear-9d720.firebasestorage.app',
+    storageBucket: 'bugbear-9d720.appspot.com',
     iosBundleId: 'com.example.bugbearApp',
   );
 
@@ -71,7 +71,7 @@ class DefaultFirebaseOptions {
     appId: '1:729792119936:ios:9d68ed97aed03948935265',
     messagingSenderId: '729792119936',
     projectId: 'bugbear-9d720',
-    storageBucket: 'bugbear-9d720.firebasestorage.app',
+    storageBucket: 'bugbear-9d720.appspot.com',
     iosBundleId: 'com.example.bugbearApp',
   );
 
@@ -81,7 +81,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '729792119936',
     projectId: 'bugbear-9d720',
     authDomain: 'bugbear-9d720.firebaseapp.com',
-    storageBucket: 'bugbear-9d720.firebasestorage.app',
+    storageBucket: 'bugbear-9d720.appspot.com',
   );
 
 }
