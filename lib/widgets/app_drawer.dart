@@ -14,7 +14,7 @@ class AppDrawer extends StatelessWidget {
             const DrawerHeader(
               decoration: BoxDecoration(color: Colors.blueGrey),
               child: Text(
-                'Men\u00fc',
+                'Menü',
                 style: TextStyle(fontSize: 24, color: Colors.white),
               ),
             ),
