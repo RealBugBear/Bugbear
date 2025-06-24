@@ -188,7 +188,16 @@ class QuestionnaireState extends ChangeNotifier {
     BuildContext? context,
   }) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
-    if (uid == null) return;
+    if (uid == null) {
+      if (context != null && context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Bitte anmelden, um das Profil zu speichern.'),
+          ),
+        );
+      }
+      return;
+    }
 
     try {
       final service = ProfileService();
