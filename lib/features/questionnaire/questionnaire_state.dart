@@ -5,6 +5,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:hive/hive.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:bugbear_app/features/profile/models/reflex_profile.dart';
 import 'package:bugbear_app/features/profile/services/profile_service.dart';
 
@@ -237,14 +238,37 @@ class QuestionnaireState extends ChangeNotifier {
       }
       await _box.clear();
       resetState();
+    } on FirebaseException catch (e, st) {
+      debugPrint(
+        'Firebase error saving questionnaire result: ${e.code} - ${e.message}',
+      );
+      debugPrintStack(stackTrace: st);
+      if (context != null && context.mounted) {
+        var message = _isGerman
+            ? 'Fehler beim Speichern. Bitte erneut versuchen.'
+            : 'Error saving. Please try again.';
+        if (e.code == 'permission-denied') {
+          message = _isGerman
+              ? 'Zugriff verweigert. Bitte anmelden.'
+              : 'Permission denied. Please sign in.';
+        } else if (e.code == 'unavailable' || e.code == 'network-error') {
+          message = _isGerman
+              ? 'Netzwerkfehler. Bitte Verbindung prüfen.'
+              : 'Network error. Please check your connection.';
+        }
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
+      }
     } catch (e, st) {
       debugPrint('Error saving questionnaire result: $e');
       debugPrintStack(stackTrace: st);
       if (context != null && context.mounted) {
+        final message = _isGerman
+            ? 'Fehler beim Speichern. Bitte erneut versuchen.'
+            : 'Error saving. Please try again.';
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Fehler beim Speichern. Bitte erneut versuchen.'),
-          ),
+          SnackBar(content: Text(message)),
         );
       }
     }
