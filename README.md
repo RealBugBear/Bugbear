@@ -14,3 +14,12 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+## Firestore Rules
+
+Security rules for Cloud Firestore are stored in `firestore.rules`. After making changes, deploy them with other Firebase configuration using:
+
+```bash
+firebase deploy
+```
+
