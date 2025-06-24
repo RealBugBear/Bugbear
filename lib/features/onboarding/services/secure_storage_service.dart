@@ -25,15 +25,29 @@ class SecureStorageService {
     await _storage.delete(key: _keyLoggedIn);
   }
 
-  /// Returns the persisted Hive encryption key or generates a new one.
-  Future<List<int>> getEncryptionKey() async {
+  /// Persists the given Hive encryption key.
+  Future<void> writeEncryptionKey(List<int> key) async {
+    await _storage.write(
+      key: _keyEncryption,
+      value: base64UrlEncode(key),
+    );
+  }
+
+  /// Reads the stored Hive encryption key if available.
+  Future<List<int>?> readEncryptionKey() async {
     final stored = await _storage.read(key: _keyEncryption);
-    if (stored != null) {
-      return base64Url.decode(stored);
-    }
+    return stored != null ? base64Url.decode(stored) : null;
+  }
+
+  /// Returns the persisted Hive encryption key or generates a new one if absent.
+  /// The key is kept in [FlutterSecureStorage] so it can be reused on subsequent
+  /// launches of the app.
+  Future<List<int>> getEncryptionKey() async {
+    final existing = await readEncryptionKey();
+    if (existing != null) return existing;
 
     final key = Hive.generateSecureKey();
-    await _storage.write(key: _keyEncryption, value: base64UrlEncode(key));
+    await writeEncryptionKey(key);
     return key;
   }
 }
