@@ -41,47 +41,47 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyA7S3zedj6miyantm-ZjHQpvcHPgUJSyew',
-    appId: '1:729792119936:web:25c804d2c97c4964935265',
-    messagingSenderId: '729792119936',
-    projectId: 'bugbear-9d720',
-    authDomain: 'bugbear-9d720.firebaseapp.com',
-    storageBucket: 'bugbear-9d720.appspot.com',
+    apiKey: String.fromEnvironment('FIREBASE_WEB_API_KEY'),
+    appId: String.fromEnvironment('FIREBASE_WEB_APP_ID'),
+    messagingSenderId: String.fromEnvironment('FIREBASE_WEB_MESSAGING_SENDER_ID'),
+    projectId: String.fromEnvironment('FIREBASE_PROJECT_ID'),
+    authDomain: String.fromEnvironment('FIREBASE_WEB_AUTH_DOMAIN'),
+    storageBucket: String.fromEnvironment('FIREBASE_WEB_STORAGE_BUCKET'),
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAkoYYb1bH949evjRb940gr_OUH7LFnns0',
-    appId: '1:729792119936:android:4a0693745974f2e0935265',
-    messagingSenderId: '729792119936',
-    projectId: 'bugbear-9d720',
-    storageBucket: 'bugbear-9d720.appspot.com',
+    apiKey: String.fromEnvironment('FIREBASE_ANDROID_API_KEY'),
+    appId: String.fromEnvironment('FIREBASE_ANDROID_APP_ID'),
+    messagingSenderId: String.fromEnvironment('FIREBASE_ANDROID_MESSAGING_SENDER_ID'),
+    projectId: String.fromEnvironment('FIREBASE_PROJECT_ID'),
+    storageBucket: String.fromEnvironment('FIREBASE_ANDROID_STORAGE_BUCKET'),
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAak0nzgDj_ejIu3oc-SHA1Vlrsyg9g74A',
-    appId: '1:729792119936:ios:9d68ed97aed03948935265',
-    messagingSenderId: '729792119936',
-    projectId: 'bugbear-9d720',
-    storageBucket: 'bugbear-9d720.appspot.com',
-    iosBundleId: 'com.example.bugbearApp',
+    apiKey: String.fromEnvironment('FIREBASE_IOS_API_KEY'),
+    appId: String.fromEnvironment('FIREBASE_IOS_APP_ID'),
+    messagingSenderId: String.fromEnvironment('FIREBASE_IOS_MESSAGING_SENDER_ID'),
+    projectId: String.fromEnvironment('FIREBASE_PROJECT_ID'),
+    storageBucket: String.fromEnvironment('FIREBASE_IOS_STORAGE_BUCKET'),
+    iosBundleId: String.fromEnvironment('FIREBASE_IOS_BUNDLE_ID'),
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAak0nzgDj_ejIu3oc-SHA1Vlrsyg9g74A',
-    appId: '1:729792119936:ios:9d68ed97aed03948935265',
-    messagingSenderId: '729792119936',
-    projectId: 'bugbear-9d720',
-    storageBucket: 'bugbear-9d720.appspot.com',
-    iosBundleId: 'com.example.bugbearApp',
+    apiKey: String.fromEnvironment('FIREBASE_MACOS_API_KEY'),
+    appId: String.fromEnvironment('FIREBASE_MACOS_APP_ID'),
+    messagingSenderId: String.fromEnvironment('FIREBASE_MACOS_MESSAGING_SENDER_ID'),
+    projectId: String.fromEnvironment('FIREBASE_PROJECT_ID'),
+    storageBucket: String.fromEnvironment('FIREBASE_MACOS_STORAGE_BUCKET'),
+    iosBundleId: String.fromEnvironment('FIREBASE_MACOS_BUNDLE_ID'),
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyA7S3zedj6miyantm-ZjHQpvcHPgUJSyew',
-    appId: '1:729792119936:web:e90a8cd4d391b79d935265',
-    messagingSenderId: '729792119936',
-    projectId: 'bugbear-9d720',
-    authDomain: 'bugbear-9d720.firebaseapp.com',
-    storageBucket: 'bugbear-9d720.appspot.com',
+    apiKey: String.fromEnvironment('FIREBASE_WINDOWS_API_KEY'),
+    appId: String.fromEnvironment('FIREBASE_WINDOWS_APP_ID'),
+    messagingSenderId: String.fromEnvironment('FIREBASE_WINDOWS_MESSAGING_SENDER_ID'),
+    projectId: String.fromEnvironment('FIREBASE_PROJECT_ID'),
+    authDomain: String.fromEnvironment('FIREBASE_WINDOWS_AUTH_DOMAIN'),
+    storageBucket: String.fromEnvironment('FIREBASE_WINDOWS_STORAGE_BUCKET'),
   );
 
 }

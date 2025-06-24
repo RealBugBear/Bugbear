@@ -46,6 +46,18 @@ following restrictions:
    `https://bugbear-9d720.web.app`, `https://bugbear-9d720.firebaseapp.com` and
    any local development hosts (for example `http://localhost:5000`).
 
-After creating restricted keys, replace the values in
-`lib/firebase_options.dart` with the new keys.
+After creating restricted keys, provide them as compile‑time environment
+variables when building the app. The values are read using `String.fromEnvironment`
+and are **not** stored in source control. Example:
+
+```bash
+flutter run \
+  --dart-define=FIREBASE_PROJECT_ID=bugbear-9d720 \
+  --dart-define=FIREBASE_ANDROID_API_KEY=<android-key> \
+  --dart-define=FIREBASE_ANDROID_APP_ID=<android-app-id> \
+  --dart-define=FIREBASE_WEB_API_KEY=<web-key>
+```
+
+These variables can also be configured in your CI environment with the same
+names when running `flutter build`.
 
