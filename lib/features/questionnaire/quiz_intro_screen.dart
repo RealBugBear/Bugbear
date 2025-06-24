@@ -11,6 +11,24 @@ class QuizIntroScreen extends StatelessWidget {
 
   Future<void> _startQuiz(BuildContext context) async {
     final box = Hive.box('questionnaire_progress');
+    final state = context.read<QuestionnaireState>();
+
+    // Ensure questions are loaded to determine their count
+    if (!state.isInitialized) {
+      await state.init();
+    }
+    if (!context.mounted) return;
+
+    final storedIndex = box.get('index', defaultValue: 0) as int;
+    final questionCount = state.questions.length;
+
+    if (storedIndex >= questionCount && questionCount > 0) {
+      await box.clear();
+      if (context.mounted) {
+        state.resetState();
+      }
+    }
+
     bool continueQuiz = true;
     if (box.isNotEmpty) {
       final result = await showDialog<bool>(
