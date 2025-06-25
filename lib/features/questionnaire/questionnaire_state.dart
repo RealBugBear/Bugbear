@@ -7,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:bugbear_app/features/profile/models/reflex_profile.dart';
 import 'package:bugbear_app/features/profile/services/profile_service.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
+import 'dart:developer' as developer;
 
 /// Einzelne Frage des Fragebogens.
 class Question {
@@ -238,10 +240,17 @@ class QuestionnaireState extends ChangeNotifier {
       await _box.clear();
       resetState();
     } on FirebaseException catch (e, st) {
-      debugPrint(
-        'Firebase error saving questionnaire result: ${e.code} - ${e.message}',
-      );
-      debugPrintStack(stackTrace: st);
+      if (kDebugMode) {
+        debugPrint(
+          'Firebase error saving questionnaire result: ${e.code} - ${e.message}',
+        );
+        debugPrintStack(stackTrace: st);
+      } else {
+        developer.log(
+          'Firebase error saving questionnaire result: ${e.code}',
+          name: 'questionnaire_state',
+        );
+      }
       if (context != null && context.mounted) {
         var message = _isGerman
             ? 'Fehler beim Speichern. Bitte erneut versuchen.'
@@ -260,8 +269,13 @@ class QuestionnaireState extends ChangeNotifier {
         );
       }
     } catch (e, st) {
-      debugPrint('Error saving questionnaire result: $e');
-      debugPrintStack(stackTrace: st);
+      if (kDebugMode) {
+        debugPrint('Error saving questionnaire result: $e');
+        debugPrintStack(stackTrace: st);
+      } else {
+        developer.log('Error saving questionnaire result',
+            name: 'questionnaire_state');
+      }
       if (context != null && context.mounted) {
         final message = _isGerman
             ? 'Fehler beim Speichern. Bitte erneut versuchen.'
