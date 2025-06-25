@@ -58,8 +58,32 @@ flutter run \
   --dart-define=FIREBASE_PROJECT_ID=bugbear-9d720 \
   --dart-define=FIREBASE_ANDROID_API_KEY=<android-key> \
   --dart-define=FIREBASE_ANDROID_APP_ID=<android-app-id> \
-  --dart-define=FIREBASE_WEB_API_KEY=<web-key>
+  --dart-define=FIREBASE_ANDROID_MESSAGING_SENDER_ID=<android-messaging-id> \
+  --dart-define=FIREBASE_ANDROID_STORAGE_BUCKET=<android-bucket> \
+  --dart-define=FIREBASE_IOS_API_KEY=<ios-key> \
+  --dart-define=FIREBASE_IOS_APP_ID=<ios-app-id> \
+  --dart-define=FIREBASE_IOS_BUNDLE_ID=<ios-bundle-id> \
+  --dart-define=FIREBASE_IOS_MESSAGING_SENDER_ID=<ios-messaging-id> \
+  --dart-define=FIREBASE_IOS_STORAGE_BUCKET=<ios-bucket> \
+  --dart-define=FIREBASE_MACOS_API_KEY=<macos-key> \
+  --dart-define=FIREBASE_MACOS_APP_ID=<macos-app-id> \
+  --dart-define=FIREBASE_MACOS_BUNDLE_ID=<macos-bundle-id> \
+  --dart-define=FIREBASE_MACOS_MESSAGING_SENDER_ID=<macos-messaging-id> \
+  --dart-define=FIREBASE_MACOS_STORAGE_BUCKET=<macos-bucket> \
+  --dart-define=FIREBASE_WEB_API_KEY=<web-key> \
+  --dart-define=FIREBASE_WEB_APP_ID=<web-app-id> \
+  --dart-define=FIREBASE_WEB_AUTH_DOMAIN=<web-auth-domain> \
+  --dart-define=FIREBASE_WEB_MESSAGING_SENDER_ID=<web-messaging-id> \
+  --dart-define=FIREBASE_WEB_STORAGE_BUCKET=<web-bucket> \
+  --dart-define=FIREBASE_WINDOWS_API_KEY=<windows-key> \
+  --dart-define=FIREBASE_WINDOWS_APP_ID=<windows-app-id> \
+  --dart-define=FIREBASE_WINDOWS_AUTH_DOMAIN=<windows-auth-domain> \
+  --dart-define=FIREBASE_WINDOWS_MESSAGING_SENDER_ID=<windows-messaging-id> \
+  --dart-define=FIREBASE_WINDOWS_STORAGE_BUCKET=<windows-bucket>
 ```
+
+Missing values for any of these variables cause `Firebase.initializeApp` to fail
+during startup.
 
 These variables can also be configured in your CI environment with the same
 names when running `flutter build`.
