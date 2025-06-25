@@ -46,7 +46,7 @@ Future<void> main() async {
     debugPrintStack(stackTrace: st);
     runApp(
       const MaterialApp(
-        home: const ErrorScreen(
+        home: ErrorScreen(
           message:
               'Firebase konnte nicht initialisiert werden. Bitte Einstellungen pr\xC3\xBCfen.',
         ),
