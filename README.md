@@ -1,6 +1,6 @@
-# bugbear_recovery
+# bugbear_app
 
-A new Flutter project.
+A cross-platform Flutter application for logging bug reports and managing recovery tasks.
 
 ## Getting Started
 
@@ -42,7 +42,7 @@ console to prevent unauthorized use. When generating new keys, apply the
 following restrictions:
 
 1. **Android** – Restrict to the Android package name
-   `com.example.bugbear_recovery` and add the appropriate SHA-1/SHA-256 signing
+   `com.example.bugbear_app` and add the appropriate SHA-1/SHA-256 signing
    certificate fingerprints.
 2. **iOS** – Restrict to the bundle ID `com.example.bugbearRecovery`.
 3. **Web** – Authorize the domains used by the web app such as
