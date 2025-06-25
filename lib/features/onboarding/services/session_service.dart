@@ -7,7 +7,11 @@ class SessionService {
   final FirebaseAuth      _auth = FirebaseAuth.instance;
 
   Future<void> createSession(DateTime date) async {
-    final uid = _auth.currentUser!.uid;
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw StateError('Cannot create session when no user is signed in');
+    }
+    final uid = user.uid;
     await _db
         .collection('users')
         .doc(uid)
@@ -19,7 +23,11 @@ class SessionService {
   }
 
   Future<List<Map<String, dynamic>>> fetchUserSessions() async {
-    final uid = _auth.currentUser!.uid;
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw StateError('Cannot fetch sessions when no user is signed in');
+    }
+    final uid = user.uid;
     final snapshot = await _db
         .collection('users')
         .doc(uid)
