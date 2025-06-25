@@ -45,8 +45,8 @@ Future<void> main() async {
     debugPrint('Error initializing Firebase: $e');
     debugPrintStack(stackTrace: st);
     runApp(
-      MaterialApp(
-        home: ErrorScreen(
+      const MaterialApp(
+        home: const ErrorScreen(
           message:
               'Firebase konnte nicht initialisiert werden. Bitte Einstellungen pr\xC3\xBCfen.',
         ),
