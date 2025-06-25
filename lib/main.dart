@@ -17,6 +17,7 @@ import 'package:bugbear_app/features/common/dashboard_screen.dart';
 import 'package:bugbear_app/features/onboarding/profile/settings_screen.dart';
 import 'package:bugbear_app/features/training/training_screen.dart';
 import 'package:bugbear_app/features/calendar/screens/calendar_screen.dart';
+import 'package:bugbear_app/features/common/error_screen.dart';
 
 import 'package:bugbear_app/features/training/models/session_state.dart';
 import 'package:bugbear_app/features/training/models/session_state_adapter.dart';
@@ -36,9 +37,23 @@ import 'package:bugbear_app/features/profile/models/reflex_profile.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e, st) {
+    debugPrint('Error initializing Firebase: $e');
+    debugPrintStack(stackTrace: st);
+    runApp(
+      MaterialApp(
+        home: ErrorScreen(
+          message:
+              'Firebase konnte nicht initialisiert werden. Bitte Einstellungen pr\xC3\xBCfen.',
+        ),
+      ),
+    );
+    return;
+  }
 
   await Hive.initFlutter();
   final storage = SecureStorageService();
