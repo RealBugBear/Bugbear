@@ -13,6 +13,7 @@ class QuestionnaireResultScreen extends StatefulWidget {
 }
 
 class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
+  bool _isSaving = false;
 
   Color _colorForPercent(double p) {
     if (p >= 0.75) return Colors.green;
@@ -48,16 +49,29 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
   }
 
   Future<void> _save(BuildContext context, String name) async {
+    setState(() => _isSaving = true);
     final trimmed = name.trim().isEmpty ? 'Reflexprofil' : name.trim();
-    await context
-        .read<QuestionnaireState>()
-        .saveResult(name: trimmed, context: context);
-    if (!context.mounted) return;
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      '/reflexe-profil',
-      ModalRoute.withName('/'),
-    );
+    try {
+      await context
+          .read<QuestionnaireState>()
+          .saveResult(name: trimmed, context: context);
+      if (!context.mounted) return;
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        '/reflexe-profil',
+        ModalRoute.withName('/'),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Fehler beim Speichern des Profils: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
   }
 
   @override
@@ -66,7 +80,6 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Ergebnis')),
-
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -98,22 +111,21 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
           ],
         ),
       ),
-
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: ElevatedButton(
-            onPressed: () async {
-              final name = await _promptProfileName();
-
-              if (!context.mounted || name == null) return;
-              await _save(context, name);
-            },
-            child: const Text('Speichern'),
-          ),
+          child: _isSaving
+              ? const Center(child: CircularProgressIndicator())
+              : ElevatedButton(
+                  onPressed: () async {
+                    final name = await _promptProfileName();
+                    if (!context.mounted || name == null) return;
+                    await _save(context, name);
+                  },
+                  child: const Text('Speichern'),
+                ),
         ),
       ),
-
     );
   }
 }
