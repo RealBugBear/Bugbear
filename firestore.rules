@@ -1,31 +1,26 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    // Funktion: nur angemeldete Nutzer
     function isSignedIn() {
       return request.auth != null;
     }
+
+    // Funktion: Nutzer darf nur seine eigenen Daten benutzen
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    match /users/{userId} {
+    // Zugriff auf alle Dokumente & Unterordner unter /users/{userId}/...
+    match /users/{userId}/{path=**}/{docId} {
       allow read, write: if isOwner(userId);
-
-      match /profiles/{profileId} {
-        allow read, write: if isOwner(userId);
-      }
-
-      match /sessions/{sessionId} {
-        allow read, write: if isOwner(userId);
-      }
-
-      match /{document=**} {
-        allow read, write: if false;
-      }
     }
 
+    // Alles andere ist komplett gesperrt
     match /{document=**} {
       allow read, write: if false;
     }
+
   }
 }

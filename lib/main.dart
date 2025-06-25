@@ -37,6 +37,11 @@ import 'package:bugbear_app/features/profile/models/reflex_profile.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // **DEBUG PRINT** zu Beginn – überprüfe, ob Key gesetzt ist:
+  const androidApiKey = String.fromEnvironment('FIREBASE_ANDROID_API_KEY');
+  debugPrint('DEBUG: FIREBASE_ANDROID_API_KEY="$androidApiKey"');
+
   try {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -48,7 +53,7 @@ Future<void> main() async {
       const MaterialApp(
         home: ErrorScreen(
           message:
-              'Firebase konnte nicht initialisiert werden. Bitte Einstellungen pr\xC3\xBCfen.',
+              'Firebase konnte nicht initialisiert werden. Bitte Einstellungen prüfen.',
         ),
       ),
     );
@@ -58,17 +63,15 @@ Future<void> main() async {
   await Hive.initFlutter();
   final storage = SecureStorageService();
   final encryptionKey = await storage.getEncryptionKey();
-  // SessionState persistence
+
   Hive.registerAdapter(SessionStatusAdapter());
   Hive.registerAdapter(SessionStateAdapter());
   await Hive.openBox<SessionState>('session_state',
       encryptionCipher: HiveAesCipher(encryptionKey));
 
-  // Fragebogen-Fortschritt
   await Hive.openBox('questionnaire_progress',
       encryptionCipher: HiveAesCipher(encryptionKey));
 
-  // CalendarEvent persistence
   Hive.registerAdapter(CalendarEventAdapter());
   await Hive.openBox<CalendarEvent>('calendar_events',
       encryptionCipher: HiveAesCipher(encryptionKey));
