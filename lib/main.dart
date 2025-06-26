@@ -38,11 +38,8 @@ import 'package:bugbear_app/features/profile/models/reflex_profile.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // **DEBUG PRINT** zu Beginn – überprüfe, ob Key gesetzt ist:
-  const androidApiKey = String.fromEnvironment('FIREBASE_ANDROID_API_KEY');
-  debugPrint('DEBUG: FIREBASE_ANDROID_API_KEY="$androidApiKey"');
-
   try {
+    // Firebase initialisieren (nur EINMAL!)
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -60,6 +57,7 @@ Future<void> main() async {
     return;
   }
 
+  // Hive-Init und lokale Datenbank
   await Hive.initFlutter();
   final storage = SecureStorageService();
   final encryptionKey = await storage.getEncryptionKey();
@@ -167,7 +165,8 @@ class MyApp extends StatelessWidget {
           '/questionnaire/questions': (c) => const QuestionnaireScreen(),
           '/reflexe-profil': (c) => const ProfileOverviewScreen(),
           '/reflexe-profil/detail': (c) {
-            final profile = ModalRoute.of(c)!.settings.arguments as ReflexProfile;
+            final profile =
+                ModalRoute.of(c)!.settings.arguments as ReflexProfile;
             return ReflexProfileDetailScreen(profile: profile);
           },
         },

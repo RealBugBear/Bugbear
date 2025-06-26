@@ -1,3 +1,17 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Firebase Google Services Plugin (aktuellste stabile Version)
+        classpath("com.google.gms:google-services:4.3.15")
+        // Andere Plugins können hier stehen (z.B. Gradle, Crashlytics etc.)
+    }
+}
+
 allprojects {
     repositories {
         google()
@@ -5,14 +19,13 @@ allprojects {
     }
 }
 
-val newBuildDir: Directory = rootProject.layout.buildDirectory.dir("../../build").get()
+// Optional: Custom Build-Verzeichnisse für Monorepos o.Ä.
+val newBuildDir = rootProject.layout.buildDirectory.dir("../../build").get()
 rootProject.layout.buildDirectory.value(newBuildDir)
 
 subprojects {
-    val newSubprojectBuildDir: Directory = newBuildDir.dir(project.name)
+    val newSubprojectBuildDir = newBuildDir.dir(project.name)
     project.layout.buildDirectory.value(newSubprojectBuildDir)
-}
-subprojects {
     project.evaluationDependsOn(":app")
 }
 
