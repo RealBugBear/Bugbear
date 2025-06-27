@@ -175,5 +175,6 @@ class LevelMapCalendar extends StatelessWidget {
         );
       },
     );
+    );
   }
 }
