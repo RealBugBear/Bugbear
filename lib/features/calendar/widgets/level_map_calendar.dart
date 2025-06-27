@@ -79,8 +79,12 @@ class LevelMapCalendar extends StatelessWidget {
                           margin: const EdgeInsets.symmetric(horizontal: 4),
                           decoration: BoxDecoration(
                             color: isSelected
+
                                 ? scheduledColor
                                     .withAlpha((0.2 * 255).round())
+
+                                ? scheduledColor.withOpacity(0.2)
+
                                 : null,
                             borderRadius: BorderRadius.circular(8),
                           ),
