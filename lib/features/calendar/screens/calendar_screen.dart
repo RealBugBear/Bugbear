@@ -15,7 +15,7 @@ import 'package:bugbear_app/widgets/app_drawer.dart';
 /// Zeigt einen Monatskalender mit:
 /// - pulsierendem Rahmen am heutigen Tag
 /// - farbcodierten Markern
-/// - ListView der Events am ausgewählten Tag
+/// - Einträgen über BottomSheet
 /// - Edit-Dialog beim Tap auf einen Event
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({Key? key}) : super(key: key);
@@ -47,6 +47,32 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
   static const scheduledColor = Color(0xFF0055FF);
   static const completedColor = Color(0xFF00CC66);
 
+  static const _initialPage = 1000;
+  late final PageController _pageController;
+  late final DateTime _baseMonth;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _initialPage);
+    _baseMonth = DateTime(DateTime.now().year, DateTime.now().month);
+  }
+
+  int _monthDiff(DateTime a, DateTime b) =>
+      (a.year - b.year) * 12 + a.month - b.month;
+
+  int _indexForMonth(DateTime month) =>
+      _initialPage + _monthDiff(month, _baseMonth);
+
+  DateTime _monthForIndex(int index) {
+    final diff = index - _initialPage;
+    return DateTime(_baseMonth.year, _baseMonth.month + diff, 1);
+  }
+
+  void _onPageChanged(int page) {
+    context.read<CalendarNotifier>().loadMonth(_monthForIndex(page));
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -54,18 +80,37 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
     final focusedDay = notifier.focusedDay;
     final selectedDay = notifier.selectedDay;
 
+    final targetPage = _indexForMonth(focusedDay);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_pageController.hasClients &&
+          _pageController.page?.round() != targetPage) {
+        _pageController.jumpToPage(targetPage);
+      }
+    });
+
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Dein Trainingskalender')),
       body: Column(
         children: [
-          LevelMapCalendar(
-            month: focusedDay,
-            selectedDay: selectedDay,
-            eventLoader: notifier.eventsForDay,
-
-            onDaySelected: _onDaySelected,
-
+          Expanded(
+            child: PageView.builder(
+              controller: _pageController,
+              onPageChanged: _onPageChanged,
+              itemBuilder: (context, index) {
+                final month = _monthForIndex(index);
+                final day =
+                    month.year == selectedDay.year && month.month == selectedDay.month
+                        ? selectedDay
+                        : DateTime(month.year, month.month, 1);
+                return LevelMapCalendar(
+                  month: month,
+                  selectedDay: day,
+                  eventLoader: notifier.eventsForDay,
+                  onDaySelected: _onDaySelected,
+                );
+              },
+            ),
           ),
           const Divider(),
         ],
