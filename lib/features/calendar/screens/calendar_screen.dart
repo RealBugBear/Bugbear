@@ -53,7 +53,6 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
     final notifier = context.watch<CalendarNotifier>();
     final focusedDay = notifier.focusedDay;
     final selectedDay = notifier.selectedDay;
-    final dayEvents = notifier.eventsForSelectedDay;
 
     return Scaffold(
       drawer: const AppDrawer(),
@@ -64,44 +63,59 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
             month: focusedDay,
             selectedDay: selectedDay,
             eventLoader: notifier.eventsForDay,
+
+            onDaySelected: _onDaySelected,
             onDaySelected: notifier.selectDay,
+
           ),
           const Divider(),
-          Expanded(
-            child: dayEvents.isEmpty
-                ? const Center(child: Text('Keine Einträge an diesem Tag'))
-                : ListView.builder(
-                    itemCount: dayEvents.length,
-                    itemBuilder: (ctx, i) {
-                      final ev = dayEvents[i];
-                      return ListTile(
-                        title: Text(ev.title),
-                        leading: Icon(
-                          ev.isCompleted
-                              ? Icons.check_circle
-                              : Icons.radio_button_unchecked,
-                          color:
-                              ev.isCompleted ? completedColor : scheduledColor,
-                        ),
-                        onTap: () async {
-                          final updated = await showDialog<CalendarEvent>(
-                            context: context,
-                            builder: (_) =>
-                                EditTrainingDayDialog(event: ev),
-                          );
-                          if (updated != null) {
-                            await notifier
-                                .loadMonth(notifier.focusedDay);
-                          }
-                        },
-                      );
-                    },
-                  ),
-          ),
         ],
       ),
     );
   }
+
+
+  Future<void> _onDaySelected(DateTime day) async {
+    final notifier = context.read<CalendarNotifier>();
+    notifier.selectDay(day);
+    await showModalBottomSheet(
+      context: context,
+      builder: (sheetCtx) {
+        final events = notifier.eventsForDay(day);
+        if (events.isEmpty) {
+          return const SizedBox(
+            height: 100,
+            child: Center(child: Text('Keine Eintr\u00E4ge an diesem Tag')),
+          );
+        }
+        return ListView.builder(
+          itemCount: events.length,
+          itemBuilder: (ctx, i) {
+            final ev = events[i];
+            return ListTile(
+              title: Text(ev.title),
+              leading: Icon(
+                ev.isCompleted
+                    ? Icons.check_circle
+                    : Icons.radio_button_unchecked,
+                color: ev.isCompleted ? completedColor : scheduledColor,
+              ),
+              onTap: () async {
+                final updated = await showDialog<CalendarEvent>(
+                  context: context,
+                  builder: (_) => EditTrainingDayDialog(event: ev),
+                );
+                if (updated != null) {
+                  await notifier.loadMonth(notifier.focusedDay);
+                }
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+
 
   // no custom day cell needed with LevelMapCalendar
 }
