@@ -56,7 +56,7 @@ class LevelMapCalendar extends StatelessWidget {
                   height: 6 * cellSize,
                   child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 7,
                       childAspectRatio: 1,
                     ),
