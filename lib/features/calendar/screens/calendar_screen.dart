@@ -51,7 +51,6 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
   @override
   Widget build(BuildContext context) {
     final notifier = context.watch<CalendarNotifier>();
-    final today = DateTime.now();
     final focusedDay = notifier.focusedDay;
     final selectedDay = notifier.selectedDay;
     final dayEvents = notifier.eventsForSelectedDay;
