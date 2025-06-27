@@ -152,7 +152,8 @@ class LevelMapCalendar extends StatelessWidget {
                                   Icon(icon, size: cellSize / 3, color: iconColor),
                                 ],
                               ),
-                        ),
+                              ],
+                          ),
                       );
                     },
                   ),
