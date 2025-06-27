@@ -88,3 +88,15 @@ during startup.
 These variables can also be configured in your CI environment with the same
 names when running `flutter build`.
 
+
+### Using a key file for local development
+Instead of supplying dozens of `--dart-define` options every time, the values can
+be stored in a JSON file. Create `key_values.json` with all the required keys and
+run:
+
+```bash
+flutter run --dart-define-from-file=key_values.json
+```
+
+This loads each environment variable from the JSON file so Firebase initializes
+successfully.
