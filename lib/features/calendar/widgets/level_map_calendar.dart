@@ -38,6 +38,7 @@ class LevelMapCalendar extends StatelessWidget {
       builder: (context, constraints) {
         final cellSize = constraints.maxWidth > 600 ? 60.0 : 40.0;
         final bugSize = cellSize * 0.7;
+
         final selectedIndex = selectedDay.difference(startDate).inDays;
         final bugRow = selectedIndex ~/ 7;
         final bugCol = selectedIndex % 7;
@@ -64,11 +65,28 @@ class LevelMapCalendar extends StatelessWidget {
                     itemBuilder: (ctx, i) {
                       final date = startDate.add(Duration(days: i));
                       final inMonth = date.month == month.month;
+
+
+                      final events = eventLoader(date);
+                      final isSelected = _isSameDay(date, selectedDay);
+
+                      final hasGolden = events.any((e) => e.isGoldenDay);
+                      final hasCompleted = events.any((e) => e.isCompleted);
+                      final completedCount =
+                          events.where((e) => e.isCompleted).length;
+                      final progress = events.isEmpty
+                          ? 0.0
+                          : hasGolden
+                              ? 1.0
+                              : completedCount / events.length;
+
+
                       final events = eventLoader(date);
                       final isSelected = _isSameDay(date, selectedDay);
 
                       bool hasGolden = events.any((e) => e.isGoldenDay);
                       bool hasCompleted = events.any((e) => e.isCompleted);
+
                       final icon = hasGolden
                           ? Icons.star
                           : hasCompleted
@@ -92,6 +110,55 @@ class LevelMapCalendar extends StatelessWidget {
                                 : null,
                             borderRadius: BorderRadius.circular(4),
                           ),
+
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Positioned(
+                                right: 4,
+                                top: 4,
+                                bottom: 4,
+                                child: Container(
+                                  width: 4,
+                                  decoration: BoxDecoration(
+                                    color: scheduledColor.withAlpha(50),
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: FractionallySizedBox(
+                                      heightFactor: progress,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: progress == 1.0
+                                              ? completedColor
+                                              : scheduledColor,
+                                          borderRadius: const BorderRadius.vertical(
+                                            bottom: Radius.circular(2),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '${date.day}',
+                                    style: TextStyle(
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: inMonth ? null : Colors.grey,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Icon(icon, size: cellSize / 3, color: iconColor),
+                                ],
+                              ),
+
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -105,11 +172,12 @@ class LevelMapCalendar extends StatelessWidget {
                               ),
                               const SizedBox(height: 2),
                               Icon(icon, size: cellSize / 3, color: iconColor),
+
                             ],
                           ),
                         ),
                       );
-                    }),
+                    },
                   ),
                 ),
               ),
