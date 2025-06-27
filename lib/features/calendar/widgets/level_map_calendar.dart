@@ -1,6 +1,7 @@
 // lib/features/calendar/widgets/level_map_calendar.dart
 
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 
 import '../models/calendar_event.dart';
 
@@ -36,7 +37,9 @@ class LevelMapCalendar extends StatelessWidget {
     final startDate = firstOfMonth.subtract(Duration(days: startOffset));
     return LayoutBuilder(
       builder: (context, constraints) {
-        final cellSize = constraints.maxWidth > 600 ? 60.0 : 40.0;
+        final widthBased = constraints.maxWidth / 7;
+        final heightBased = (constraints.maxHeight - 16) / 6.7;
+        final cellSize = math.min(widthBased, heightBased);
         final bugSize = cellSize * 0.7;
 
         final selectedIndex = selectedDay.difference(startDate).inDays;
@@ -45,8 +48,7 @@ class LevelMapCalendar extends StatelessWidget {
         final bugLeft = bugCol * cellSize + (cellSize - bugSize) / 2;
         final bugTop = bugRow * cellSize + (cellSize - bugSize) / 2;
 
-        return SizedBox(
-          height: 6 * cellSize + bugSize + 16,
+        return SizedBox.expand(
           child: Stack(
             children: [
               Positioned(

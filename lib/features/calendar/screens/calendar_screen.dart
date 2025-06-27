@@ -15,6 +15,9 @@ import 'package:bugbear_app/widgets/app_drawer.dart';
 /// Zeigt einen Monatskalender mit:
 /// - pulsierendem Rahmen am heutigen Tag
 /// - farbcodierten Markern
+
+/// - Einträgen über Popup-Dialog
+
 /// - Einträgen über BottomSheet
 /// - Edit-Dialog beim Tap auf einen Event
 class CalendarScreen extends StatelessWidget {
@@ -91,6 +94,26 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Dein Trainingskalender')),
+
+      body: PageView.builder(
+        scrollDirection: Axis.vertical,
+        pageSnapping: false,
+        controller: _pageController,
+        onPageChanged: _onPageChanged,
+        itemBuilder: (context, index) {
+          final month = _monthForIndex(index);
+          final day =
+              month.year == selectedDay.year && month.month == selectedDay.month
+                  ? selectedDay
+                  : DateTime(month.year, month.month, 1);
+          return LevelMapCalendar(
+            month: month,
+            selectedDay: day,
+            eventLoader: notifier.eventsForDay,
+            onDaySelected: _onDaySelected,
+          );
+        },
+
       body: Column(
         children: [
           Expanded(
@@ -114,6 +137,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
           ),
           const Divider(),
         ],
+
       ),
     );
   }
@@ -122,39 +146,47 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
   Future<void> _onDaySelected(DateTime day) async {
     final notifier = context.read<CalendarNotifier>();
     notifier.selectDay(day);
-    await showModalBottomSheet(
+    await showDialog(
       context: context,
       builder: (sheetCtx) {
         final events = notifier.eventsForDay(day);
         if (events.isEmpty) {
-          return const SizedBox(
-            height: 100,
-            child: Center(child: Text('Keine Eintr\u00E4ge an diesem Tag')),
+          return Dialog(
+            child: SizedBox(
+              height: MediaQuery.of(sheetCtx).size.height * 0.6,
+              child: const Center(child: Text('Keine Eintr\u00E4ge an diesem Tag')),
+            ),
           );
         }
-        return ListView.builder(
-          itemCount: events.length,
-          itemBuilder: (ctx, i) {
-            final ev = events[i];
-            return ListTile(
-              title: Text(ev.title),
-              leading: Icon(
-                ev.isCompleted
-                    ? Icons.check_circle
-                    : Icons.radio_button_unchecked,
-                color: ev.isCompleted ? completedColor : scheduledColor,
-              ),
-              onTap: () async {
-                final updated = await showDialog<CalendarEvent>(
-                  context: context,
-                  builder: (_) => EditTrainingDayDialog(event: ev),
-                );
-                if (updated != null) {
-                  await notifier.loadMonth(notifier.focusedDay);
-                }
-              },
-            );
-          },
+        return Dialog(
+          insetPadding: EdgeInsets.symmetric(
+            vertical: MediaQuery.of(sheetCtx).size.height * 0.2,
+            horizontal: 24,
+          ),
+          child: ListView.builder(
+            itemCount: events.length,
+            itemBuilder: (ctx, i) {
+              final ev = events[i];
+              return ListTile(
+                title: Text(ev.title),
+                leading: Icon(
+                  ev.isCompleted
+                      ? Icons.check_circle
+                      : Icons.radio_button_unchecked,
+                  color: ev.isCompleted ? completedColor : scheduledColor,
+                ),
+                onTap: () async {
+                  final updated = await showDialog<CalendarEvent>(
+                    context: context,
+                    builder: (_) => EditTrainingDayDialog(event: ev),
+                  );
+                  if (updated != null) {
+                    await notifier.loadMonth(notifier.focusedDay);
+                  }
+                },
+              );
+            },
+          ),
         );
       },
     );
