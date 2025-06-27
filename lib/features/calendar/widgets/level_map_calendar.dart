@@ -56,7 +56,8 @@ class LevelMapCalendar extends StatelessWidget {
                   height: 6 * cellSize,
                   child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 7,
                       childAspectRatio: 1,
                     ),
@@ -88,7 +89,9 @@ class LevelMapCalendar extends StatelessWidget {
                           margin: const EdgeInsets.all(2),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? scheduledColor.withAlpha((0.2 * 255).round())
+                                ? scheduledColor.withAlpha(
+                                    (0.2 * 255).round(),
+                                  )
                                 : null,
                             borderRadius: BorderRadius.circular(4),
                           ),
@@ -98,8 +101,9 @@ class LevelMapCalendar extends StatelessWidget {
                               Text(
                                 '${date.day}',
                                 style: TextStyle(
-                                  fontWeight:
-                                      isSelected ? FontWeight.bold : FontWeight.normal,
+                                  fontWeight: isSelected
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
                                   color: inMonth ? null : Colors.grey,
                                 ),
                               ),
@@ -109,7 +113,7 @@ class LevelMapCalendar extends StatelessWidget {
                           ),
                         ),
                       );
-                    }),
+                    },
                   ),
                 ),
               ),
