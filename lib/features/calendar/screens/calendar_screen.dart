@@ -63,13 +63,17 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
             month: focusedDay,
             selectedDay: selectedDay,
             eventLoader: notifier.eventsForDay,
+
             onDaySelected: _onDaySelected,
+            onDaySelected: notifier.selectDay,
+
           ),
           const Divider(),
         ],
       ),
     );
   }
+
 
   Future<void> _onDaySelected(DateTime day) async {
     final notifier = context.read<CalendarNotifier>();
@@ -111,6 +115,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
       },
     );
   }
+
 
   // no custom day cell needed with LevelMapCalendar
 }
