@@ -39,22 +39,30 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    // Firebase initialisieren (nur EINMAL!)
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
+    // Initialisiere Firebase NUR, wenn es noch nicht existiert (hilft beim Hot Restart im Debugging)
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+    }
   } catch (e, st) {
-    debugPrint('Error initializing Firebase: $e');
-    debugPrintStack(stackTrace: st);
-    runApp(
-      const MaterialApp(
-        home: ErrorScreen(
-          message:
-              'Firebase konnte nicht initialisiert werden. Bitte Einstellungen prüfen.',
+    // Optional: Duplicate-app explizit abfangen (nur im Debug sinnvoll)
+    if (e is FirebaseException && e.code == 'duplicate-app') {
+      debugPrint('Firebase wurde bereits initialisiert (duplicate-app).');
+      // -> ignorieren, App läuft weiter
+    } else {
+      debugPrint('Error initializing Firebase: $e');
+      debugPrintStack(stackTrace: st);
+      runApp(
+        const MaterialApp(
+          home: ErrorScreen(
+            message:
+                'Firebase konnte nicht initialisiert werden. Bitte Einstellungen prüfen.',
+          ),
         ),
-      ),
-    );
-    return;
+      );
+      return;
+    }
   }
 
   // Hive-Init und lokale Datenbank
