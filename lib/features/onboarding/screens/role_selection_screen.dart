@@ -39,8 +39,8 @@ class RoleSelectionScreenState extends State<RoleSelectionScreen> {
       if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: const Text(
-                'Fehler beim Speichern der Rolle. Bitte später erneut versuchen.'),
+            content:
+                Text('Fehler beim Speichern der Rolle. Bitte später erneut versuchen.'),
             backgroundColor: Colors.red,
           ),
         );
