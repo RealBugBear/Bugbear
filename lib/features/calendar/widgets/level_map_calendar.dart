@@ -58,6 +58,13 @@ class LevelMapCalendar extends StatelessWidget {
 
                       bool hasGolden = events.any((e) => e.isGoldenDay);
                       bool hasCompleted = events.any((e) => e.isCompleted);
+                      final completedCount =
+                          events.where((e) => e.isCompleted).length;
+                      final progress = events.isEmpty
+                          ? 0.0
+                          : hasGolden
+                              ? 1.0
+                              : completedCount / events.length;
                       final icon = hasGolden
                           ? Icons.star
                           : hasCompleted
@@ -83,19 +90,52 @@ class LevelMapCalendar extends StatelessWidget {
                                 : null,
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          child: Stack(
+                            alignment: Alignment.center,
                             children: [
-                              Text(
-                                '${i + 1}',
-                                style: TextStyle(
-                                  fontWeight: isSelected
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
+                              Positioned(
+                                right: 4,
+                                bottom: 4,
+                                top: 4,
+                                child: Container(
+                                  width: 4,
+                                  decoration: BoxDecoration(
+                                    color: scheduledColor.withAlpha(50),
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                  child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: FractionallySizedBox(
+                                      heightFactor: progress,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: progress == 1.0
+                                              ? completedColor
+                                              : scheduledColor,
+                                          borderRadius:
+                                              const BorderRadius.vertical(
+                                                  bottom: Radius.circular(2)),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                              const SizedBox(height: 4),
-                              Icon(icon, size: cellSize / 3, color: iconColor),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '${i + 1}',
+                                    style: TextStyle(
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Icon(icon, size: cellSize / 3, color: iconColor),
+                                ],
+                              ),
                             ],
                           ),
                         ),
