@@ -37,12 +37,21 @@ class RoleSelectionScreenState extends State<RoleSelectionScreen> {
       Navigator.pushReplacementNamed(context, '/dashboard');
     } catch (e) {
       if (!mounted) return;
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text('Fehler beim Speichern der Rolle. Bitte später erneut versuchen.'),
           backgroundColor: Colors.red,
         ),
       );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Fehler beim Speichern der Rolle. Bitte später erneut versuchen.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+
     } finally {
       if (mounted) {
         setState(() {
