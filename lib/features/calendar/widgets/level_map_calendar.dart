@@ -81,12 +81,6 @@ class LevelMapCalendar extends StatelessWidget {
                               : completedCount / events.length;
 
 
-                      final events = eventLoader(date);
-                      final isSelected = _isSameDay(date, selectedDay);
-
-                      bool hasGolden = events.any((e) => e.isGoldenDay);
-                      bool hasCompleted = events.any((e) => e.isCompleted);
-
                       final icon = hasGolden
                           ? Icons.star
                           : hasCompleted
@@ -158,23 +152,6 @@ class LevelMapCalendar extends StatelessWidget {
                                   Icon(icon, size: cellSize / 3, color: iconColor),
                                 ],
                               ),
-
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '${date.day}',
-                                style: TextStyle(
-                                  fontWeight:
-                                      isSelected ? FontWeight.bold : FontWeight.normal,
-                                  color: inMonth ? null : Colors.grey,
-                                ),
-                              ),
-                              const SizedBox(height: 2),
-                              Icon(icon, size: cellSize / 3, color: iconColor),
-
-                            ],
-                          ),
                         ),
                       );
                     },
