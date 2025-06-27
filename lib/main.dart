@@ -29,6 +29,7 @@ import 'package:bugbear_app/features/training/notifier/session_notifier.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event.dart';
 import 'package:bugbear_app/features/calendar/models/calendar_event_adapter.dart';
 import 'package:bugbear_app/features/calendar/services/calendar_service.dart';
+import 'package:bugbear_app/features/calendar/services/golden_day_service.dart';
 import 'package:bugbear_app/features/questionnaire/questionnaire_screen.dart';
 import 'package:bugbear_app/features/questionnaire/quiz_intro_screen.dart';
 import 'package:bugbear_app/features/profile/screens/profile_overview_screen.dart';
@@ -136,6 +137,9 @@ class MyApp extends StatelessWidget {
         Provider<CalendarService>(
           create: (_) => CalendarService(),
         ),
+        Provider<GoldenDayService>(
+          create: (_) => GoldenDayService(),
+        ),
         Provider<ExerciseRepository>(
           create: (_) => ExerciseRepository(),
         ),
@@ -148,6 +152,7 @@ class MyApp extends StatelessWidget {
               sessionRepository,
               ctx.read<SyncService>(),
               ctx.read<CalendarService>(),
+              ctx.read<GoldenDayService>(),
               exRepo,
               initialExercises,
               initialSessionState,
