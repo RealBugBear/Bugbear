@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:table_calendar/table_calendar.dart';
+import '../widgets/level_map_calendar.dart';
 
 import '../models/calendar_event.dart';
 import '../dialogs/edit_training_day_dialog.dart';
@@ -42,30 +42,11 @@ class _CalendarScreenContent extends StatefulWidget {
       _CalendarScreenContentState();
 }
 
-class _CalendarScreenContentState extends State<_CalendarScreenContent>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _ctrl;
-  late final Animation<double> _scale;
+class _CalendarScreenContentState extends State<_CalendarScreenContent> {
 
   static const scheduledColor = Color(0xFF0055FF);
   static const completedColor = Color(0xFF00CC66);
-  static const missedColor = Color(0xFFFFCC00);
 
-  @override
-  void initState() {
-    super.initState();
-    _ctrl = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 1),
-    )..repeat(reverse: true);
-    _scale = Tween<double>(begin: 1.0, end: 1.2).animate(_ctrl);
-  }
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,57 +61,11 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent>
       appBar: AppBar(title: const Text('Dein Trainingskalender')),
       body: Column(
         children: [
-          TableCalendar<CalendarEvent>(
-            firstDay: DateTime.utc(2000, 1, 1),
-            lastDay: DateTime.utc(2100, 12, 31),
-            focusedDay: focusedDay,
-            selectedDayPredicate: (d) => isSameDay(d, selectedDay),
-            onDaySelected: (sel, focus) => notifier.selectDay(sel),
-            headerStyle: const HeaderStyle(
-              formatButtonVisible: false,
-              titleCentered: true,
-            ),
-            calendarStyle: const CalendarStyle(
-              outsideDaysVisible: false,
-              todayDecoration: BoxDecoration(),
-            ),
+          LevelMapCalendar(
+            month: focusedDay,
+            selectedDay: selectedDay,
             eventLoader: notifier.eventsForDay,
-            calendarBuilders: CalendarBuilders(
-              defaultBuilder: (ctx, date, _) =>
-                  _buildDayCell(date, date, today),
-              todayBuilder: (ctx, date, _) => ScaleTransition(
-                scale: _scale,
-                child: _buildDayCell(date, date, today, isToday: true),
-              ),
-              selectedBuilder: (ctx, date, _) {
-                final cell = _buildDayCell(date, date, today, isSelected: true);
-                return isSameDay(date, today)
-                    ? ScaleTransition(scale: _scale, child: cell)
-                    : cell;
-              },
-              markerBuilder: (ctx, date, events) {
-                if (events.isEmpty) return const SizedBox.shrink();
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: events.map((ev) {
-                    final color = ev.isCompleted
-                        ? completedColor
-                        : date.isBefore(DateTime(today.year, today.month, today.day))
-                            ? missedColor
-                            : scheduledColor;
-                    return Container(
-                      width: 6,
-                      height: 6,
-                      margin: const EdgeInsets.symmetric(horizontal: 0.5),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: color,
-                      ),
-                    );
-                  }).toList(),
-                );
-              },
-            ),
+            onDaySelected: notifier.selectDay,
           ),
           const Divider(),
           Expanded(
@@ -169,27 +104,5 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent>
     );
   }
 
-  Widget _buildDayCell(DateTime date, DateTime cellDate, DateTime today,
-      {bool isToday = false, bool isSelected = false}) {
-    final selectedDay = context.read<CalendarNotifier>().selectedDay;
-    final sel = isSameDay(cellDate, selectedDay);
-    return Container(
-      margin: const EdgeInsets.all(4.0),
-      decoration: BoxDecoration(
-        color: sel
-            ? scheduledColor.withAlpha((0.2 * 255).round())
-            : null,
-        border: isToday ? Border.all(color: scheduledColor, width: 2) : null,
-        borderRadius: BorderRadius.circular(8),
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        date.day.toString(),
-        style: TextStyle(
-          fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
-          color: sel ? scheduledColor : null,
-        ),
-      ),
-    );
-  }
+  // no custom day cell needed with LevelMapCalendar
 }
