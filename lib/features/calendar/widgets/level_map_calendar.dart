@@ -66,6 +66,7 @@ class LevelMapCalendar extends StatelessWidget {
                       final date = startDate.add(Duration(days: i));
                       final inMonth = date.month == month.month;
 
+
                       final events = eventLoader(date);
                       final isSelected = _isSameDay(date, selectedDay);
 
@@ -78,6 +79,13 @@ class LevelMapCalendar extends StatelessWidget {
                           : hasGolden
                               ? 1.0
                               : completedCount / events.length;
+
+
+                      final events = eventLoader(date);
+                      final isSelected = _isSameDay(date, selectedDay);
+
+                      bool hasGolden = events.any((e) => e.isGoldenDay);
+                      bool hasCompleted = events.any((e) => e.isCompleted);
 
                       final icon = hasGolden
                           ? Icons.star
@@ -102,6 +110,7 @@ class LevelMapCalendar extends StatelessWidget {
                                 : null,
                             borderRadius: BorderRadius.circular(4),
                           ),
+
                           child: Stack(
                             alignment: Alignment.center,
                             children: [
@@ -149,6 +158,21 @@ class LevelMapCalendar extends StatelessWidget {
                                   Icon(icon, size: cellSize / 3, color: iconColor),
                                 ],
                               ),
+
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${date.day}',
+                                style: TextStyle(
+                                  fontWeight:
+                                      isSelected ? FontWeight.bold : FontWeight.normal,
+                                  color: inMonth ? null : Colors.grey,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Icon(icon, size: cellSize / 3, color: iconColor),
+
                             ],
                           ),
                         ),
