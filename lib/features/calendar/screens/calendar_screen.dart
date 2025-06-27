@@ -65,7 +65,6 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
             eventLoader: notifier.eventsForDay,
 
             onDaySelected: _onDaySelected,
-            onDaySelected: notifier.selectDay,
 
           ),
           const Divider(),
