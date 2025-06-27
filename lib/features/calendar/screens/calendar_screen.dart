@@ -15,7 +15,10 @@ import 'package:bugbear_app/widgets/app_drawer.dart';
 /// Zeigt einen Monatskalender mit:
 /// - pulsierendem Rahmen am heutigen Tag
 /// - farbcodierten Markern
+
 /// - Einträgen über Popup-Dialog
+
+/// - Einträgen über BottomSheet
 /// - Edit-Dialog beim Tap auf einen Event
 class CalendarScreen extends StatelessWidget {
   const CalendarScreen({Key? key}) : super(key: key);
@@ -91,6 +94,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Dein Trainingskalender')),
+
       body: PageView.builder(
         scrollDirection: Axis.vertical,
         pageSnapping: false,
@@ -109,6 +113,31 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
             onDaySelected: _onDaySelected,
           );
         },
+
+      body: Column(
+        children: [
+          Expanded(
+            child: PageView.builder(
+              controller: _pageController,
+              onPageChanged: _onPageChanged,
+              itemBuilder: (context, index) {
+                final month = _monthForIndex(index);
+                final day =
+                    month.year == selectedDay.year && month.month == selectedDay.month
+                        ? selectedDay
+                        : DateTime(month.year, month.month, 1);
+                return LevelMapCalendar(
+                  month: month,
+                  selectedDay: day,
+                  eventLoader: notifier.eventsForDay,
+                  onDaySelected: _onDaySelected,
+                );
+              },
+            ),
+          ),
+          const Divider(),
+        ],
+
       ),
     );
   }
