@@ -120,13 +120,15 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
               onPageChanged: _onPageChanged,
               itemBuilder: (context, index) {
                 final month = _monthForIndex(index);
-                final day =
-                    month.year == selectedDay.year && month.month == selectedDay.month
-                        ? selectedDay
-                        : DateTime(month.year, month.month, 1);
+                final isSelectedMonth =
+                    month.year == selectedDay.year && month.month == selectedDay.month;
+                final day = isSelectedMonth
+                    ? selectedDay
+                    : DateTime(month.year, month.month, 1);
                 return LevelMapCalendar(
                   month: month,
                   selectedDay: day,
+                  showBug: isSelectedMonth,
                   eventLoader: notifier.eventsForDay,
                   onDaySelected: _onDaySelected,
                 );
