@@ -94,19 +94,16 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Dein Trainingskalender')),
-
-
-
-
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Row(
-
+             children: [
               children: [
 
               children: const [
+
 
                 for (final label in ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'])
                   Expanded(
@@ -114,6 +111,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                       child: Text(
                         label,
 
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                         style: const TextStyle(fontWeight: FontWeight.bold),
 
                         style: TextStyle(fontWeight: FontWeight.bold),
@@ -147,8 +145,6 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
           ),
         ],
 
-
-
       body: PageView.builder(
         scrollDirection: Axis.vertical,
         pageSnapping: false,
@@ -167,8 +163,6 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
             onDaySelected: _onDaySelected,
           );
         },
-
-
       ),
     );
   }
