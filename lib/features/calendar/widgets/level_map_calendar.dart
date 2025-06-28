@@ -64,7 +64,6 @@ class LevelMapCalendar extends StatelessWidget {
         final cellHeight = constraints.maxHeight / 6;
         final aspectRatio = cellWidth / cellHeight;
 
-        final selectedIndex = selectedDay.difference(startDate).inDays;
         final bugIndex = anchorDay.difference(startDate).inDays;
         final bugRow = bugIndex ~/ 7;
         final bugCol = bugIndex % 7;
