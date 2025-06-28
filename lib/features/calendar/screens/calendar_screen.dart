@@ -146,6 +146,23 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                     Positioned(
                       right: 0,
 
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: Container(
+                          width: 48,
+                          color: Colors.blueGrey.shade50,
+                          alignment: Alignment.center,
+                          child: RotatedBox(
+                            quarterTurns: 3,
+                            child: Text(
+                              monthName,
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.comicNeue(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+
+
                       top: 8,
                       bottom: 8,
 
@@ -166,6 +183,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                             style: GoogleFonts.comicNeue(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
+
                             ),
                           ),
                         ),
