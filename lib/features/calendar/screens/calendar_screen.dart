@@ -113,31 +113,6 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
             onDaySelected: _onDaySelected,
           );
         },
-
-      body: Column(
-        children: [
-          Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              onPageChanged: _onPageChanged,
-              itemBuilder: (context, index) {
-                final month = _monthForIndex(index);
-                final day =
-                    month.year == selectedDay.year && month.month == selectedDay.month
-                        ? selectedDay
-                        : DateTime(month.year, month.month, 1);
-                return LevelMapCalendar(
-                  month: month,
-                  selectedDay: day,
-                  eventLoader: notifier.eventsForDay,
-                  onDaySelected: _onDaySelected,
-                );
-              },
-            ),
-          ),
-          const Divider(),
-        ],
-
       ),
     );
   }
