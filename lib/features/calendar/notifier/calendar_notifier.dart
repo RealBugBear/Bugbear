@@ -91,6 +91,7 @@ class CalendarNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+
   /// Returns true if any event for [day] is marked completed.
   bool dayIsCompleted(DateTime day) {
     return eventsForDay(day).any((e) => e.isCompleted);
@@ -115,4 +116,5 @@ class CalendarNotifier extends ChangeNotifier {
 
     await toggleCompleted(list.first);
   }
+
 }
