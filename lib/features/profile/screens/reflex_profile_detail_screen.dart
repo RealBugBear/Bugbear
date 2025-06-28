@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/reflex_profile.dart';
-import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import '../../calendar/widgets/golden_day_banner.dart';
 
 class ReflexProfileDetailScreen extends StatelessWidget {
