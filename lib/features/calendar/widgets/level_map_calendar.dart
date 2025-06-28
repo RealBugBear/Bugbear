@@ -101,18 +101,33 @@ class LevelMapCalendar extends StatelessWidget {
                               : completedCount / events.length;
 
 
-                      final icon = hasGolden
-                          ? Icons.star
-                          : hasCompleted
-                              ? Icons.check_circle
-                              : events.isNotEmpty
-                                  ? Icons.schedule
-                                  : Icons.circle_outlined;
                       final iconColor = hasGolden
                           ? Colors.amber
                           : hasCompleted
                               ? completedColor
                               : scheduledColor;
+
+                      final iconSize = math.min(cellWidth, cellHeight) / 3;
+                      final Widget iconWidget;
+                      if (hasGolden) {
+                        iconWidget = Icon(
+                          Icons.star,
+                          size: iconSize,
+                          color: iconColor,
+                        );
+                      } else if (hasCompleted) {
+                        iconWidget = Image.asset(
+                          'assets/images/tick.png',
+                          width: iconSize,
+                          height: iconSize,
+                        );
+                      } else {
+                        iconWidget = Icon(
+                          events.isNotEmpty ? Icons.schedule : Icons.circle_outlined,
+                          size: iconSize,
+                          color: iconColor,
+                        );
+                      }
 
                       return GestureDetector(
                         onTap: () => onDaySelected(date),
@@ -177,11 +192,7 @@ class LevelMapCalendar extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  Icon(
-                                    icon,
-                                    size: math.min(cellWidth, cellHeight) / 3,
-                                    color: iconColor,
-                                  ),
+                                  iconWidget,
                                 ],
                               ),
                               ],

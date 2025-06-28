@@ -75,4 +75,19 @@ class CalendarNotifier extends ChangeNotifier {
       }
     }
   }
+
+  /// Toggles the completed status of [event] and persists the change.
+  Future<void> toggleCompleted(CalendarEvent event) async {
+    final updated = event.copyWith(isCompleted: !event.isCompleted);
+    await _service.saveTrainingDay(updated);
+    final key = DateTime(updated.date.year, updated.date.month, updated.date.day);
+    final list = _eventsByDay[key];
+    if (list != null) {
+      final idx = list.indexWhere((e) => e.id == event.id);
+      if (idx != -1) {
+        list[idx] = updated;
+      }
+    }
+    notifyListeners();
+  }
 }

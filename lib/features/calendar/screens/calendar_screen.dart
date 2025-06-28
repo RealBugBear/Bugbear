@@ -177,6 +177,15 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                       : Icons.radio_button_unchecked,
                   color: ev.isCompleted ? completedColor : scheduledColor,
                 ),
+                trailing: IconButton(
+                  icon: Icon(
+                    ev.isCompleted ? Icons.undo : Icons.check,
+                    color: ev.isCompleted ? scheduledColor : completedColor,
+                  ),
+                  onPressed: () {
+                    context.read<CalendarNotifier>().toggleCompleted(ev);
+                  },
+                ),
                 onTap: () async {
                   final updated = await showDialog<CalendarEvent>(
                     context: context,
