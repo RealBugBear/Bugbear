@@ -95,6 +95,48 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
       drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Dein Trainingskalender')),
 
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: const [
+                for (final label in ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'])
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        label,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: PageView.builder(
+              scrollDirection: Axis.vertical,
+              pageSnapping: false,
+              controller: _pageController,
+              onPageChanged: _onPageChanged,
+              itemBuilder: (context, index) {
+                final month = _monthForIndex(index);
+                final day =
+                    month.year == selectedDay.year && month.month == selectedDay.month
+                        ? selectedDay
+                        : DateTime(month.year, month.month, 1);
+                return LevelMapCalendar(
+                  month: month,
+                  selectedDay: day,
+                  eventLoader: notifier.eventsForDay,
+                  onDaySelected: _onDaySelected,
+                );
+              },
+            ),
+          ),
+        ],
+
+
       body: PageView.builder(
         scrollDirection: Axis.vertical,
         pageSnapping: false,
@@ -113,6 +155,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
             onDaySelected: _onDaySelected,
           );
         },
+
       ),
     );
   }
