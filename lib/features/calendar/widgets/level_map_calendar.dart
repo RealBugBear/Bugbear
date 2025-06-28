@@ -16,8 +16,10 @@ class LevelMapCalendar extends StatelessWidget {
   final List<CalendarEvent> Function(DateTime day) eventLoader;
   final ValueChanged<DateTime> onDaySelected;
   final bool showBug;
+
   final bool showSelectedHighlight;
   final bool showTodayHighlight;
+
 
   const LevelMapCalendar({
     super.key,
@@ -26,8 +28,10 @@ class LevelMapCalendar extends StatelessWidget {
     required this.eventLoader,
     required this.onDaySelected,
     this.showBug = true,
+
     this.showSelectedHighlight = true,
     this.showTodayHighlight = true,
+
   });
 
   static const scheduledColor = Color(0xFF0055FF);
