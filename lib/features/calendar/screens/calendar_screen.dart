@@ -140,7 +140,9 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                         bugDay: notifier.upcomingGoldenDay,
                         showBug: isSelectedMonth,
                         showSelectedHighlight: isSelectedMonth,
-                        showTodayHighlight: isTodayMonth,
+                        // Always highlight the current day number so it
+                        // remains visible when navigating between months.
+                        showTodayHighlight: true,
                         eventLoader: notifier.eventsForDay,
                         onDaySelected: _onDaySelected,
                       ),
