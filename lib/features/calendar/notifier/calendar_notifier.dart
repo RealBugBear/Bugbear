@@ -75,4 +75,44 @@ class CalendarNotifier extends ChangeNotifier {
       }
     }
   }
+
+  /// Toggles the completed status of [event] and persists the change.
+  Future<void> toggleCompleted(CalendarEvent event) async {
+    final updated = event.copyWith(isCompleted: !event.isCompleted);
+    await _service.saveTrainingDay(updated);
+    final key = DateTime(updated.date.year, updated.date.month, updated.date.day);
+    final list = _eventsByDay[key];
+    if (list != null) {
+      final idx = list.indexWhere((e) => e.id == event.id);
+      if (idx != -1) {
+        list[idx] = updated;
+      }
+    }
+    notifyListeners();
+  }
+
+  /// Returns true if any event for [day] is marked completed.
+  bool dayIsCompleted(DateTime day) {
+    return eventsForDay(day).any((e) => e.isCompleted);
+  }
+
+  /// Toggles completion for the first event on [day] or creates one if none exist.
+  Future<void> toggleDayCompleted(DateTime day) async {
+    final key = DateTime(day.year, day.month, day.day);
+    final list = _eventsByDay[key] ?? [];
+    if (list.isEmpty) {
+      final newEvent = CalendarEvent(
+        id: 'manual_${day.toIso8601String()}',
+        date: key,
+        title: 'Training',
+        isCompleted: true,
+      );
+      await _service.addEvent(newEvent);
+      _eventsByDay.putIfAbsent(key, () => []).add(newEvent);
+      notifyListeners();
+      return;
+    }
+
+    await toggleCompleted(list.first);
+  }
 }

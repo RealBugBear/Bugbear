@@ -153,10 +153,31 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
       builder: (sheetCtx) {
         final events = notifier.eventsForDay(day);
         if (events.isEmpty) {
+          final completed = notifier.dayIsCompleted(day);
           return Dialog(
-            child: SizedBox(
-              height: MediaQuery.of(sheetCtx).size.height * 0.6,
-              child: const Center(child: Text('Keine Eintr\u00E4ge an diesem Tag')),
+            child: Padding(
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Keine Eintr\u00E4ge an diesem Tag'),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      notifier.toggleDayCompleted(day);
+                    },
+                    icon: Icon(
+                      completed ? Icons.undo : Icons.check,
+                      color: completed ? scheduledColor : completedColor,
+                    ),
+                    label: Text(
+                      completed
+                          ? 'Als nicht erledigt markieren'
+                          : 'Training erledigt',
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -176,6 +197,15 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                       ? Icons.check_circle
                       : Icons.radio_button_unchecked,
                   color: ev.isCompleted ? completedColor : scheduledColor,
+                ),
+                trailing: IconButton(
+                  icon: Icon(
+                    ev.isCompleted ? Icons.undo : Icons.check,
+                    color: ev.isCompleted ? scheduledColor : completedColor,
+                  ),
+                  onPressed: () {
+                    context.read<CalendarNotifier>().toggleCompleted(ev);
+                  },
                 ),
                 onTap: () async {
                   final updated = await showDialog<CalendarEvent>(
