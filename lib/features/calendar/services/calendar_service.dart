@@ -35,4 +35,19 @@ class CalendarService {
   Future<void> saveTrainingDay(CalendarEvent event) async {
     await _calendarBox.put(event.id, event);
   }
+
+  /// Returns the next golden day on or after today, or `null` if none exist.
+  Future<DateTime?> loadUpcomingGoldenDay() async {
+    final goldenEvents = _calendarBox.values
+        .where((e) => e.isGoldenDay)
+        .toList();
+    if (goldenEvents.isEmpty) return null;
+    goldenEvents.sort((a, b) => a.date.compareTo(b.date));
+    final today = DateTime.now();
+    final dayStart = DateTime(today.year, today.month, today.day);
+    for (final ev in goldenEvents) {
+      if (!ev.date.isBefore(dayStart)) return ev.date;
+    }
+    return goldenEvents.last.date;
+  }
 }
