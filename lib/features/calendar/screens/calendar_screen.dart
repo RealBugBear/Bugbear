@@ -99,23 +99,13 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Row(
-             children: [
               children: [
-
-              children: const [
-
-
                 for (final label in ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'])
                   Expanded(
                     child: Center(
                       child: Text(
                         label,
-
                         style: const TextStyle(fontWeight: FontWeight.bold),
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-
-                        style: TextStyle(fontWeight: FontWeight.bold),
-
                       ),
                     ),
                   ),
@@ -144,25 +134,6 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
             ),
           ),
         ],
-
-      body: PageView.builder(
-        scrollDirection: Axis.vertical,
-        pageSnapping: false,
-        controller: _pageController,
-        onPageChanged: _onPageChanged,
-        itemBuilder: (context, index) {
-          final month = _monthForIndex(index);
-          final day =
-              month.year == selectedDay.year && month.month == selectedDay.month
-                  ? selectedDay
-                  : DateTime(month.year, month.month, 1);
-          return LevelMapCalendar(
-            month: month,
-            selectedDay: day,
-            eventLoader: notifier.eventsForDay,
-            onDaySelected: _onDaySelected,
-          );
-        },
       ),
     );
   }
