@@ -43,6 +43,9 @@ class LevelMapCalendar extends StatelessWidget {
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 
+  bool _isSameDayNumber(DateTime date, int dayNumber) =>
+      date.day == dayNumber && date.month == month.month;
+
   @override
   Widget build(BuildContext context) {
     final firstOfMonth = DateTime(month.year, month.month, 1);
@@ -144,7 +147,7 @@ class LevelMapCalendar extends StatelessWidget {
                                     .withAlpha((0.2 * 255).round())
                                 : null,
                             border: showTodayHighlight &&
-                                    _isSameDay(date, DateTime.now())
+                                    _isSameDayNumber(date, DateTime.now().day)
                                 ? Border.all(
                                     color: scheduledColor,
                                     width: 2,
