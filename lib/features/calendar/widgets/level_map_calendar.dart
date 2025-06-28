@@ -37,32 +37,32 @@ class LevelMapCalendar extends StatelessWidget {
     final startDate = firstOfMonth.subtract(Duration(days: startOffset));
     return LayoutBuilder(
       builder: (context, constraints) {
-        final widthBased = constraints.maxWidth / 7;
-        final heightBased = (constraints.maxHeight - 16) / 6.7;
-        final cellSize = math.min(widthBased, heightBased);
-        final bugSize = cellSize * 0.7;
+        final cellWidth = constraints.maxWidth / 7;
+        final bugSize = cellWidth * 0.7;
+        final cellHeight = constraints.maxHeight / 6;
+        final aspectRatio = cellWidth / cellHeight;
 
         final selectedIndex = selectedDay.difference(startDate).inDays;
         final bugRow = selectedIndex ~/ 7;
         final bugCol = selectedIndex % 7;
-        final bugLeft = bugCol * cellSize + (cellSize - bugSize) / 2;
-        final bugTop = bugRow * cellSize + (cellSize - bugSize) / 2;
+        final bugLeft = bugCol * cellWidth + (cellWidth - bugSize) / 2;
+        final bugTop = bugRow * cellHeight + (cellHeight - bugSize) / 2;
 
         return SizedBox.expand(
           child: Stack(
             children: [
               Positioned(
-                top: bugSize + 8,
+                top: 0,
                 left: 0,
                 right: 0,
                 child: SizedBox(
-                  height: 6 * cellSize,
+                  height: 6 * cellHeight,
                   child: GridView.builder(
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 7,
-                      childAspectRatio: 1,
-                    ),
+                      childAspectRatio: aspectRatio,
+                      ),
                     itemCount: 42,
                     itemBuilder: (ctx, i) {
                       final date = startDate.add(Duration(days: i));
@@ -151,7 +151,11 @@ class LevelMapCalendar extends StatelessWidget {
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  Icon(icon, size: cellSize / 3, color: iconColor),
+                                  Icon(
+                                    icon,
+                                    size: math.min(cellWidth, cellHeight) / 3,
+                                    color: iconColor,
+                                  ),
                                 ],
                               ),
                               ],
