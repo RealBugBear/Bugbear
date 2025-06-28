@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../widgets/level_map_calendar.dart';
+import '../widgets/month_bracket.dart';
 
 import '../models/calendar_event.dart';
 import '../dialogs/edit_training_day_dialog.dart';
@@ -145,24 +146,11 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                     ),
                     Positioned(
                       right: 0,
+                      top: 0,
+                      bottom: 0,
                       child: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Container(
-                          width: 48,
-                          color: Colors.blueGrey.shade50,
-                          alignment: Alignment.center,
-                          child: RotatedBox(
-                            quarterTurns: 3,
-                            child: Text(
-                              monthName,
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.comicNeue(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
+                        child: MonthBracket(monthName: monthName),
                       ),
                     ),
                   ],
