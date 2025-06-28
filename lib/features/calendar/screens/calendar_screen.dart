@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../widgets/level_map_calendar.dart';
 import '../widgets/month_bracket.dart';
+import '../widgets/golden_day_banner.dart';
 
 import '../models/calendar_event.dart';
 import '../dialogs/edit_training_day_dialog.dart';
@@ -157,6 +158,10 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                 );
               },
             ),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(16.0),
+            child: GoldenDayBanner(),
           ),
         ],
       ),
