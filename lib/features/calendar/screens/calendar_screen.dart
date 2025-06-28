@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import '../widgets/level_map_calendar.dart';
 
 import '../models/calendar_event.dart';
@@ -127,14 +129,42 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                 final day = isSelectedMonth
                     ? selectedDay
                     : DateTime(month.year, month.month, 1);
-                return LevelMapCalendar(
-                  month: month,
-                  selectedDay: day,
-                  showBug: isSelectedMonth,
-                  showSelectedHighlight: isSelectedMonth,
-                  showTodayHighlight: isTodayMonth,
-                  eventLoader: notifier.eventsForDay,
-                  onDaySelected: _onDaySelected,
+                final monthName = DateFormat.MMMM().format(month);
+                return Stack(
+                  children: [
+                    Positioned.fill(
+                      child: LevelMapCalendar(
+                        month: month,
+                        selectedDay: day,
+                        showBug: isSelectedMonth,
+                        showSelectedHighlight: isSelectedMonth,
+                        showTodayHighlight: isTodayMonth,
+                        eventLoader: notifier.eventsForDay,
+                        onDaySelected: _onDaySelected,
+                      ),
+                    ),
+                    Positioned(
+                      right: 0,
+                      top: 8,
+                      bottom: 8,
+                      child: Container(
+                        width: 48,
+                        color: Colors.blueGrey.shade50,
+                        alignment: Alignment.center,
+                        child: RotatedBox(
+                          quarterTurns: 3,
+                          child: Text(
+                            monthName,
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.comicNeue(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 );
               },
             ),
