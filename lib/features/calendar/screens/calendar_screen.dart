@@ -136,6 +136,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                       child: LevelMapCalendar(
                         month: month,
                         selectedDay: day,
+                        bugDay: notifier.upcomingGoldenDay,
                         showBug: isSelectedMonth,
                         showSelectedHighlight: isSelectedMonth,
                         showTodayHighlight: isTodayMonth,
