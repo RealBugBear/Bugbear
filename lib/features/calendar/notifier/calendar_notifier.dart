@@ -32,6 +32,23 @@ class CalendarNotifier extends ChangeNotifier {
   /// Events des aktuell selektierten Tages
   List<CalendarEvent> get eventsForSelectedDay => eventsForDay(_selectedDay);
 
+  /// Returns the next golden day based on loaded events or `null` if none.
+  DateTime? get upcomingGoldenDay {
+    final goldenEvents = _eventsByDay.values
+        .expand((e) => e)
+        .where((ev) => ev.isGoldenDay)
+        .toList();
+    if (goldenEvents.isEmpty) return null;
+    goldenEvents.sort((a, b) => a.date.compareTo(b.date));
+    final now = DateTime.now();
+    for (final ev in goldenEvents) {
+      if (!ev.date.isBefore(DateTime(now.year, now.month, now.day))) {
+        return ev.date;
+      }
+    }
+    return goldenEvents.last.date;
+  }
+
   /// Lädt alle Events des Monats [month] und behält bereits
   /// geladene Monate im Speicher, damit Marker beim Scrollen
   /// nicht verloren gehen.

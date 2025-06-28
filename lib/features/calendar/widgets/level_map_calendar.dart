@@ -13,6 +13,8 @@ import '../models/calendar_event.dart';
 class LevelMapCalendar extends StatelessWidget {
   final DateTime month;
   final DateTime selectedDay;
+  /// Day that controls the position of the bug mascot.
+  final DateTime? bugDay;
   final List<CalendarEvent> Function(DateTime day) eventLoader;
   final ValueChanged<DateTime> onDaySelected;
   final bool showBug;
@@ -25,6 +27,7 @@ class LevelMapCalendar extends StatelessWidget {
     super.key,
     required this.month,
     required this.selectedDay,
+    this.bugDay,
     required this.eventLoader,
     required this.onDaySelected,
     this.showBug = true,
@@ -47,12 +50,13 @@ class LevelMapCalendar extends StatelessWidget {
     // start of the six week view
     DateTime startDate = firstOfMonth.subtract(Duration(days: startOffset));
 
-    // Shift startDate so that the selected day appears on the
+    // Shift startDate so that the bug day appears on the
     // second row from the bottom (row index 4 in a 6 row grid).
-    final selectedIndex = selectedDay.difference(startDate).inDays;
-    final selectedRow = selectedIndex ~/ 7;
+    final anchorDay = bugDay ?? selectedDay;
+    final anchorIndex = anchorDay.difference(startDate).inDays;
+    final anchorRow = anchorIndex ~/ 7;
     const desiredRow = 4;
-    startDate = startDate.add(Duration(days: (selectedRow - desiredRow) * 7));
+    startDate = startDate.add(Duration(days: (anchorRow - desiredRow) * 7));
     return LayoutBuilder(
       builder: (context, constraints) {
         final cellWidth = constraints.maxWidth / 7;
@@ -61,8 +65,9 @@ class LevelMapCalendar extends StatelessWidget {
         final aspectRatio = cellWidth / cellHeight;
 
         final selectedIndex = selectedDay.difference(startDate).inDays;
-        final bugRow = selectedIndex ~/ 7;
-        final bugCol = selectedIndex % 7;
+        final bugIndex = anchorDay.difference(startDate).inDays;
+        final bugRow = bugIndex ~/ 7;
+        final bugCol = bugIndex % 7;
         final bugLeft = bugCol * cellWidth + (cellWidth - bugSize) / 2;
         final bugTop = bugRow * cellHeight + (cellHeight - bugSize) / 2;
 
