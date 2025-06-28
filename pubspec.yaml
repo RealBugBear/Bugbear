@@ -57,6 +57,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/pawbubble.png
+    - assets/images/paw.png
     - assets/sounds/
     - assets/quiz_questions_de.json
     - assets/quiz_questions_en.json
