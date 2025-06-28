@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../models/reflex_profile.dart';
+import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import '../../calendar/services/calendar_service.dart';
 
 class ReflexProfileDetailScreen extends StatelessWidget {
   final ReflexProfile profile;
@@ -41,6 +44,23 @@ class ReflexProfileDetailScreen extends StatelessWidget {
               trailing: Text('$percent%'),
             );
           }),
+          const SizedBox(height: 24),
+          FutureBuilder<DateTime?>(
+            future: context.read<CalendarService>().loadUpcomingGoldenDay(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              final day = snapshot.data;
+              final text = day == null
+                  ? 'Kein Golden Day geplant'
+                  : DateFormat('dd.MM.yyyy').format(day);
+              return ListTile(
+                title: const Text('Nächster Golden Day'),
+                trailing: Text(text),
+              );
+            },
+          ),
           const SizedBox(height: 24),
           const Text(
             'Antworten',
