@@ -44,7 +44,15 @@ class LevelMapCalendar extends StatelessWidget {
   Widget build(BuildContext context) {
     final firstOfMonth = DateTime(month.year, month.month, 1);
     final startOffset = firstOfMonth.weekday - 1; // Monday=1
-    final startDate = firstOfMonth.subtract(Duration(days: startOffset));
+    // start of the six week view
+    DateTime startDate = firstOfMonth.subtract(Duration(days: startOffset));
+
+    // Shift startDate so that the selected day appears on the
+    // second row from the bottom (row index 4 in a 6 row grid).
+    final selectedIndex = selectedDay.difference(startDate).inDays;
+    final selectedRow = selectedIndex ~/ 7;
+    const desiredRow = 4;
+    startDate = startDate.add(Duration(days: (selectedRow - desiredRow) * 7));
     return LayoutBuilder(
       builder: (context, constraints) {
         final cellWidth = constraints.maxWidth / 7;
