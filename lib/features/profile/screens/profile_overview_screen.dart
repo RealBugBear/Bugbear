@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:bugbear_app/widgets/app_drawer.dart';
 import '../models/reflex_profile.dart';
 import '../services/profile_service.dart';
+import '../../calendar/widgets/golden_day_banner.dart';
 
 class ProfileOverviewScreen extends StatelessWidget {
   const ProfileOverviewScreen({super.key});
@@ -108,10 +109,16 @@ class ProfileOverviewScreen extends StatelessWidget {
                             },
                           ),
                   ),
+                  if (mainId != null)
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: GoldenDayBanner(),
+                    ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: ElevatedButton(
-                      onPressed: () => Navigator.pushNamed(context, '/questionnaire'),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/questionnaire'),
                       child: const Text('Neues Quiz starten'),
                     ),
                   ),
