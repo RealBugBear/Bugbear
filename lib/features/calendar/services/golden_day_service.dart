@@ -12,21 +12,32 @@ class GoldenDayService {
   /// that week. Normally six sessions are expected each week. If fewer or more
   /// sessions were done, the Golden Day is shifted later or earlier
   /// accordingly.
+  ///
+  /// The [phaseLengthWeeks] parameter specifies how many full weeks a phase
+  /// should last before the Golden Day is shown.
   DateTime calculateGoldenDay(
-      DateTime phaseStart, Map<int, int> weeklyCounts) {
+    DateTime phaseStart,
+    Map<int, int> weeklyCounts, {
+    int phaseLengthWeeks = 4,
+  }) {
     // normalize phaseStart to remove any time component
     final start = DateTime(phaseStart.year, phaseStart.month, phaseStart.day);
 
-    // number of fully completed weeks
-    final weeks = weeklyCounts.length;
-
     // accumulated shift due to weeks with not exactly six sessions
     var shift = 0;
+    var countedWeeks = 0;
     for (final entry in weeklyCounts.entries) {
+      if (entry.value >= 3) {
+        countedWeeks++;
+      } else {
+        phaseLengthWeeks += 1;
+      }
       shift += (6 - entry.value);
     }
 
-    return start.add(Duration(days: 6 + weeks * 7 + shift));
+    final totalWeeks =
+        countedWeeks >= phaseLengthWeeks ? countedWeeks : phaseLengthWeeks;
+    return start.add(Duration(days: totalWeeks * 7 - 1 + shift));
   }
 }
 

@@ -114,9 +114,10 @@ class LevelMapCalendar extends StatelessWidget {
                       final iconSize = math.min(cellWidth, cellHeight) / 3;
                       final Widget iconWidget;
                       if (hasGolden) {
-                        iconWidget = Icon(
-                          Icons.star,
-                          size: iconSize,
+                        iconWidget = Image.asset(
+                          'assets/images/paw.png',
+                          width: iconSize,
+                          height: iconSize,
                           color: iconColor,
                         );
                       } else if (hasCompleted) {
