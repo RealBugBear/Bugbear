@@ -122,6 +122,16 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                 final month = _monthForIndex(index);
                 final isSelectedMonth =
                     month.year == selectedDay.year && month.month == selectedDay.month;
+
+                final isTodayMonth =
+                    month.year == DateTime.now().year && month.month == DateTime.now().month;
+                return LevelMapCalendar(
+                  month: month,
+                  selectedDay: selectedDay,
+                  showBug: isSelectedMonth,
+                  showSelectedHighlight: isSelectedMonth,
+                  showTodayHighlight: isTodayMonth,
+
                 final day = isSelectedMonth
                     ? selectedDay
                     : DateTime(month.year, month.month, 1);
@@ -129,6 +139,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                   month: month,
                   selectedDay: day,
                   showBug: isSelectedMonth,
+
                   eventLoader: notifier.eventsForDay,
                   onDaySelected: _onDaySelected,
                 );
