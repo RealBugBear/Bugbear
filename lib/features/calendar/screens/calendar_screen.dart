@@ -125,8 +125,6 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                 final month = _monthForIndex(index);
                 final isSelectedMonth =
                     month.year == selectedDay.year && month.month == selectedDay.month;
-                final isTodayMonth =
-                    month.year == DateTime.now().year && month.month == DateTime.now().month;
                 final day = isSelectedMonth
                     ? selectedDay
                     : DateTime(month.year, month.month, 1);
