@@ -199,7 +199,7 @@ class LevelMapCalendar extends StatelessWidget {
                   top: bugTop,
                   left: bugLeft,
                   child: Image.asset(
-                    'assets/images/bug.png',
+                    'assets/images/pawbubble.png',
                     width: bugSize,
                     height: bugSize,
                   ),
