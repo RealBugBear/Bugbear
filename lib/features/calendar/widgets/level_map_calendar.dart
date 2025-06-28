@@ -15,6 +15,9 @@ class LevelMapCalendar extends StatelessWidget {
   final DateTime selectedDay;
   final List<CalendarEvent> Function(DateTime day) eventLoader;
   final ValueChanged<DateTime> onDaySelected;
+  final bool showBug;
+  final bool showSelectedHighlight;
+  final bool showTodayHighlight;
 
   const LevelMapCalendar({
     super.key,
@@ -22,6 +25,9 @@ class LevelMapCalendar extends StatelessWidget {
     required this.selectedDay,
     required this.eventLoader,
     required this.onDaySelected,
+    this.showBug = true,
+    this.showSelectedHighlight = true,
+    this.showTodayHighlight = true,
   });
 
   static const scheduledColor = Color(0xFF0055FF);
@@ -101,8 +107,16 @@ class LevelMapCalendar extends StatelessWidget {
                         child: Container(
                           margin: const EdgeInsets.all(2),
                           decoration: BoxDecoration(
-                            color: isSelected
-                                ? scheduledColor.withAlpha((0.2 * 255).round())
+                            color: showSelectedHighlight && isSelected
+                                ? scheduledColor
+                                    .withAlpha((0.2 * 255).round())
+                                : null,
+                            border: showTodayHighlight &&
+                                    _isSameDay(date, DateTime.now())
+                                ? Border.all(
+                                    color: scheduledColor,
+                                    width: 2,
+                                  )
                                 : null,
                             borderRadius: BorderRadius.circular(4),
                           ),
@@ -166,17 +180,18 @@ class LevelMapCalendar extends StatelessWidget {
                   ),
                 ),
               ),
-              AnimatedPositioned(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOut,
-                top: bugTop,
-                left: bugLeft,
-                child: Image.asset(
-                  'assets/images/bug.png',
-                  width: bugSize,
-                  height: bugSize,
+              if (showBug)
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                  top: bugTop,
+                  left: bugLeft,
+                  child: Image.asset(
+                    'assets/images/bug.png',
+                    width: bugSize,
+                    height: bugSize,
+                  ),
                 ),
-              ),
             ],
           ),
         );
