@@ -32,11 +32,22 @@ class CalendarNotifier extends ChangeNotifier {
   /// Events des aktuell selektierten Tages
   List<CalendarEvent> get eventsForSelectedDay => eventsForDay(_selectedDay);
 
-  /// Lädt alle Events des Monats [month]
+  /// Lädt alle Events des Monats [month] und behält bereits
+  /// geladene Monate im Speicher, damit Marker beim Scrollen
+  /// nicht verloren gehen.
   Future<void> loadMonth(DateTime month) async {
     _focusedDay = month;
     final events = await _service.loadEventsForMonth(month);
-    _eventsByDay.clear();
+
+    // Entferne nur die Einträge des geladenen Monats, damit
+    // andere Monate weiterhin angezeigt werden können.
+    final keysToRemove = _eventsByDay.keys
+        .where((d) => d.year == month.year && d.month == month.month)
+        .toList();
+    for (final key in keysToRemove) {
+      _eventsByDay.remove(key);
+    }
+
     for (var ev in events) {
       final key = DateTime(ev.date.year, ev.date.month, ev.date.day);
       _eventsByDay.putIfAbsent(key, () => []).add(ev);
