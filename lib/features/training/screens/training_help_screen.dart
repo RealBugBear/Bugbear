@@ -17,7 +17,7 @@ class _TrainingHelpScreenState extends State<TrainingHelpScreen> {
 
   /// Mapping 'phase-exercise' → asset path
   final Map<String, String> _videoPaths = {
-    '2a-1': 'assets/videos/test video.mp4',
+    '2a-1': 'assets/videos/test_video.mp4',
   };
 
   Future<void> _playVideo(String key) async {
