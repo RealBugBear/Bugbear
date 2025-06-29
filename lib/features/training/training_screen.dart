@@ -23,9 +23,7 @@ class TrainingScreen extends StatelessWidget {
       drawer: const AppDrawer(),
       appBar: TrainingHeader(
         phaseName: 'Phase ${state.phaseId}',
-        onHelpPressed: () {
-          // TODO: Hilfe-Overlay öffnen
-        },
+        phaseId: state.phaseId,
       ),
       body: Column(
         children: [

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:bugbear_app/features/training/screens/phase_selection_screen.dart';
+import 'package:bugbear_app/features/training/screens/training_help_screen.dart';
 
 /// TrainingHeader zeigt in der oberen Leiste:
 /// - das automatische Hamburger-Icon (öffnet den Drawer)
@@ -7,12 +8,12 @@ import 'package:bugbear_app/features/training/screens/phase_selection_screen.dar
 /// - ein Hilfesymbol (öffnet ein Overlay mit Erklärungen)
 class TrainingHeader extends StatelessWidget implements PreferredSizeWidget {
   final String phaseName;
-  final VoidCallback onHelpPressed;
+  final String phaseId;
 
   const TrainingHeader({
     super.key,
     required this.phaseName,
-    required this.onHelpPressed,
+    required this.phaseId,
   });
 
   @override
@@ -42,7 +43,13 @@ class TrainingHeader extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           icon: const Icon(Icons.help_outline),
-          onPressed: onHelpPressed,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => TrainingHelpScreen(phaseId: phaseId),
+              ),
+            );
+          },
           tooltip: 'Hilfe anzeigen',
         ),
       ],
