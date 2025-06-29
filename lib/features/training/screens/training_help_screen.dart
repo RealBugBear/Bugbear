@@ -15,9 +15,16 @@ class TrainingHelpScreen extends StatefulWidget {
 class _TrainingHelpScreenState extends State<TrainingHelpScreen> {
   VideoPlayerController? _controller;
 
-  Future<void> _playVideo() async {
+  /// Mapping 'phase-exercise' → asset path
+  final Map<String, String> _videoPaths = {
+    '2a-1': 'assets/videos/test video.mp4',
+  };
+
+  Future<void> _playVideo(String key) async {
+    final path = _videoPaths[key];
+    if (path == null) return;
     await _controller?.dispose();
-    _controller = VideoPlayerController.asset('assets/videos/test video.mp4');
+    _controller = VideoPlayerController.asset(path);
     await _controller!.initialize();
     setState(() {});
     await _controller!.play();
@@ -47,7 +54,8 @@ class _TrainingHelpScreenState extends State<TrainingHelpScreen> {
                 final num = i + 1;
                 return ElevatedButton(
                   key: Key('help_btn_$num'),
-                  onPressed: () => _playVideo(),
+                  onPressed: () =>
+                      _playVideo('${widget.phaseId}-$num'),
                   child: Text('$num'),
                 );
               }),
