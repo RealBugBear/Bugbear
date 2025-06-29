@@ -47,7 +47,7 @@ class _TrainingHelpScreenState extends State<TrainingHelpScreen> {
                 final num = i + 1;
                 return ElevatedButton(
                   key: Key('help_btn_$num'),
-                  onPressed: _playVideo,
+                  onPressed: () => _playVideo(),
                   child: Text('$num'),
                 );
               }),
