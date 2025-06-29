@@ -46,15 +46,9 @@ class _TrainingHelpScreenState extends State<TrainingHelpScreen> {
               children: List.generate(exercises.length, (i) {
                 final num = i + 1;
                 return ElevatedButton(
-
                   key: Key('help_btn_$num'),
                   onPressed: _playVideo,
                   child: Text('$num'),
-
-                  key: Key('help_btn_\$num'),
-                  onPressed: _playVideo,
-                  child: Text('\$num'),
-
                 );
               }),
             ),
