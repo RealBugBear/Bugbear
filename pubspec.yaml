@@ -62,6 +62,7 @@ flutter:
     - assets/sounds/
     - assets/quiz_questions_de.json
     - assets/quiz_questions_en.json
+    - assets/videos/test video.mp4
 
 flutter_intl:
   enabled: true
