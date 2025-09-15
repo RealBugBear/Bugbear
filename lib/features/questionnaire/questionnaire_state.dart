@@ -5,8 +5,8 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:hive/hive.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:bugbear_app/features/profile/models/reflex_profile.dart';
-import 'package:bugbear_app/features/profile/services/profile_service.dart';
+import 'package:free_base/features/profile/models/reflex_profile.dart';
+import 'package:free_base/features/profile/services/profile_service.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:developer' as developer;
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:bugbear_app/features/training/services/exercise_repository.dart';
-import 'package:bugbear_app/features/training/screens/training_help_screen.dart';
+import 'package:free_base/features/training/services/exercise_repository.dart';
+import 'package:free_base/features/training/screens/training_help_screen.dart';
 
 void main() {
   testWidgets('shows buttons for each exercise', (tester) async {

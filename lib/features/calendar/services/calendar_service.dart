@@ -1,7 +1,7 @@
 // lib/features/calendar/services/calendar_service.dart
 
 import 'package:hive/hive.dart';
-import 'package:bugbear_app/features/calendar/models/calendar_event.dart';
+import 'package:free_base/features/calendar/models/calendar_event.dart';
 
 /// CalendarService
 ///

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
-import 'package:bugbear_app/widgets/app_drawer.dart';
+import 'package:free_base/widgets/app_drawer.dart';
 
 import 'questionnaire_state.dart';
 import 'questionnaire_result_screen.dart';

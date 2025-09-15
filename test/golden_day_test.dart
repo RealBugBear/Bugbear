@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:bugbear_app/features/calendar/services/golden_day_service.dart';
+import 'package:free_base/features/calendar/services/golden_day_service.dart';
 
 void main() {
   final service = GoldenDayService();

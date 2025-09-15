@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:bugbear_app/features/training/screens/phase_selection_screen.dart';
+import 'package:free_base/constants/app_strings.dart';
+import 'package:free_base/features/training/screens/phase_selection_screen.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -11,11 +12,26 @@ class AppDrawer extends StatelessWidget {
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
+            DrawerHeader(
               decoration: BoxDecoration(color: Colors.blueGrey),
-              child: Text(
-                'Menü',
-                style: TextStyle(fontSize: 24, color: Colors.white),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    AppStrings.appName,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Menü',
+                    style: const TextStyle(fontSize: 16, color: Colors.white70),
+                  ),
+                ],
               ),
             ),
             ListTile(

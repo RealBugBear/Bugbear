@@ -1,6 +1,6 @@
 // lib/features/training/services/session_repository.dart
 
-import 'package:bugbear_app/features/training/models/session_state.dart';
+import 'package:free_base/features/training/models/session_state.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 class SessionRepository {

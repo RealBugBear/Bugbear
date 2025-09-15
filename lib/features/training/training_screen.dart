@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:bugbear_app/features/training/notifier/session_notifier.dart';
-import 'package:bugbear_app/features/training/widgets/training_header.dart';
-import 'package:bugbear_app/widgets/app_drawer.dart';
-import 'package:bugbear_app/features/training/widgets/progress_row.dart';
-import 'package:bugbear_app/features/training/widgets/exercise_canvas.dart';
-import 'package:bugbear_app/features/training/widgets/control_button_row.dart';
+import 'package:free_base/features/training/notifier/session_notifier.dart';
+import 'package:free_base/features/training/widgets/training_header.dart';
+import 'package:free_base/widgets/app_drawer.dart';
+import 'package:free_base/features/training/widgets/progress_row.dart';
+import 'package:free_base/features/training/widgets/exercise_canvas.dart';
+import 'package:free_base/features/training/widgets/control_button_row.dart';
 
 class TrainingScreen extends StatelessWidget {
   const TrainingScreen({super.key});

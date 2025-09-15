@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:bugbear_app/features/training/models/session_state.dart';
-import 'package:bugbear_app/features/training/services/session_repository.dart';
+import 'package:free_base/features/training/models/session_state.dart';
+import 'package:free_base/features/training/services/session_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SyncService {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:bugbear_app/features/onboarding/services/secure_storage_service.dart';
+import 'package:free_base/features/onboarding/services/secure_storage_service.dart';
 
 /// SplashScreen: Prüft verschlüsselten Login-Status + Firebase-Auth
 class SplashScreen extends StatefulWidget {

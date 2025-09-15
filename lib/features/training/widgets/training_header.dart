@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:bugbear_app/features/training/screens/phase_selection_screen.dart';
-import 'package:bugbear_app/features/training/screens/training_help_screen.dart';
+import 'package:free_base/features/training/screens/phase_selection_screen.dart';
+import 'package:free_base/features/training/screens/training_help_screen.dart';
 
 /// TrainingHeader zeigt in der oberen Leiste:
 /// - das automatische Hamburger-Icon (öffnet den Drawer)

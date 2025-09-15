@@ -1,91 +1,135 @@
-# bugbear_app
+# Free Base
 
-A cross-platform Flutter application for logging bug reports and managing recovery tasks.
+Free Base is the digital companion for the Free Base reflex-integration program. The Flutter app guides families, athletes, and
+therapists through structured training phases, keeps offline progress safely encrypted, and synchronises results with Firebase so
+coaches always have the latest information.
+
+## Project Overview
+
+### Key Features
+- **Guided onboarding** with Firebase email/password authentication, secure key generation, and role selection for personal,
+  parent/child, or trainer journeys.
+- **Daily training companion** featuring phase-based exercise plans, timers, and offline persistence through Hive, with automatic
+  background synchronisation handled by the `SyncService` once connectivity returns.
+- **Calendar and “Golden Day” planning** powered by the `CalendarService` and `GoldenDayService` to monitor adherence and highlight
+  milestone celebrations.
+- **Questionnaire and reflex profiles** that pull structured content from local JSON assets, store state securely, and surface
+  insights through the profile screens.
+- **Cross-platform shell** with platform-specific assets (icons, splash screens) ready to be replaced with branded Free Base
+  artwork.
+
+### Architecture Highlights
+- Flutter 3 / Dart 3 application organised under `lib/features`, using Provider for dependency injection and state management.
+- Firebase Core, Authentication, and Firestore for backend services; configuration is generated via `firebase_options.dart` and
+  platform-specific files created by `flutterfire configure`.
+- Hive (AES encrypted via `SecureStorageService`) for offline-first storage of training sessions, questionnaires, and calendar
+  events.
+- Modular services (`SessionRepository`, `ExerciseRepository`, `SyncService`, `CalendarService`, `GoldenDayService`,
+  `ProfileService`) that keep UI widgets declarative and easy to test.
+- Localisation scaffolding (`lib/l10n/*.arb`) prepared for English and German with the shared `appName` key.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
+- Flutter SDK 3.0 or newer (verify with `flutter --version`).
+- Dart 3 toolchain (included with Flutter).
+- Firebase CLI (`npm install -g firebase-tools`) with access to a Firebase project.
+- Platform SDKs for your targets (Android Studio, Xcode, Visual Studio Build Tools).
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
-## Firestore Rules
-
-Security rules for Cloud Firestore are stored in `firestore.rules`. After making changes, deploy them with other Firebase configuration using:
-
+### 1. Clone & install dependencies
 ```bash
-firebase deploy
+git clone https://github.com/<your-org>/free-base.git
+cd free-base
+flutter pub get
 ```
 
-## Encryption Key Lifecycle
+### 2. Configure Firebase (EU region)
+1. Create a Firebase project or reuse an existing one. When enabling Firestore and Storage, choose an EU region such as
+   `europe-west1` to keep personal data inside the EU.
+2. Run the FlutterFire wizard and select the platforms you need:
+   ```bash
+   flutterfire configure --project <firebase-project-id> --out=lib/firebase_options.dart
+   ```
+3. Restrict the generated API keys to the package and bundle identifiers found in the Android, iOS, macOS, web, and Windows
+   folders. Update `android/app/build.gradle.kts` and `ios/Runner.xcodeproj` if you rename bundle IDs.
+4. Deploy the provided Firestore security rules from `firestore.rules` with `firebase deploy --only firestore:rules`.
 
-The app encrypts all Hive boxes using a secret key. The first time the
-application runs, `SecureStorageService` generates a new key using `Hive.generateSecureKey()`.
-This key is persisted with `FlutterSecureStorage` so it remains available across
-app restarts. On subsequent launches the stored key is loaded again and reused to
-decrypt the boxes. The key only changes when the app data is cleared or the
-`FlutterSecureStorage` entry is removed.
-Signing out triggers `AuthService.signOut()`, which clears `SecureStorageService`
-and deletes the stored encryption key so a fresh key is generated on the next
-launch.
+### 3. Environment configuration
+Sensitive values are injected at build time via `--dart-define`. Configure them once in your shell, CI pipeline, or IDE run
+configuration.
 
-## Firebase API Key Restrictions
-Run `flutterfire configure` to generate `lib/firebase_options.dart` and platform
-specific configuration files. The API keys referenced there are restricted to
-the app's domains and bundle identifiers and may only be used by this
-application. When generating new keys, apply the following restrictions:
+| Key | Purpose |
+| --- | --- |
+| `FIREBASE_PROJECT_ID` | Firebase project identifier (used for desktop builds). |
+| `FIREBASE_ANDROID_API_KEY`, `FIREBASE_ANDROID_APP_ID`, `FIREBASE_ANDROID_MESSAGING_SENDER_ID`, `FIREBASE_ANDROID_STORAGE_BUCKET` |
+  Android credentials as generated by FlutterFire. |
+| `FIREBASE_IOS_*` / `FIREBASE_MACOS_*` | Keys, bundle IDs, and storage buckets for Apple platforms. |
+| `FIREBASE_WEB_*` | Web API key, app ID, auth domain, messaging sender ID, storage bucket. |
+| `FIREBASE_WINDOWS_*` | API key, app ID, auth domain, messaging sender ID, storage bucket for Windows builds. |
 
-1. **Android** – Restrict to the Android package name
-   `com.example.bugbear_app` and add the appropriate SHA-1/SHA-256 signing
-   certificate fingerprints.
-2. **iOS** – Restrict to the bundle ID `com.example.bugbearRecovery`.
-3. **Web** – Authorize the domains used by the web app such as
-   `https://bugbear-9d720.web.app`, `https://bugbear-9d720.firebaseapp.com` and
-   any local development hosts (for example `http://localhost:5000`).
-
-After creating restricted keys, provide them as compile‑time environment
-variables when building the app. The values are read using `String.fromEnvironment`
-and are **not** stored in source control. For web and desktop builds supply the
-values via `--dart-define=FIREBASE_…`. Example:
-
+Example run command:
 ```bash
 flutter run \
-  --dart-define=FIREBASE_PROJECT_ID=bugbear-9d720 \
+  --dart-define=FIREBASE_PROJECT_ID=<project-id> \
   --dart-define=FIREBASE_ANDROID_API_KEY=<android-key> \
   --dart-define=FIREBASE_ANDROID_APP_ID=<android-app-id> \
-  --dart-define=FIREBASE_ANDROID_MESSAGING_SENDER_ID=<android-messaging-id> \
+  --dart-define=FIREBASE_ANDROID_MESSAGING_SENDER_ID=<android-sender-id> \
   --dart-define=FIREBASE_ANDROID_STORAGE_BUCKET=<android-bucket> \
   --dart-define=FIREBASE_IOS_API_KEY=<ios-key> \
   --dart-define=FIREBASE_IOS_APP_ID=<ios-app-id> \
   --dart-define=FIREBASE_IOS_BUNDLE_ID=<ios-bundle-id> \
-  --dart-define=FIREBASE_IOS_MESSAGING_SENDER_ID=<ios-messaging-id> \
+  --dart-define=FIREBASE_IOS_MESSAGING_SENDER_ID=<ios-sender-id> \
   --dart-define=FIREBASE_IOS_STORAGE_BUCKET=<ios-bucket> \
   --dart-define=FIREBASE_MACOS_API_KEY=<macos-key> \
   --dart-define=FIREBASE_MACOS_APP_ID=<macos-app-id> \
   --dart-define=FIREBASE_MACOS_BUNDLE_ID=<macos-bundle-id> \
-  --dart-define=FIREBASE_MACOS_MESSAGING_SENDER_ID=<macos-messaging-id> \
+  --dart-define=FIREBASE_MACOS_MESSAGING_SENDER_ID=<macos-sender-id> \
   --dart-define=FIREBASE_MACOS_STORAGE_BUCKET=<macos-bucket> \
   --dart-define=FIREBASE_WEB_API_KEY=<web-key> \
   --dart-define=FIREBASE_WEB_APP_ID=<web-app-id> \
   --dart-define=FIREBASE_WEB_AUTH_DOMAIN=<web-auth-domain> \
-  --dart-define=FIREBASE_WEB_MESSAGING_SENDER_ID=<web-messaging-id> \
+  --dart-define=FIREBASE_WEB_MESSAGING_SENDER_ID=<web-sender-id> \
   --dart-define=FIREBASE_WEB_STORAGE_BUCKET=<web-bucket> \
   --dart-define=FIREBASE_WINDOWS_API_KEY=<windows-key> \
   --dart-define=FIREBASE_WINDOWS_APP_ID=<windows-app-id> \
   --dart-define=FIREBASE_WINDOWS_AUTH_DOMAIN=<windows-auth-domain> \
-  --dart-define=FIREBASE_WINDOWS_MESSAGING_SENDER_ID=<windows-messaging-id> \
+  --dart-define=FIREBASE_WINDOWS_MESSAGING_SENDER_ID=<windows-sender-id> \
   --dart-define=FIREBASE_WINDOWS_STORAGE_BUCKET=<windows-bucket>
 ```
 
-Missing values for any of these variables cause `Firebase.initializeApp` to fail
-during startup.
+Tip: For local development create a script (e.g. `tool/run_free_base.sh`) that exports these values or use `.vscode/launch.json`
+with per-platform configurations.
 
-These variables can also be configured in your CI environment with the same
-names when running `flutter build`.
+### 4. Run smoke tests
+- `flutter run` (mobile/web/desktop) — verify the splash screen, login, and dashboard navigation flows.
+- `flutter test` — execute unit and widget tests (including questionnaire and golden day services).
+- `npm test` inside the project root — runs Firestore security rule tests.
+
+### Build & Release
+- Android: `flutter build apk` / `flutter build appbundle`.
+- iOS: `flutter build ios --release` (requires Xcode setup and code signing).
+- Web: `flutter build web` and deploy the contents of `build/web/`.
+- macOS / Windows: `flutter build macos` or `flutter build windows` (make sure the generated binaries use the Free Base name).
+
+Replace the placeholder launcher icons and splash screens with official Free Base artwork before shipping. Assets live under
+`assets/images` and platform-specific resources (`android/app/src/main/res`, `ios/Runner/Assets.xcassets`, etc.).
+
+## Privacy & Data Protection (EU)
+- Store all Firebase services in an EU region and document the data flows in your privacy policy.
+- Authentication credentials are handled by Firebase Auth; training data and questionnaire answers live in Firestore collections
+  scoped to the user ID.
+- Local Hive boxes are encrypted with an AES key stored via `SecureStorageService` and purged on sign-out.
+- Update the in-app and store privacy disclosures to explain retention periods, user deletion rights, and data processing roles.
+
+## Maintenance & Tooling
+- Generate localisation files with `flutter pub run intl_utils:generate` after editing `.arb` resources.
+- Run `flutter pub run build_runner build --delete-conflicting-outputs` if you add new `freezed` or `json_serializable`
+  models.
+- Keep the Firebase configuration (`lib/firebase_options.dart` and platform bundles) in sync with the project when environments
+  change.
+
+## Known Issues
+- Parent and trainer role flows still use placeholder screens. UX copy and dedicated dashboards will follow in future sprints.
+- Exercise assets currently rely on placeholder imagery (`assets/images/placeholder.png`). Replace these with the final Free Base
+  visuals during the branding pass.
 
