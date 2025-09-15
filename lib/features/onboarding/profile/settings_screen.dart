@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:bugbear_app/features/onboarding/services/auth_service.dart';
-import 'package:bugbear_app/widgets/app_drawer.dart';
+import 'package:free_base/features/onboarding/services/auth_service.dart';
+import 'package:free_base/widgets/app_drawer.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});

@@ -5,36 +5,37 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:bugbear_app/firebase_options.dart';
-import 'package:bugbear_app/features/onboarding/services/auth_service.dart';
-import 'package:bugbear_app/features/onboarding/services/secure_storage_service.dart';
-import 'package:bugbear_app/features/onboarding/state/auth_provider.dart';
-import 'package:bugbear_app/features/common/splash_screen.dart';
-import 'package:bugbear_app/features/onboarding/screens/login_screen.dart';
-import 'package:bugbear_app/features/onboarding/screens/register_screen.dart';
-import 'package:bugbear_app/features/onboarding/screens/role_selection_screen.dart';
-import 'package:bugbear_app/features/common/dashboard_screen.dart';
-import 'package:bugbear_app/features/onboarding/profile/settings_screen.dart';
-import 'package:bugbear_app/features/training/training_screen.dart';
-import 'package:bugbear_app/features/calendar/screens/calendar_screen.dart';
-import 'package:bugbear_app/features/common/error_screen.dart';
+import 'package:free_base/constants/app_strings.dart';
+import 'package:free_base/firebase_options.dart';
+import 'package:free_base/features/onboarding/services/auth_service.dart';
+import 'package:free_base/features/onboarding/services/secure_storage_service.dart';
+import 'package:free_base/features/onboarding/state/auth_provider.dart';
+import 'package:free_base/features/common/splash_screen.dart';
+import 'package:free_base/features/onboarding/screens/login_screen.dart';
+import 'package:free_base/features/onboarding/screens/register_screen.dart';
+import 'package:free_base/features/onboarding/screens/role_selection_screen.dart';
+import 'package:free_base/features/common/dashboard_screen.dart';
+import 'package:free_base/features/onboarding/profile/settings_screen.dart';
+import 'package:free_base/features/training/training_screen.dart';
+import 'package:free_base/features/calendar/screens/calendar_screen.dart';
+import 'package:free_base/features/common/error_screen.dart';
 
-import 'package:bugbear_app/features/training/models/session_state.dart';
-import 'package:bugbear_app/features/training/models/session_state_adapter.dart';
-import 'package:bugbear_app/features/training/services/session_repository.dart';
-import 'package:bugbear_app/features/training/services/sync_service.dart';
-import 'package:bugbear_app/features/training/services/exercise_repository.dart';
-import 'package:bugbear_app/features/training/notifier/session_notifier.dart';
+import 'package:free_base/features/training/models/session_state.dart';
+import 'package:free_base/features/training/models/session_state_adapter.dart';
+import 'package:free_base/features/training/services/session_repository.dart';
+import 'package:free_base/features/training/services/sync_service.dart';
+import 'package:free_base/features/training/services/exercise_repository.dart';
+import 'package:free_base/features/training/notifier/session_notifier.dart';
 
-import 'package:bugbear_app/features/calendar/models/calendar_event.dart';
-import 'package:bugbear_app/features/calendar/models/calendar_event_adapter.dart';
-import 'package:bugbear_app/features/calendar/services/calendar_service.dart';
-import 'package:bugbear_app/features/calendar/services/golden_day_service.dart';
-import 'package:bugbear_app/features/questionnaire/questionnaire_screen.dart';
-import 'package:bugbear_app/features/questionnaire/quiz_intro_screen.dart';
-import 'package:bugbear_app/features/profile/screens/profile_overview_screen.dart';
-import 'package:bugbear_app/features/profile/screens/reflex_profile_detail_screen.dart';
-import 'package:bugbear_app/features/profile/models/reflex_profile.dart';
+import 'package:free_base/features/calendar/models/calendar_event.dart';
+import 'package:free_base/features/calendar/models/calendar_event_adapter.dart';
+import 'package:free_base/features/calendar/services/calendar_service.dart';
+import 'package:free_base/features/calendar/services/golden_day_service.dart';
+import 'package:free_base/features/questionnaire/questionnaire_screen.dart';
+import 'package:free_base/features/questionnaire/quiz_intro_screen.dart';
+import 'package:free_base/features/profile/screens/profile_overview_screen.dart';
+import 'package:free_base/features/profile/screens/reflex_profile_detail_screen.dart';
+import 'package:free_base/features/profile/models/reflex_profile.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -162,7 +163,7 @@ class MyApp extends StatelessWidget {
         createQuestionnaireProvider(),
       ],
       child: MaterialApp(
-        title: 'BugBear App',
+        title: AppStrings.appName,
         theme: ThemeData(primarySwatch: Colors.blue),
         initialRoute: '/',
         routes: {

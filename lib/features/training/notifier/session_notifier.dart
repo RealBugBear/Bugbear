@@ -8,14 +8,14 @@
 
 import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:bugbear_app/features/training/models/session_state.dart';
-import 'package:bugbear_app/features/training/models/exercise_item.dart';
-import 'package:bugbear_app/features/training/services/session_repository.dart';
-import 'package:bugbear_app/features/training/services/sync_service.dart';
-import 'package:bugbear_app/features/calendar/services/calendar_service.dart';
-import 'package:bugbear_app/features/calendar/models/calendar_event.dart';
-import 'package:bugbear_app/features/training/services/exercise_repository.dart';
-import 'package:bugbear_app/features/calendar/services/golden_day_service.dart';
+import 'package:free_base/features/training/models/session_state.dart';
+import 'package:free_base/features/training/models/exercise_item.dart';
+import 'package:free_base/features/training/services/session_repository.dart';
+import 'package:free_base/features/training/services/sync_service.dart';
+import 'package:free_base/features/calendar/services/calendar_service.dart';
+import 'package:free_base/features/calendar/models/calendar_event.dart';
+import 'package:free_base/features/training/services/exercise_repository.dart';
+import 'package:free_base/features/calendar/services/golden_day_service.dart';
 
 class SessionNotifier extends ChangeNotifier {
   final SessionRepository _repo;

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
-import 'package:bugbear_app/widgets/app_drawer.dart';
+import 'package:free_base/widgets/app_drawer.dart';
 import '../models/reflex_profile.dart';
 import '../services/profile_service.dart';
 import '../../calendar/widgets/golden_day_banner.dart';

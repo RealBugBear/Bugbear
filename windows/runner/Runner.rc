@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "bugbear_recovery" "\0"
+            VALUE "FileDescription", "Free Base" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "bugbear_recovery" "\0"
+            VALUE "InternalName", "free_base" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "bugbear_recovery.exe" "\0"
-            VALUE "ProductName", "bugbear_recovery" "\0"
+            VALUE "OriginalFilename", "free_base.exe" "\0"
+            VALUE "ProductName", "Free Base" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

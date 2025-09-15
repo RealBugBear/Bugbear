@@ -1,4 +1,4 @@
-import 'package:bugbear_app/features/training/models/exercise_item.dart';
+import 'package:free_base/features/training/models/exercise_item.dart';
 
 /// Liefert für eine gegebene Phase eine Liste nummerierter ExerciseItems.
 class ExerciseRepository {

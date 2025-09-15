@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:bugbear_app/features/training/services/exercise_repository.dart';
-import 'package:bugbear_app/features/training/notifier/session_notifier.dart';
+import 'package:free_base/features/training/services/exercise_repository.dart';
+import 'package:free_base/features/training/notifier/session_notifier.dart';
 
 class PhaseSelectionDialog extends StatelessWidget {
   const PhaseSelectionDialog({super.key});

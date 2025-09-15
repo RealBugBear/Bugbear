@@ -1,11 +1,11 @@
 {
-    "name": "bugbear_recovery",
-    "short_name": "bugbear_recovery",
+    "name": "Free Base",
+    "short_name": "FreeBase",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Free Base helps families plan, execute, and track reflex-integration training sessions.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

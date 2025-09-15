@@ -1,7 +1,7 @@
 // lib/features/calendar/models/calendar_event.dart
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:bugbear_app/features/training/models/session_state.dart';
+import 'package:free_base/features/training/models/session_state.dart';
 
 part 'calendar_event.freezed.dart';
 part 'calendar_event.g.dart';

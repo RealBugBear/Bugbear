@@ -11,7 +11,7 @@ import '../models/calendar_event.dart';
 import '../dialogs/edit_training_day_dialog.dart';
 import '../notifier/calendar_notifier.dart';
 import '../services/calendar_service.dart';
-import 'package:bugbear_app/widgets/app_drawer.dart';
+import 'package:free_base/widgets/app_drawer.dart';
 
 /// CalendarScreen
 ///

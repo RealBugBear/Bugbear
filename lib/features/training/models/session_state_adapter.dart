@@ -1,5 +1,5 @@
 import 'package:hive/hive.dart';
-import 'package:bugbear_app/features/training/models/session_state.dart';
+import 'package:free_base/features/training/models/session_state.dart';
 
 class SessionStatusAdapter extends TypeAdapter<SessionStatus> {
   @override

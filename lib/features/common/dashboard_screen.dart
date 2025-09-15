@@ -1,9 +1,9 @@
 // lib/features/common/dashboard_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:bugbear_app/features/training/training_screen.dart';
-import 'package:bugbear_app/features/calendar/screens/calendar_screen.dart';
-import 'package:bugbear_app/widgets/app_drawer.dart';
+import 'package:free_base/features/training/training_screen.dart';
+import 'package:free_base/features/calendar/screens/calendar_screen.dart';
+import 'package:free_base/widgets/app_drawer.dart';
 
 /// DashboardScreen
 ///
