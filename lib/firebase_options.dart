@@ -41,29 +41,29 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: String.fromEnvironment('FIREBASE_WEB_API_KEY'),
-    appId: String.fromEnvironment('FIREBASE_WEB_APP_ID'),
-    messagingSenderId: String.fromEnvironment('FIREBASE_WEB_MESSAGING_SENDER_ID'),
-    projectId: String.fromEnvironment('FIREBASE_PROJECT_ID'),
-    authDomain: String.fromEnvironment('FIREBASE_WEB_AUTH_DOMAIN'),
-    storageBucket: String.fromEnvironment('FIREBASE_WEB_STORAGE_BUCKET'),
+    apiKey: 'AIzaSyA7S3zedj6miyantm-ZjHQpvcHPgUJSyew',
+    appId: '1:729792119936:web:25c804d2c97c4964935265',
+    messagingSenderId: '729792119936',
+    projectId: 'bugbear-9d720',
+    authDomain: 'bugbear-9d720.firebaseapp.com',
+    storageBucket: 'bugbear-9d720.firebasestorage.app',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: String.fromEnvironment('FIREBASE_ANDROID_API_KEY'),
-    appId: String.fromEnvironment('FIREBASE_ANDROID_APP_ID'),
-    messagingSenderId: String.fromEnvironment('FIREBASE_ANDROID_MESSAGING_SENDER_ID'),
-    projectId: String.fromEnvironment('FIREBASE_PROJECT_ID'),
-    storageBucket: String.fromEnvironment('FIREBASE_ANDROID_STORAGE_BUCKET'),
+    apiKey: 'AIzaSyCrOxkJj_w35-oyrDFdst-lqI3Ql-wHq28',
+    appId: '1:729792119936:android:5f6dcb95da178e67935265',
+    messagingSenderId: '729792119936',
+    projectId: 'bugbear-9d720',
+    storageBucket: 'bugbear-9d720.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: String.fromEnvironment('FIREBASE_IOS_API_KEY'),
-    appId: String.fromEnvironment('FIREBASE_IOS_APP_ID'),
-    messagingSenderId: String.fromEnvironment('FIREBASE_IOS_MESSAGING_SENDER_ID'),
-    projectId: String.fromEnvironment('FIREBASE_PROJECT_ID'),
-    storageBucket: String.fromEnvironment('FIREBASE_IOS_STORAGE_BUCKET'),
-    iosBundleId: String.fromEnvironment('FIREBASE_IOS_BUNDLE_ID'),
+    apiKey: 'AIzaSyAak0nzgDj_ejIu3oc-SHA1Vlrsyg9g74A',
+    appId: '1:729792119936:ios:90827a7f0b76ea41935265',
+    messagingSenderId: '729792119936',
+    projectId: 'bugbear-9d720',
+    storageBucket: 'bugbear-9d720.firebasestorage.app',
+    iosBundleId: 'com.example.bugbearRecovery',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
