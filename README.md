@@ -36,10 +36,10 @@ and deletes the stored encryption key so a fresh key is generated on the next
 launch.
 
 ## Firebase API Key Restrictions
-
-API keys in `lib/firebase_options.dart` should be restricted in the Google Cloud
-console to prevent unauthorized use. When generating new keys, apply the
-following restrictions:
+Run `flutterfire configure` to generate `lib/firebase_options.dart` and platform
+specific configuration files. The API keys referenced there are restricted to
+the app's domains and bundle identifiers and may only be used by this
+application. When generating new keys, apply the following restrictions:
 
 1. **Android** – Restrict to the Android package name
    `com.example.bugbear_app` and add the appropriate SHA-1/SHA-256 signing
@@ -51,7 +51,8 @@ following restrictions:
 
 After creating restricted keys, provide them as compile‑time environment
 variables when building the app. The values are read using `String.fromEnvironment`
-and are **not** stored in source control. Example:
+and are **not** stored in source control. For web and desktop builds supply the
+values via `--dart-define=FIREBASE_…`. Example:
 
 ```bash
 flutter run \
