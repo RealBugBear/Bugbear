@@ -1,0 +1,27 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
+      - name: Flutter dependencies
+        run: flutter pub get
+      - name: Lint & Tests
+        run: |
+          flutter analyze
+          flutter test --no-pub
+      - name: Secret scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: .
+          base: ${{ github.event.pull_request.base.sha || github.event.before }}
+          head: ${{ github.sha }}
+      - name: Firestore rules tests
+        run: |
+          npm install
+          npm run test:rules

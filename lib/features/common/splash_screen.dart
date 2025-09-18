@@ -16,21 +16,19 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkAuthStatus();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _redirect());
   }
 
-  Future<void> _checkAuthStatus() async {
-    // Optionales kurzes Branding-Delay
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    final loggedIn = await _secureStorage.isLoggedIn;
+  Future<void> _redirect() async {
+    final cachedLogin = await _secureStorage.isLoggedIn;
     final firebaseUser = FirebaseAuth.instance.currentUser;
 
     if (!mounted) return;
-    if (loggedIn && firebaseUser != null) {
-      Navigator.pushReplacementNamed(context, '/dashboard');
+
+    if (firebaseUser != null && cachedLogin) {
+      Navigator.of(context).pushReplacementNamed('/dashboard');
     } else {
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.of(context).pushReplacementNamed('/login');
     }
   }
 
