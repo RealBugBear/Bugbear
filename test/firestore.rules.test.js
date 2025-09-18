@@ -1,4 +1,4 @@
-const fs = require('fs');
+const { readFileSync } = require('fs');
 const {
   initializeTestEnvironment,
   assertFails,
@@ -9,69 +9,112 @@ let testEnv;
 
 beforeAll(async () => {
   testEnv = await initializeTestEnvironment({
-    projectId: 'bugbear-test',
+    projectId: 'demo-test',
     firestore: {
-      rules: fs.readFileSync('firestore.rules', 'utf8'),
+      rules: readFileSync('firestore.rules', 'utf8'),
     },
   });
 });
 
-afterAll(async () => {
-  await testEnv.cleanup();
-});
+afterAll(async () => await testEnv.cleanup());
 
-function getDb(uid) {
+function userDb(uid) {
   return testEnv.authenticatedContext(uid).firestore();
 }
 
-function getAnonDb() {
+function unauthDb() {
   return testEnv.unauthenticatedContext().firestore();
 }
 
-test('user can read and write own user document', async () => {
-  const db = getDb('alice');
-  await assertSucceeds(db.collection('users').doc('alice').set({foo: 'bar'}));
-  await assertSucceeds(db.collection('users').doc('alice').get());
+test('owner can CRUD their own profile document', async () => {
+  const db = userDb('userA');
+  const ref = db.doc('users/userA/profiles/profile1');
+
+  await assertSucceeds(ref.set({ name: 'Alice' }));
+  await assertSucceeds(ref.get());
+  await assertSucceeds(ref.update({ age: 8 }));
+  await assertSucceeds(ref.delete());
 });
 
-test('user cannot read other user document', async () => {
-  const db = getDb('bob');
-  await assertFails(db.collection('users').doc('alice').get());
+test('unauthenticated access is blocked everywhere', async () => {
+  const db = unauthDb();
+
+  await assertFails(db.doc('users/userA').get());
+  await assertFails(db.collection('forum/posts').get());
+  await assertFails(db.collection('reports').add({ reason: 'spam' }));
 });
 
-test('user can manage own profile', async () => {
-  const db = getDb('alice');
-  await assertSucceeds(
-    db
-      .collection('users')
-      .doc('alice')
-      .collection('profiles')
-      .doc('p1')
-      .set({foo: 'bar'})
-  );
-  await assertSucceeds(
-    db.collection('users').doc('alice').collection('profiles').doc('p1').get()
-  );
-});
+test('cross-user reads and writes are denied', async () => {
+  const dbOwner = userDb('owner');
+  const dbOther = userDb('intruder');
+  const sessionRef = dbOwner.doc('users/owner/sessions/s1');
 
-test('user cannot access unknown subcollection', async () => {
-  const db = getDb('alice');
+  await assertSucceeds(sessionRef.set({ when: '2025-09-01' }));
+  await assertFails(dbOther.doc('users/owner/sessions/s1').get());
   await assertFails(
-    db
-      .collection('users')
-      .doc('alice')
-      .collection('unknown')
-      .doc('x')
-      .get()
+    dbOther.doc('users/owner/sessions/s1').set({ when: '2025-10-01' })
   );
 });
 
-test('user cannot read from unknown top-level collection', async () => {
-  const db = getDb('alice');
-  await assertFails(db.collection('other').doc('doc').get());
+test('forum rules allow authors but enforce payload validation', async () => {
+  const db = userDb('poster');
+  const posts = db.collection('forum/posts');
+
+  await assertSucceeds(
+    posts.add({
+      authorId: 'poster',
+      authorName: 'Pat',
+      text: 'Hello world',
+      timestamp: Date.now(),
+    })
+  );
+
+  await assertFails(
+    posts.add({
+      authorId: 'someone-else',
+      authorName: 'Eve',
+      text: 'Hi',
+      timestamp: Date.now(),
+    })
+  );
+
+  await assertFails(
+    posts.add({
+      authorId: 'poster',
+      authorName: 'Pat',
+      text: ''.padEnd(5000, 'x'),
+      timestamp: Date.now(),
+    })
+  );
 });
 
-test('unauthenticated access is denied', async () => {
-  const db = getAnonDb();
-  await assertFails(db.collection('users').doc('alice').get());
+test('only the author can update or delete forum posts', async () => {
+  const authorDb = userDb('author');
+  const otherDb = userDb('reader');
+  const postRef = authorDb.collection('forum/posts').doc('p1');
+
+  await assertSucceeds(
+    postRef.set({
+      authorId: 'author',
+      authorName: 'Ally',
+      text: 'Original text',
+      timestamp: Date.now(),
+    })
+  );
+
+  await assertSucceeds(postRef.update({ text: 'Updated text' }));
+  await assertFails(
+    otherDb.collection('forum/posts').doc('p1').update({ text: 'Hacked' })
+  );
+  await assertFails(otherDb.collection('forum/posts').doc('p1').delete());
+});
+
+test('reports can be created but never read back by clients', async () => {
+  const reporterDb = userDb('reporter');
+  const reports = reporterDb.collection('reports');
+  const reportRef = reports.doc('r1');
+
+  await assertSucceeds(reportRef.set({ reason: 'spam', createdAt: Date.now() }));
+  await assertFails(reportRef.get());
+  await assertFails(reportRef.update({ resolved: true }));
 });

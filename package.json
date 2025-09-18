@@ -2,11 +2,13 @@
   "name": "firestore-rules-tests",
   "private": true,
   "scripts": {
-    "test": "jest"
+    "emulators": "firebase emulators:start --only firestore --import=./emulator-data --export-on-exit",
+    "test": "npm run test:rules",
+    "test:rules": "jest --runInBand"
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^2.0.0",
-    "firebase-admin": "^11.5.0",
-    "jest": "^29.0.0"
+    "firebase-tools": "^13.0.0",
+    "jest": "^29.7.0"
   }
 }

@@ -11,6 +11,7 @@ import 'package:free_base/features/onboarding/services/auth_service.dart';
 import 'package:free_base/features/onboarding/services/secure_storage_service.dart';
 import 'package:free_base/features/onboarding/state/auth_provider.dart';
 import 'package:free_base/features/common/splash_screen.dart';
+import 'package:free_base/features/common/route_guard.dart';
 import 'package:free_base/features/onboarding/screens/login_screen.dart';
 import 'package:free_base/features/onboarding/screens/register_screen.dart';
 import 'package:free_base/features/onboarding/screens/role_selection_screen.dart';
@@ -166,23 +167,55 @@ class MyApp extends StatelessWidget {
         title: AppStrings.appName,
         theme: ThemeData(primarySwatch: Colors.blue),
         initialRoute: '/',
-        routes: {
-          '/': (c) => const SplashScreen(),
-          '/login': (c) => const LoginScreen(),
-          '/register': (c) => const RegisterScreen(),
-          '/select-role': (c) => const RoleSelectionScreen(),
-          '/dashboard': (c) => const DashboardScreen(),
-          '/settings': (c) => const SettingsScreen(),
-          '/training': (c) => const TrainingScreen(),
-          '/calendar': (c) => const CalendarScreen(),
-          '/questionnaire': (c) => const QuizIntroScreen(),
-          '/questionnaire/questions': (c) => const QuestionnaireScreen(),
-          '/reflexe-profil': (c) => const ProfileOverviewScreen(),
-          '/reflexe-profil/detail': (c) {
-            final profile =
-                ModalRoute.of(c)!.settings.arguments as ReflexProfile;
-            return ReflexProfileDetailScreen(profile: profile);
-          },
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case '/':
+              return MaterialPageRoute(
+                builder: (_) => const SplashScreen(),
+                settings: settings,
+              );
+            case '/login':
+              return MaterialPageRoute(
+                builder: (_) => const LoginScreen(),
+                settings: settings,
+              );
+            case '/register':
+              return MaterialPageRoute(
+                builder: (_) => const RegisterScreen(),
+                settings: settings,
+              );
+            case '/select-role':
+              return MaterialPageRoute(
+                builder: (_) => const RoleSelectionScreen(),
+                settings: settings,
+              );
+            case '/dashboard':
+              return guard(settings, (_) => const DashboardScreen());
+            case '/settings':
+              return guard(settings, (_) => const SettingsScreen());
+            case '/training':
+              return guard(settings, (_) => const TrainingScreen());
+            case '/calendar':
+              return guard(settings, (_) => const CalendarScreen());
+            case '/questionnaire':
+              return guard(settings, (_) => const QuizIntroScreen());
+            case '/questionnaire/questions':
+              return guard(settings, (_) => const QuestionnaireScreen());
+            case '/reflexe-profil':
+              return guard(settings, (_) => const ProfileOverviewScreen());
+            case '/reflexe-profil/detail':
+              return guard(settings, (_) {
+                final profile = settings.arguments as ReflexProfile;
+                return ReflexProfileDetailScreen(profile: profile);
+              });
+            default:
+              return MaterialPageRoute(
+                builder: (_) => const ErrorScreen(
+                  message: 'Die angeforderte Seite wurde nicht gefunden.',
+                ),
+                settings: settings,
+              );
+          }
         },
       ),
     );
