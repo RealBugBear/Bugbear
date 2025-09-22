@@ -7,6 +7,7 @@ import 'package:free_base/widgets/app_drawer.dart';
 import 'package:free_base/features/training/widgets/progress_row.dart';
 import 'package:free_base/features/training/widgets/exercise_canvas.dart';
 import 'package:free_base/features/training/widgets/control_button_row.dart';
+import 'package:free_base/widgets/connectivity_banner.dart';
 
 class TrainingScreen extends StatelessWidget {
   const TrainingScreen({super.key});
@@ -27,6 +28,7 @@ class TrainingScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
+          const ConnectivityBanner(),
           ProgressRow(
             currentExercise: idx + 1,
             totalExercises: exercises.length,

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:free_base/services/error_handler.dart';
+
 import 'questionnaire_state.dart';
 
 /// Displays questionnaire results with percentages per reflex and allows
@@ -63,12 +65,16 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
       );
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Fehler beim Speichern des Profils: $e'),
-          backgroundColor: Colors.red,
-        ),
+      final locale = Localizations.maybeLocaleOf(context);
+      final isGerman = locale != null && locale.languageCode.toLowerCase() == 'de';
+      final message = ErrorHandler.messageFor(
+        e,
+        isGerman: isGerman,
+        fallback: isGerman
+            ? 'Fehler beim Speichern des Profils. Bitte erneut versuchen.'
+            : 'Failed to save the profile. Please try again.',
       );
+      ErrorHandler.showErrorSnack(context, message);
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

@@ -37,6 +37,15 @@ import 'package:free_base/features/questionnaire/quiz_intro_screen.dart';
 import 'package:free_base/features/profile/screens/profile_overview_screen.dart';
 import 'package:free_base/features/profile/screens/reflex_profile_detail_screen.dart';
 import 'package:free_base/features/profile/models/reflex_profile.dart';
+import 'package:free_base/features/common/feature_placeholder_screen.dart';
+import 'package:free_base/services/feature_flags.dart';
+
+const FeatureFlags _localFeatureFlags = FeatureFlags(
+  parentsTrackEnabled: true,
+  trainerTrackEnabled: true,
+  forumEnabled: false,
+  achievementsEnabled: false,
+);
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -119,6 +128,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider<FeatureFlags>.value(
+          value: _localFeatureFlags,
+        ),
         ChangeNotifierProvider<AppAuthProvider>(
           create: (_) => AppAuthProvider(),
         ),
@@ -208,6 +220,42 @@ class MyApp extends StatelessWidget {
                 final profile = settings.arguments as ReflexProfile;
                 return ReflexProfileDetailScreen(profile: profile);
               });
+            case '/forum':
+              final flags = Provider.of<FeatureFlags>(context, listen: false);
+              if (!flags.forumEnabled) {
+                return MaterialPageRoute(
+                  builder: (_) => const ErrorScreen(
+                    message: 'Dieses Feature ist aktuell deaktiviert.',
+                  ),
+                  settings: settings,
+                );
+              }
+              return guard(
+                settings,
+                (_) => const FeaturePlaceholderScreen(
+                  title: 'Forum',
+                  message:
+                      'Hier entsteht das Community-Forum. Die Inhalte folgen in einer späteren Version.',
+                ),
+              );
+            case '/achievements':
+              final flags = Provider.of<FeatureFlags>(context, listen: false);
+              if (!flags.achievementsEnabled) {
+                return MaterialPageRoute(
+                  builder: (_) => const ErrorScreen(
+                    message: 'Dieses Feature ist aktuell deaktiviert.',
+                  ),
+                  settings: settings,
+                );
+              }
+              return guard(
+                settings,
+                (_) => const FeaturePlaceholderScreen(
+                  title: 'Erfolge',
+                  message:
+                      'Deine Erfolge erscheinen hier, sobald das Feature freigeschaltet ist.',
+                ),
+              );
             default:
               return MaterialPageRoute(
                 builder: (_) => const ErrorScreen(
