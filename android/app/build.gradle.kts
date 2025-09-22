@@ -29,7 +29,7 @@ android {
     defaultConfig {
         applicationId = "com.example.bugbear_recovery"
         // Erhöht auf API-Level 23, erforderlich für firebase_auth und andere Plugins
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName

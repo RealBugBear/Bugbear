@@ -24,7 +24,7 @@ dependencies:
 
   # State-Management, Localization & UI
   provider: ^6.1.5
-  intl: ^0.19.0
+  intl: 0.20.2
   flutter_local_notifications: ^19.2.1
   timezone: ^0.10.1
   google_fonts: ^6.2.1
