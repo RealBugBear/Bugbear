@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:free_base/features/profile/models/reflex_profile.dart';
 import 'package:free_base/features/profile/services/profile_service.dart';
+import 'package:free_base/services/error_handler.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'dart:developer' as developer;
 
@@ -192,11 +193,10 @@ class QuestionnaireState extends ChangeNotifier {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) {
       if (context != null && context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Bitte anmelden, um das Profil zu speichern.'),
-          ),
-        );
+        final message = _isGerman
+            ? 'Bitte anmelden, um das Profil zu speichern.'
+            : 'Please sign in to save the profile.';
+        ErrorHandler.showErrorSnack(context, message);
       }
       return;
     }
@@ -252,21 +252,15 @@ class QuestionnaireState extends ChangeNotifier {
         );
       }
       if (context != null && context.mounted) {
-        var message = _isGerman
+        final fallback = _isGerman
             ? 'Fehler beim Speichern. Bitte erneut versuchen.'
             : 'Error saving. Please try again.';
-        if (e.code == 'permission-denied') {
-          message = _isGerman
-              ? 'Zugriff verweigert. Bitte anmelden.'
-              : 'Permission denied. Please sign in.';
-        } else if (e.code == 'unavailable' || e.code == 'network-error') {
-          message = _isGerman
-              ? 'Netzwerkfehler. Bitte Verbindung prüfen.'
-              : 'Network error. Please check your connection.';
-        }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)),
+        final message = ErrorHandler.messageFor(
+          e,
+          isGerman: _isGerman,
+          fallback: fallback,
         );
+        ErrorHandler.showErrorSnack(context, message);
       }
     } catch (e, st) {
       if (kDebugMode) {
@@ -280,9 +274,7 @@ class QuestionnaireState extends ChangeNotifier {
         final message = _isGerman
             ? 'Fehler beim Speichern. Bitte erneut versuchen.'
             : 'Error saving. Please try again.';
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(message)),
-        );
+        ErrorHandler.showErrorSnack(context, message);
       }
     }
   }

@@ -5,13 +5,19 @@ void main() {
   final service = GoldenDayService();
 
   group('GoldenDayService', () {
+    test('zero sessions extend the phase significantly', () {
+      final start = DateTime(2024, 1, 1);
+      final result = service.calculateGoldenDay(start, {0: 0});
+      expect(result, start.add(const Duration(days: 40)));
+    });
+
     test('no weeks -> first golden day after 6 days', () {
       final start = DateTime(2024, 1, 1); // monday
       final result = service.calculateGoldenDay(start, {});
       expect(result, start.add(const Duration(days: 6)));
     });
 
-    test('complete week keeps weekday', () {
+    test('six sessions keep the baseline schedule', () {
       final start = DateTime(2024, 1, 1);
       final result = service.calculateGoldenDay(start, {0: 6});
       expect(result, start.add(const Duration(days: 13)));
@@ -23,7 +29,7 @@ void main() {
       expect(result, start.add(const Duration(days: 14)));
     });
 
-    test('extra sessions shift earlier', () {
+    test('more than six sessions shift earlier', () {
       final start = DateTime(2024, 1, 1);
       final result = service.calculateGoldenDay(start, {0: 7});
       expect(result, start.add(const Duration(days: 12)));

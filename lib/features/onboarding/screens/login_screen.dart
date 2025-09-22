@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:free_base/features/onboarding/services/auth_service.dart';
+import 'package:free_base/services/error_handler.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,9 +38,19 @@ class LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacementNamed(context, '/select-role');
     } catch (e) {
       if (!mounted) return;
+      final locale = Localizations.maybeLocaleOf(context);
+      final isGerman = locale != null && locale.languageCode.toLowerCase() == 'de';
+      final message = ErrorHandler.messageFor(
+        e,
+        isGerman: isGerman,
+        fallback: isGerman
+            ? 'Fehler bei der Anmeldung. Bitte später erneut versuchen.'
+            : 'Login failed. Please try again later.',
+      );
       setState(() {
-        _error = 'Fehler bei der Anmeldung: ${e.toString()}';
+        _error = message;
       });
+      ErrorHandler.showErrorSnack(context, message);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:free_base/features/onboarding/services/auth_service.dart';
+import 'package:free_base/services/error_handler.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -41,9 +42,19 @@ class RegisterScreenState extends State<RegisterScreen> {
       Navigator.pushReplacementNamed(context, '/select-role');
     } catch (e) {
       if (!mounted) return;
+      final locale = Localizations.maybeLocaleOf(context);
+      final isGerman = locale != null && locale.languageCode.toLowerCase() == 'de';
+      final message = ErrorHandler.messageFor(
+        e,
+        isGerman: isGerman,
+        fallback: isGerman
+            ? 'Fehler beim Registrieren. Bitte später erneut versuchen.'
+            : 'Registration failed. Please try again later.',
+      );
       setState(() {
-        _error = 'Fehler beim Registrieren: ${e.toString()}';
+        _error = message;
       });
+      ErrorHandler.showErrorSnack(context, message);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

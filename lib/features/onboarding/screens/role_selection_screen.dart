@@ -1,6 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:free_base/services/error_handler.dart';
+import 'package:free_base/services/feature_flags.dart';
 
 class RoleSelectionScreen extends StatefulWidget {
   const RoleSelectionScreen({super.key});
@@ -37,29 +41,12 @@ class RoleSelectionScreenState extends State<RoleSelectionScreen> {
       Navigator.pushReplacementNamed(context, '/dashboard');
     } catch (e) {
       if (!mounted) return;
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content:
-                Text('Fehler beim Speichern der Rolle. Bitte später erneut versuchen.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Fehler beim Speichern der Rolle. Bitte später erneut versuchen.'),
-          backgroundColor: Colors.red,
-        ),
+      ErrorHandler.showError(
+        context,
+        e,
+        fallback:
+            'Fehler beim Speichern der Rolle. Bitte später erneut versuchen.',
       );
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Fehler beim Speichern der Rolle. Bitte später erneut versuchen.'),
-            backgroundColor: Colors.red,
-          ),
-        );
-
     } finally {
       if (mounted) {
         setState(() {
@@ -71,6 +58,32 @@ class RoleSelectionScreenState extends State<RoleSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final featureFlags = context.watch<FeatureFlags>();
+    final buttons = <Widget>[
+      _RoleButton(
+        label: 'Personal',
+        onPressed:
+            _isLoading ? null : () => _setRoleAndContinue('personal'),
+      ),
+      if (featureFlags.parentsTrackEnabled) ...[
+        const SizedBox(height: 12),
+        _RoleButton(
+          label: 'Eltern-Kind',
+          onPressed: _isLoading
+              ? null
+              : () => _setRoleAndContinue('eltern-kind'),
+        ),
+      ],
+      if (featureFlags.trainerTrackEnabled) ...[
+        const SizedBox(height: 12),
+        _RoleButton(
+          label: 'Trainer',
+          onPressed:
+              _isLoading ? null : () => _setRoleAndContinue('trainer'),
+        ),
+      ],
+    ];
+
     return Scaffold(
       appBar: AppBar(title: const Text('Rolle auswählen')),
       body: Padding(
@@ -80,24 +93,27 @@ class RoleSelectionScreenState extends State<RoleSelectionScreen> {
               ? const CircularProgressIndicator()
               : Column(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      onPressed: () => _setRoleAndContinue('personal'),
-                      child: const Text('Personal'),
-                    ),
-                    const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () => _setRoleAndContinue('eltern-kind'),
-                      child: const Text('Eltern-Kind'),
-                    ),
-                    const SizedBox(height: 12),
-                    ElevatedButton(
-                      onPressed: () => _setRoleAndContinue('trainer'),
-                      child: const Text('Trainer'),
-                    ),
-                  ],
+                  children: buttons,
                 ),
         ),
+      ),
+    );
+  }
+}
+
+class _RoleButton extends StatelessWidget {
+  final String label;
+  final VoidCallback? onPressed;
+
+  const _RoleButton({required this.label, required this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        child: Text(label),
       ),
     );
   }
