@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:free_base/constants/app_strings.dart';
-import 'package:free_base/features/training/screens/phase_selection_screen.dart';
 import 'package:free_base/services/feature_flags.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -26,7 +25,7 @@ class AppDrawer extends StatelessWidget {
         title: const Text('Training'),
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/training');
+          Navigator.pushNamed(context, '/training/moro');
         },
       ),
       ListTile(
@@ -79,18 +78,6 @@ class AppDrawer extends StatelessWidget {
             Navigator.pushNamed(context, '/achievements');
           },
         ),
-      ListTile(
-        leading: const Icon(Icons.playlist_play),
-        title: const Text('Phase auswählen'),
-        onTap: () {
-          Navigator.pop(context);
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (_) => const PhaseSelectionScreen(),
-            ),
-          );
-        },
-      ),
     ];
 
     return Drawer(
