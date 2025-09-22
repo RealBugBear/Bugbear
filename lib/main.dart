@@ -17,7 +17,7 @@ import 'package:free_base/features/onboarding/screens/register_screen.dart';
 import 'package:free_base/features/onboarding/screens/role_selection_screen.dart';
 import 'package:free_base/features/common/dashboard_screen.dart';
 import 'package:free_base/features/onboarding/profile/settings_screen.dart';
-import 'package:free_base/features/training/training_screen.dart';
+import 'package:free_base/features/training/moro/moro_training_screen.dart';
 import 'package:free_base/features/calendar/screens/calendar_screen.dart';
 import 'package:free_base/features/common/error_screen.dart';
 
@@ -206,7 +206,8 @@ class MyApp extends StatelessWidget {
             case '/settings':
               return guard(settings, (_) => const SettingsScreen());
             case '/training':
-              return guard(settings, (_) => const TrainingScreen());
+            case '/training/moro':
+              return guard(settings, (_) => const MoroTrainingScreen());
             case '/calendar':
               return guard(settings, (_) => const CalendarScreen());
             case '/questionnaire':

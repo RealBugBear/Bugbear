@@ -30,7 +30,7 @@ dependencies:
   google_fonts: ^6.2.1
   json_annotation: ^4.9.0
   freezed_annotation: ^2.1.0
-  audioplayers: ^6.4.0
+  audioplayers: ^6.0.0
   video_player: ^2.7.0
 
   # Offline-Persistence mit Hive (inkl. Verschlüsselung)
@@ -61,6 +61,7 @@ flutter:
     - assets/images/paw.png
     - assets/images/tick.png
     - assets/sounds/
+    - assets/moro/moro_exercises.json
     - assets/quiz_questions_de.json
     - assets/quiz_questions_en.json
     - assets/videos/test_video.mp4
