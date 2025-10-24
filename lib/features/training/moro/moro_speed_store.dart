@@ -1,43 +1,20 @@
 import 'package:hive/hive.dart';
 
+/// Stores per-exercise speed offsets (0..3) with clamping.
 class MoroSpeedStore {
-  static const _boxName = 'moro_speed_offsets';
-  static const _offsetsKey = 'offsets';
+  static const _box = 'moro_speed_offsets'; // Map<String,int>
 
   static Future<int> getOffsetForExercise(int exerciseIndex) async {
-    final box = await Hive.openBox(_boxName);
-    final raw = box.get(_offsetsKey);
-    if (raw is Map) {
-      final entry = raw['$exerciseIndex'];
-      if (entry is int) {
-        return entry;
-      }
-      if (entry is num) {
-        return entry.toInt();
-      }
-    }
-    return 0;
+    final b = await Hive.openBox(_box);
+    final map = (b.get('offsets') as Map?)?.cast<String, int>() ?? <String, int>{};
+    final v = map['$exerciseIndex'] ?? 0;
+    return v.clamp(0, 3);
   }
 
   static Future<void> setOffsetForExercise(int exerciseIndex, int offsetSec) async {
-    final box = await Hive.openBox(_boxName);
-    final dynamic raw = box.get(_offsetsKey);
-    final Map<String, int> map = {};
-    if (raw is Map) {
-      raw.forEach((key, value) {
-        if (value is int) {
-          map[key.toString()] = value;
-        } else if (value is num) {
-          map[key.toString()] = value.toInt();
-        }
-      });
-    }
-    final clamped = offsetSec < 0
-        ? 0
-        : offsetSec > 3
-            ? 3
-            : offsetSec;
-    map['$exerciseIndex'] = clamped;
-    await box.put(_offsetsKey, map);
+    final b = await Hive.openBox(_box);
+    final map = (b.get('offsets') as Map?)?.cast<String, int>() ?? <String, int>{};
+    map['$exerciseIndex'] = offsetSec.clamp(0, 3);
+    await b.put('offsets', map);
   }
 }
