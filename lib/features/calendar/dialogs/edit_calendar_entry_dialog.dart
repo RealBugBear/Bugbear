@@ -1,4 +1,4 @@
-// lib/features/calendar/dialogs/edit_training_day_dialog.dart
+// lib/features/calendar/dialogs/edit_calendar_entry_dialog.dart
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -7,27 +7,27 @@ import '../models/calendar_event.dart';
 import '../notifier/calendar_notifier.dart';
 import '../services/calendar_service.dart';
 
-/// EditTrainingDayDialog
+/// EditCalendarEntryDialog
 ///
-/// Modaler Dialog zur Bearbeitung eines einzelnen Trainingstags:
+/// Modaler Dialog zur Bearbeitung eines einzelnen Kalendereintrags:
 /// - Phase per Dropdown
 /// - Golden Day per Switch
 /// - Abgeschlossen per Switch
 /// - Notiz per TextFormField (max. 500 Zeichen)
-/// Auf „Speichern“ wird CalendarService.saveTrainingDay() aufgerufen
+/// Auf „Speichern“ wird CalendarService.saveEntry() aufgerufen
 /// und der CalendarNotifier lädt den aktuellen Monat neu.
-class EditTrainingDayDialog extends StatefulWidget {
+class EditCalendarEntryDialog extends StatefulWidget {
   final CalendarEvent event;
-  const EditTrainingDayDialog({Key? key, required this.event})
+  const EditCalendarEntryDialog({Key? key, required this.event})
       : super(key: key);
 
   @override
-  State<EditTrainingDayDialog> createState() =>
-      _EditTrainingDayDialogState();
+  State<EditCalendarEntryDialog> createState() =>
+      _EditCalendarEntryDialogState();
 }
 
-class _EditTrainingDayDialogState
-    extends State<EditTrainingDayDialog> {
+class _EditCalendarEntryDialogState
+    extends State<EditCalendarEntryDialog> {
   final _formKey = GlobalKey<FormState>();
   static const _maxNotes = 500;
 
@@ -52,7 +52,7 @@ class _EditTrainingDayDialogState
   Widget build(BuildContext context) {
     return AlertDialog(
       title:
-          Text('Bearbeite Trainingstag ${_formatDate(widget.event.date)}'),
+          Text('Bearbeite Kalendereintrag ${_formatDate(widget.event.date)}'),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -120,7 +120,7 @@ class _EditTrainingDayDialogState
               final CalendarNotifier notifier = context.read<CalendarNotifier>();
 
               final navigator = Navigator.of(context);
-              await service.saveTrainingDay(updated);
+              await service.saveEntry(updated);
               if (!mounted) return;
 
               await notifier.loadMonth(notifier.focusedDay);

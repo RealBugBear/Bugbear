@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:free_base/constants/app_strings.dart';
 import 'package:free_base/firebase_options.dart';
@@ -17,16 +15,8 @@ import 'package:free_base/features/onboarding/screens/register_screen.dart';
 import 'package:free_base/features/onboarding/screens/role_selection_screen.dart';
 import 'package:free_base/features/common/dashboard_screen.dart';
 import 'package:free_base/features/onboarding/profile/settings_screen.dart';
-import 'package:free_base/features/training/moro/moro_training_screen.dart';
 import 'package:free_base/features/calendar/screens/calendar_screen.dart';
 import 'package:free_base/features/common/error_screen.dart';
-
-import 'package:free_base/features/training/models/session_state.dart';
-import 'package:free_base/features/training/models/session_state_adapter.dart';
-import 'package:free_base/features/training/services/session_repository.dart';
-import 'package:free_base/features/training/services/sync_service.dart';
-import 'package:free_base/features/training/services/exercise_repository.dart';
-import 'package:free_base/features/training/notifier/session_notifier.dart';
 
 import 'package:free_base/features/calendar/models/calendar_event.dart';
 import 'package:free_base/features/calendar/models/calendar_event_adapter.dart';
@@ -42,7 +32,7 @@ import 'package:free_base/services/feature_flags.dart';
 
 const FeatureFlags _localFeatureFlags = FeatureFlags(
   parentsTrackEnabled: true,
-  trainerTrackEnabled: true,
+  trainerTrackEnabled: false,
   forumEnabled: false,
   achievementsEnabled: false,
 );
@@ -82,11 +72,6 @@ Future<void> main() async {
   final storage = SecureStorageService();
   final encryptionKey = await storage.getEncryptionKey();
 
-  Hive.registerAdapter(SessionStatusAdapter());
-  Hive.registerAdapter(SessionStateAdapter());
-  await Hive.openBox<SessionState>('session_state',
-      encryptionCipher: HiveAesCipher(encryptionKey));
-
   await Hive.openBox('questionnaire_progress',
       encryptionCipher: HiveAesCipher(encryptionKey));
 
@@ -94,35 +79,13 @@ Future<void> main() async {
   await Hive.openBox<CalendarEvent>('calendar_events',
       encryptionCipher: HiveAesCipher(encryptionKey));
 
-  final sessionRepository = SessionRepository();
-  final savedSession = await sessionRepository.load();
-  final initialSessionState = savedSession ??
-      SessionState(
-        phaseId: '0',
-        exerciseIndex: 0,
-        completedReps: 0,
-        remainingSeconds: 8,
-        isPaused: false,
-        startedAt: DateTime.now(),
-      );
-
   runApp(
-    MyApp(
-      sessionRepository: sessionRepository,
-      initialSessionState: initialSessionState,
-    ),
+    const MyApp(),
   );
 }
 
 class MyApp extends StatelessWidget {
-  final SessionRepository sessionRepository;
-  final SessionState initialSessionState;
-
-  const MyApp({
-    super.key,
-    required this.sessionRepository,
-    required this.initialSessionState,
-  });
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -137,41 +100,11 @@ class MyApp extends StatelessWidget {
         Provider<AuthService>(
           create: (_) => AuthService(),
         ),
-        Provider<SessionRepository>.value(
-          value: sessionRepository,
-        ),
-        Provider<SyncService>(
-          create: (_) => SyncService(
-            sessionRepository,
-            FirebaseFirestore.instance,
-            FirebaseAuth.instance.currentUser?.uid ?? '',
-          ),
-          dispose: (_, svc) => svc.dispose(),
-        ),
         Provider<CalendarService>(
           create: (_) => CalendarService(),
         ),
         Provider<GoldenDayService>(
           create: (_) => GoldenDayService(),
-        ),
-        Provider<ExerciseRepository>(
-          create: (_) => ExerciseRepository(),
-        ),
-        ChangeNotifierProvider<SessionNotifier>(
-          create: (ctx) {
-            final exRepo = ctx.read<ExerciseRepository>();
-            final initialExercises =
-                exRepo.getExercisesForPhase(initialSessionState.phaseId);
-            return SessionNotifier(
-              sessionRepository,
-              ctx.read<SyncService>(),
-              ctx.read<CalendarService>(),
-              ctx.read<GoldenDayService>(),
-              exRepo,
-              initialExercises,
-              initialSessionState,
-            );
-          },
         ),
         createQuestionnaireProvider(),
       ],
@@ -205,9 +138,6 @@ class MyApp extends StatelessWidget {
               return guard(settings, (_) => const DashboardScreen());
             case '/settings':
               return guard(settings, (_) => const SettingsScreen());
-            case '/training':
-            case '/training/moro':
-              return guard(settings, (_) => const MoroTrainingScreen());
             case '/calendar':
               return guard(settings, (_) => const CalendarScreen());
             case '/questionnaire':

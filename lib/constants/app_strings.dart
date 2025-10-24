@@ -7,5 +7,5 @@ class AppStrings {
 
   /// Short description used in marketing copy and metadata.
   static const String appTagline =
-      'Reflex-integration training made accessible for every family.';
+      'Reflex-integration support made accessible for every family.';
 }

@@ -5,7 +5,7 @@
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "Free Base helps families plan, execute, and track reflex-integration training sessions.",
+    "description": "Free Base helps families plan, document, and track reflex-integration progress.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
