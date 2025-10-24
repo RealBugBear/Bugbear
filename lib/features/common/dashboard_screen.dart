@@ -1,7 +1,6 @@
 // lib/features/common/dashboard_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:free_base/features/training/training_screen.dart';
 import 'package:free_base/features/calendar/screens/calendar_screen.dart';
 import 'package:free_base/widgets/app_drawer.dart';
 
@@ -23,10 +22,9 @@ class DashboardScreen extends StatelessWidget {
             const Text('Willkommen im Dashboard!'),
             const SizedBox(height: 16),
             ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const TrainingScreen()),
-              ),
+              onPressed: () {
+                Navigator.pushNamed(context, '/training/moro');
+              },
               child: const Text('Zum Training'),
             ),
             const SizedBox(height: 12),
