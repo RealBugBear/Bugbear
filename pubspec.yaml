@@ -61,6 +61,7 @@ flutter:
     - assets/images/paw.png
     - assets/images/tick.png
     - assets/sounds/
+    - assets/audio/beep.mp3
     - assets/moro/moro_exercises.json
     - assets/quiz_questions_de.json
     - assets/quiz_questions_en.json

@@ -62,6 +62,14 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
       body: FutureBuilder<List<MoroExercise>>(
         future: _future,
         builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                'Fehler beim Laden der Moro-Übungen',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            );
+          }
           if (snapshot.connectionState != ConnectionState.done) {
             return const Center(child: CircularProgressIndicator());
           }
