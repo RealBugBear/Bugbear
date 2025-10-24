@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:free_base/features/training/models/session_state.dart';
 import 'package:free_base/features/training/notifier/session_notifier.dart';
 import 'package:free_base/features/training/widgets/training_header.dart';
 import 'package:free_base/widgets/app_drawer.dart';
@@ -19,6 +20,16 @@ class TrainingScreen extends StatelessWidget {
     final exercises = sessionNotifier.exercises;
     final idx = state.exerciseIndex.clamp(0, exercises.length - 1);
     final current = exercises[idx];
+
+    if (state.status == SessionStatus.completed) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!context.mounted) return;
+        if (ModalRoute.of(context)?.settings.name == '/training/completed') {
+          return;
+        }
+        Navigator.of(context).pushReplacementNamed('/training/completed');
+      });
+    }
 
     return Scaffold(
       drawer: const AppDrawer(),

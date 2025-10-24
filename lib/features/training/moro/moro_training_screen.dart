@@ -1,9 +1,9 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'moro_repository.dart';
+
+import 'moro_exercise_screen.dart';
 import 'moro_models.dart';
+import 'moro_repository.dart';
 import 'moro_speed_store.dart';
-import 'timers.dart';
 
 class MoroTrainingScreen extends StatefulWidget {
   const MoroTrainingScreen({super.key});
@@ -62,9 +62,12 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
                     child: ListTile(
                       title: Text('${ex.index}. ${ex.title}'),
                       subtitle: Text(subtitle),
-                      leading: _SpeedChips(value: offs, onChanged: (v) => _setOffset(ex.index, v)),
+                      leading: _SpeedChips(
+                        value: offs,
+                        onChanged: (v) => _setOffset(ex.index, v),
+                      ),
                       trailing: ElevatedButton(
-                        onPressed: () => _startExercise(context, ex, offs),
+                        onPressed: () => _openExercise(context, ex, offs),
                         child: const Text('Start'),
                       ),
                     ),
@@ -78,12 +81,17 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
     );
   }
 
-  Future<void> _startExercise(BuildContext context, MoroExercise ex, int offset) async {
-    final cancel = CancelToken();
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => _MoroRunDialog(exercise: ex, offset: offset, cancel: cancel),
+  Future<void> _openExercise(
+    BuildContext context,
+    MoroExercise ex,
+    int offset,
+  ) async {
+    await Navigator.of(context).pushNamed(
+      '/training/moro/${ex.index}',
+      arguments: MoroExerciseScreenArgs(
+        exercise: ex,
+        offset: offset,
+      ),
     );
   }
 }
@@ -99,7 +107,10 @@ class _SpeedChips extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(value == 0 ? 'Standard' : '+${value}s', style: const TextStyle(fontSize: 12)),
+        Text(
+          value == 0 ? 'Standard' : '+${value}s',
+          style: const TextStyle(fontSize: 12),
+        ),
         Wrap(
           spacing: 6,
           children: opts.map((v) {
@@ -109,83 +120,6 @@ class _SpeedChips extends StatelessWidget {
               onSelected: (_) => onChanged(v),
             );
           }).toList(),
-        ),
-      ],
-    );
-  }
-}
-
-class _MoroRunDialog extends StatefulWidget {
-  final MoroExercise exercise;
-  final int offset;
-  final CancelToken cancel;
-  const _MoroRunDialog({required this.exercise, required this.offset, required this.cancel});
-
-  @override
-  State<_MoroRunDialog> createState() => _MoroRunDialogState();
-}
-
-class _MoroRunDialogState extends State<_MoroRunDialog> {
-  StreamSubscription? _sub;
-  int _r = 1;
-  int _p = 1;
-  Duration _rem = Duration.zero;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.exercise.type == MoroExerciseType.phased4x) {
-      final t = PhasedMoroTimer(
-        repeats: widget.exercise.repeats,
-        phasesPerRepeat: widget.exercise.phasesPerRepeat,
-        phaseSeconds: widget.exercise.baseSeconds + widget.offset,
-      );
-      _sub = t.run(widget.cancel).listen((e) {
-        setState(() { _r = e.repeatIdx; _p = e.phaseIdx; _rem = e.remaining; });
-        if (e.done && mounted) Navigator.of(context).pop();
-      });
-    } else {
-      final t = SimpleMoroTimer(
-        repeats: widget.exercise.repeats,
-        repeatSeconds: widget.exercise.baseSeconds + widget.offset,
-      );
-      _sub = t.run(widget.cancel).listen((e) {
-        setState(() { _r = e.repeatIdx; _p = 1; _rem = e.remaining; });
-        if (e.done && mounted) Navigator.of(context).pop();
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _sub?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final ex = widget.exercise;
-    return AlertDialog(
-      title: Text(ex.title),
-      content: SizedBox(
-        width: 320,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Wdh: $_r / ${ex.repeats}'),
-            if (ex.type == MoroExerciseType.phased4x)
-              Text('Phase: $_p / ${ex.phasesPerRepeat}'),
-            const SizedBox(height: 8),
-            Text('Rest: ${_rem.inSeconds}s'),
-            const SizedBox(height: 8),
-            const LinearProgressIndicator(),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () { widget.cancel.cancel(); Navigator.of(context).pop(); },
-          child: const Text('Abbrechen'),
         ),
       ],
     );

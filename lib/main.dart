@@ -17,7 +17,10 @@ import 'package:free_base/features/onboarding/screens/register_screen.dart';
 import 'package:free_base/features/onboarding/screens/role_selection_screen.dart';
 import 'package:free_base/features/common/dashboard_screen.dart';
 import 'package:free_base/features/onboarding/profile/settings_screen.dart';
+import 'package:free_base/features/training/moro/moro_exercise_screen.dart';
 import 'package:free_base/features/training/moro/moro_training_screen.dart';
+import 'package:free_base/features/training/training_completed_screen.dart';
+import 'package:free_base/features/training/training_screen.dart';
 import 'package:free_base/features/calendar/screens/calendar_screen.dart';
 import 'package:free_base/features/common/error_screen.dart';
 
@@ -180,7 +183,28 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(primarySwatch: Colors.blue),
         initialRoute: '/',
         onGenerateRoute: (settings) {
-          switch (settings.name) {
+          final routeName = settings.name ?? '';
+
+          if (routeName.startsWith('/training/moro/')) {
+            final args = settings.arguments;
+            if (args is MoroExerciseScreenArgs) {
+              return guard(
+                settings,
+                (_) => MoroExerciseScreen(
+                  exercise: args.exercise,
+                  offset: args.offset,
+                ),
+              );
+            }
+            return MaterialPageRoute(
+              builder: (_) => const ErrorScreen(
+                message: 'Ungültige Trainingsparameter.',
+              ),
+              settings: settings,
+            );
+          }
+
+          switch (routeName) {
             case '/':
               return MaterialPageRoute(
                 builder: (_) => const SplashScreen(),
@@ -206,8 +230,11 @@ class MyApp extends StatelessWidget {
             case '/settings':
               return guard(settings, (_) => const SettingsScreen());
             case '/training':
+              return guard(settings, (_) => const TrainingScreen());
             case '/training/moro':
               return guard(settings, (_) => const MoroTrainingScreen());
+            case '/training/completed':
+              return guard(settings, (_) => const TrainingCompletedScreen());
             case '/calendar':
               return guard(settings, (_) => const CalendarScreen());
             case '/questionnaire':

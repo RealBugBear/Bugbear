@@ -7,6 +7,8 @@
 /// - dynamischer Phasenwechsel
 
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:free_base/features/training/models/session_state.dart';
 import 'package:free_base/features/training/models/exercise_item.dart';
@@ -162,7 +164,42 @@ class SessionNotifier extends ChangeNotifier {
         notes: '',
       );
       _calendarService.addEvent(gdEvent);
+
+      _markFirstSessionCompleted();
     }
+  }
+
+  void restartSession() {
+    _timer?.cancel();
+    _timer = null;
+    _inRest = false;
+    if (_exercises.isEmpty) {
+      return;
+    }
+    final first = _exercises.first;
+    state = SessionState(
+      phaseId: state.phaseId,
+      exerciseIndex: 0,
+      completedReps: 0,
+      remainingSeconds: first.activeSeconds,
+      isPaused: true,
+      startedAt: DateTime.now(),
+    );
+    _phaseStart = state.startedAt;
+  }
+
+  void _markFirstSessionCompleted() {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return;
+    }
+    // Fire-and-forget: der Guard liest das Flag beim nächsten Start.
+    unawaited(
+      FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set({'firstSessionCompleted': true}, SetOptions(merge: true)),
+    );
   }
 
   @override
