@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:free_base/features/training/notifier/session_notifier.dart';
+import 'package:free_base/services/app_routes.dart';
 
 class TrainingCompletedScreen extends StatelessWidget {
   const TrainingCompletedScreen({super.key});
@@ -33,12 +35,7 @@ class TrainingCompletedScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pushNamedAndRemoveUntil(
-                    '/dashboard',
-                    (route) => route.isFirst,
-                  );
-                },
+                onPressed: () => context.goNamed(AppRouteNames.dashboard),
                 child: const Text('Zurück zum Dashboard'),
               ),
             ),
@@ -48,7 +45,7 @@ class TrainingCompletedScreen extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: () {
                   sessionNotifier.restartSession();
-                  Navigator.of(context).pushReplacementNamed('/training');
+                  context.goNamed(AppRouteNames.training);
                 },
                 child: const Text('Nächste Session planen'),
               ),

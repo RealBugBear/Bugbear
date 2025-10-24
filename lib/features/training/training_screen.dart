@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:free_base/features/training/models/session_state.dart';
@@ -9,11 +10,15 @@ import 'package:free_base/features/training/widgets/progress_row.dart';
 import 'package:free_base/features/training/widgets/session_completion_dialog.dart';
 import 'package:free_base/features/training/widgets/session_status_banner.dart';
 import 'package:free_base/features/training/widgets/training_header.dart';
+import 'package:free_base/services/app_routes.dart';
+import 'package:free_base/services/training_intent.dart';
 import 'package:free_base/widgets/app_drawer.dart';
 import 'package:free_base/widgets/connectivity_banner.dart';
 
 class TrainingScreen extends StatefulWidget {
-  const TrainingScreen({super.key});
+  final TrainingIntent? intent;
+
+  const TrainingScreen({super.key, this.intent});
 
   @override
   State<TrainingScreen> createState() => _TrainingScreenState();
@@ -21,11 +26,35 @@ class TrainingScreen extends StatefulWidget {
 
 class _TrainingScreenState extends State<TrainingScreen> {
   bool _dialogShown = false;
+  bool _intentHandled = false;
+
+  @override
+  void didUpdateWidget(covariant TrainingScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.intent != oldWidget.intent) {
+      _intentHandled = false;
+    }
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    context.read<SessionNotifier>().refreshScheduleStatus();
+    final notifier = context.read<SessionNotifier>();
+    notifier.refreshScheduleStatus();
+    if (_intentHandled) return;
+    final intent = widget.intent;
+    if (intent != null) {
+      _intentHandled = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        switch (intent.type) {
+          case TrainingIntentType.start:
+          case TrainingIntentType.resume:
+            notifier.start();
+            break;
+        }
+      });
+    }
   }
 
   Future<void> _handleCompletion(
@@ -50,18 +79,15 @@ class _TrainingScreenState extends State<TrainingScreen> {
     notifier.scheduleNextSession();
     switch (action) {
       case SessionCompletionAction.openCalendar:
-        Navigator.of(context).pushNamed('/calendar');
+        context.goNamed(AppRouteNames.calendar);
         break;
       case SessionCompletionAction.giveFeedback:
-        Navigator.of(context).pushNamed('/questionnaire');
+        context.pushNamed(AppRouteNames.questionnaireIntro);
         break;
       case SessionCompletionAction.planNext:
       case SessionCompletionAction.close:
       case null:
-        Navigator.of(context).pushNamedAndRemoveUntil(
-          '/dashboard',
-          (route) => route.isFirst,
-        );
+        context.goNamed(AppRouteNames.dashboard);
         break;
     }
     if (mounted) {

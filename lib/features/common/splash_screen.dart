@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:go_router/go_router.dart';
 import 'package:free_base/features/onboarding/services/secure_storage_service.dart';
+import 'package:free_base/services/app_routes.dart';
 
 /// SplashScreen: Prüft verschlüsselten Login-Status + Firebase-Auth
 class SplashScreen extends StatefulWidget {
@@ -26,9 +28,9 @@ class _SplashScreenState extends State<SplashScreen> {
     if (!mounted) return;
 
     if (firebaseUser != null && cachedLogin) {
-      Navigator.of(context).pushReplacementNamed('/dashboard');
+      context.goNamed(AppRouteNames.dashboard);
     } else {
-      Navigator.of(context).pushReplacementNamed('/login');
+      context.goNamed(AppRouteNames.login);
     }
   }
 

@@ -1,8 +1,10 @@
 // File: lib/screens/onboarding/register_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:free_base/features/onboarding/services/auth_service.dart';
+import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/error_handler.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -39,7 +41,7 @@ class RegisterScreenState extends State<RegisterScreen> {
         // nickname: _nicknameController.text.trim(),
       );
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/select-role');
+      context.goNamed(AppRouteNames.roleSelection);
     } catch (e) {
       if (!mounted) return;
       final locale = Localizations.maybeLocaleOf(context);
@@ -97,7 +99,7 @@ class RegisterScreenState extends State<RegisterScreen> {
             ),
             const SizedBox(height: 12),
             TextButton(
-              onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
+              onPressed: () => context.goNamed(AppRouteNames.login),
               child: const Text('Bereits registriert? Anmelden'),
             ),
           ],

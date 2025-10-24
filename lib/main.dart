@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,18 +12,6 @@ import 'package:free_base/firebase_options.dart';
 import 'package:free_base/features/onboarding/services/auth_service.dart';
 import 'package:free_base/features/onboarding/services/secure_storage_service.dart';
 import 'package:free_base/features/onboarding/state/auth_provider.dart';
-import 'package:free_base/features/common/splash_screen.dart';
-import 'package:free_base/features/common/route_guard.dart';
-import 'package:free_base/features/onboarding/screens/login_screen.dart';
-import 'package:free_base/features/onboarding/screens/register_screen.dart';
-import 'package:free_base/features/onboarding/screens/role_selection_screen.dart';
-import 'package:free_base/features/common/dashboard_screen.dart';
-import 'package:free_base/features/onboarding/profile/settings_screen.dart';
-import 'package:free_base/features/training/moro/moro_exercise_screen.dart';
-import 'package:free_base/features/training/moro/moro_training_screen.dart';
-import 'package:free_base/features/training/training_completed_screen.dart';
-import 'package:free_base/features/training/training_screen.dart';
-import 'package:free_base/features/calendar/screens/calendar_screen.dart';
 import 'package:free_base/features/common/error_screen.dart';
 
 import 'package:free_base/features/training/models/session_state.dart';
@@ -37,11 +27,9 @@ import 'package:free_base/features/calendar/models/calendar_event_adapter.dart';
 import 'package:free_base/features/calendar/services/calendar_service.dart';
 import 'package:free_base/features/calendar/services/golden_day_service.dart';
 import 'package:free_base/features/questionnaire/questionnaire_screen.dart';
-import 'package:free_base/features/questionnaire/quiz_intro_screen.dart';
-import 'package:free_base/features/profile/screens/profile_overview_screen.dart';
-import 'package:free_base/features/profile/screens/reflex_profile_detail_screen.dart';
-import 'package:free_base/features/profile/models/reflex_profile.dart';
-import 'package:free_base/features/common/feature_placeholder_screen.dart';
+import 'package:free_base/services/app_intent_handler.dart';
+import 'package:free_base/services/app_route_guard.dart';
+import 'package:free_base/services/app_router.dart';
 import 'package:free_base/services/feature_flags.dart';
 
 const FeatureFlags _localFeatureFlags = FeatureFlags(
@@ -121,10 +109,10 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final SessionRepository sessionRepository;
   final SessionState initialSessionState;
-  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+  final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
 
   MyApp({
@@ -132,6 +120,22 @@ class MyApp extends StatelessWidget {
     required this.sessionRepository,
     required this.initialSessionState,
   });
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final AppRouteGuard _routeGuard = AppRouteGuard();
+  GoRouter? _router;
+  AppIntentHandler? _intentHandler;
+  bool _intentInitialized = false;
+
+  @override
+  void dispose() {
+    _intentHandler?.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -147,11 +151,11 @@ class MyApp extends StatelessWidget {
           create: (_) => AuthService(),
         ),
         Provider<SessionRepository>.value(
-          value: sessionRepository,
+          value: widget.sessionRepository,
         ),
         Provider<SyncService>(
           create: (_) => SyncService(
-            sessionRepository,
+            widget.sessionRepository,
             FirebaseFirestore.instance,
             FirebaseAuth.instance.currentUser?.uid ?? '',
           ),
@@ -170,139 +174,47 @@ class MyApp extends StatelessWidget {
           create: (ctx) {
             final exRepo = ctx.read<ExerciseRepository>();
             final initialExercises =
-                exRepo.getExercisesForPhase(initialSessionState.phaseId);
+                exRepo.getExercisesForPhase(widget.initialSessionState.phaseId);
             return SessionNotifier(
-              sessionRepository,
+              widget.sessionRepository,
               ctx.read<SyncService>(),
               ctx.read<CalendarService>(),
               ctx.read<GoldenDayService>(),
               exRepo,
               initialExercises,
-              initialSessionState,
+              widget.initialSessionState,
             );
           },
         ),
         createQuestionnaireProvider(),
       ],
-      child: MaterialApp(
-        title: AppStrings.appName,
-        theme: ThemeData(primarySwatch: Colors.blue),
-        scaffoldMessengerKey: _scaffoldMessengerKey,
-        builder: (context, child) => SessionSyncListener(
-          messengerKey: _scaffoldMessengerKey,
-          child: child ?? const SizedBox.shrink(),
-        ),
-        initialRoute: '/',
-        onGenerateRoute: (settings) {
-          final routeName = settings.name ?? '';
+      child: Builder(
+        builder: (context) {
+          final authProvider = context.watch<AppAuthProvider>();
+          _router ??= AppRouter(
+            refreshListenable: authProvider,
+            guard: _routeGuard,
+          ).router;
 
-          if (routeName.startsWith('/training/moro/')) {
-            final args = settings.arguments;
-            if (args is MoroExerciseScreenArgs) {
-              return guard(
-                settings,
-                (_) => MoroExerciseScreen(
-                  exercise: args.exercise,
-                  offset: args.offset,
-                ),
-              );
-            }
-            return MaterialPageRoute(
-              builder: (_) => const ErrorScreen(
-                message: 'Ungültige Trainingsparameter.',
-              ),
-              settings: settings,
-            );
+          if (!_intentInitialized) {
+            _intentInitialized = true;
+            authProvider.addListener(_routeGuard.reset);
+            _intentHandler = AppIntentHandler(
+              FirebaseDynamicLinks.instance,
+              _router!,
+            )..initialize();
           }
 
-          switch (routeName) {
-            case '/':
-              return MaterialPageRoute(
-                builder: (_) => const SplashScreen(),
-                settings: settings,
-              );
-            case '/login':
-              return MaterialPageRoute(
-                builder: (_) => const LoginScreen(),
-                settings: settings,
-              );
-            case '/register':
-              return MaterialPageRoute(
-                builder: (_) => const RegisterScreen(),
-                settings: settings,
-              );
-            case '/select-role':
-              return MaterialPageRoute(
-                builder: (_) => const RoleSelectionScreen(),
-                settings: settings,
-              );
-            case '/dashboard':
-              return guard(settings, (_) => const DashboardScreen());
-            case '/settings':
-              return guard(settings, (_) => const SettingsScreen());
-            case '/training':
-              return guard(settings, (_) => const TrainingScreen());
-            case '/training/moro':
-              return guard(settings, (_) => const MoroTrainingScreen());
-            case '/training/completed':
-              return guard(settings, (_) => const TrainingCompletedScreen());
-            case '/calendar':
-              return guard(settings, (_) => const CalendarScreen());
-            case '/questionnaire':
-              return guard(settings, (_) => const QuizIntroScreen());
-            case '/questionnaire/questions':
-              return guard(settings, (_) => const QuestionnaireScreen());
-            case '/reflexe-profil':
-              return guard(settings, (_) => const ProfileOverviewScreen());
-            case '/reflexe-profil/detail':
-              return guard(settings, (_) {
-                final profile = settings.arguments as ReflexProfile;
-                return ReflexProfileDetailScreen(profile: profile);
-              });
-            case '/forum':
-              final flags = Provider.of<FeatureFlags>(context, listen: false);
-              if (!flags.forumEnabled) {
-                return MaterialPageRoute(
-                  builder: (_) => const ErrorScreen(
-                    message: 'Dieses Feature ist aktuell deaktiviert.',
-                  ),
-                  settings: settings,
-                );
-              }
-              return guard(
-                settings,
-                (_) => const FeaturePlaceholderScreen(
-                  title: 'Forum',
-                  message:
-                      'Hier entsteht das Community-Forum. Die Inhalte folgen in einer späteren Version.',
-                ),
-              );
-            case '/achievements':
-              final flags = Provider.of<FeatureFlags>(context, listen: false);
-              if (!flags.achievementsEnabled) {
-                return MaterialPageRoute(
-                  builder: (_) => const ErrorScreen(
-                    message: 'Dieses Feature ist aktuell deaktiviert.',
-                  ),
-                  settings: settings,
-                );
-              }
-              return guard(
-                settings,
-                (_) => const FeaturePlaceholderScreen(
-                  title: 'Erfolge',
-                  message:
-                      'Deine Erfolge erscheinen hier, sobald das Feature freigeschaltet ist.',
-                ),
-              );
-            default:
-              return MaterialPageRoute(
-                builder: (_) => const ErrorScreen(
-                  message: 'Die angeforderte Seite wurde nicht gefunden.',
-                ),
-                settings: settings,
-              );
-          }
+          return MaterialApp.router(
+            title: AppStrings.appName,
+            theme: ThemeData(primarySwatch: Colors.blue),
+            scaffoldMessengerKey: widget.scaffoldMessengerKey,
+            routerConfig: _router!,
+            builder: (context, child) => SessionSyncListener(
+              messengerKey: widget.scaffoldMessengerKey,
+              child: child ?? const SizedBox.shrink(),
+            ),
+          );
         },
       ),
     );

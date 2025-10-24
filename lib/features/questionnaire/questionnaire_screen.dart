@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:hive/hive.dart';
+import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/widgets/app_drawer.dart';
 
 import 'questionnaire_state.dart';
-import 'questionnaire_result_screen.dart';
 
 /// Hauptscreen des Fragebogens.
 class QuestionnaireScreen extends StatefulWidget {
@@ -237,12 +238,7 @@ class _QuestionnaireScreenState extends State<QuestionnaireScreen> {
 
   void _gotoResult() {
     if (!mounted) return;
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const QuestionnaireResultScreen(),
-      ),
-    );
+    context.goNamed(AppRouteNames.questionnaireResult);
   }
 }
 

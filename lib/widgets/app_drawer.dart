@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:free_base/constants/app_strings.dart';
-import 'package:free_base/features/common/dashboard_route_args.dart';
+import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/feature_flags.dart';
+import 'package:free_base/services/training_intent.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -11,26 +13,26 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final featureFlags = context.watch<FeatureFlags>();
+    final router = GoRouter.of(context);
 
-    final items = <Widget>[
+    final primaryActions = <Widget>[
       ListTile(
         leading: const Icon(Icons.dashboard),
         title: const Text('Dashboard'),
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/dashboard');
+          router.goNamed(AppRouteNames.dashboard);
         },
       ),
       ListTile(
         leading: const Icon(Icons.fitness_center),
-        title: const Text('Training (über Dashboard)'),
-        subtitle: const Text('Starte über den empfohlenen Ablauf'),
+        title: const Text('Training starten'),
+        subtitle: const Text('Direkt zur aktuellen Einheit wechseln'),
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushNamed(
-            context,
-            '/dashboard',
-            arguments: const DashboardRouteArgs(startTraining: true),
+          router.goNamed(
+            AppRouteNames.training,
+            extra: TrainingIntent.start(),
           );
         },
       ),
@@ -39,31 +41,35 @@ class AppDrawer extends StatelessWidget {
         title: const Text('Kalender'),
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/calendar');
+          router.goNamed(AppRouteNames.calendar);
         },
       ),
       ListTile(
-        leading: const Icon(Icons.settings),
-        title: const Text('Einstellungen'),
+        leading: const Icon(Icons.person),
+        title: const Text('Profil & Auswertungen'),
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/settings');
+          router.goNamed(AppRouteNames.profile);
         },
       ),
+    ];
+
+    final secondaryActions = <Widget>[
       ListTile(
         leading: const Icon(Icons.quiz),
         title: const Text('Fragebogen'),
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/questionnaire');
+          router.goNamed(AppRouteNames.questionnaireIntro);
         },
       ),
       ListTile(
-        leading: const Icon(Icons.person),
+        leading: const Icon(Icons.flag),
         title: const Text('Reflexprofile'),
+        subtitle: const Text('Detailansichten & Entwicklungsverlauf'),
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/reflexe-profil');
+          router.goNamed(AppRouteNames.profile);
         },
       ),
       if (featureFlags.forumEnabled)
@@ -72,7 +78,7 @@ class AppDrawer extends StatelessWidget {
           title: const Text('Forum (Beta)'),
           onTap: () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, '/forum');
+            router.goNamed(AppRouteNames.forum);
           },
         ),
       if (featureFlags.achievementsEnabled)
@@ -81,7 +87,7 @@ class AppDrawer extends StatelessWidget {
           title: const Text('Erfolge'),
           onTap: () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, '/achievements');
+            router.goNamed(AppRouteNames.achievements);
           },
         ),
     ];
@@ -113,7 +119,21 @@ class AppDrawer extends StatelessWidget {
                 ],
               ),
             ),
-            ...items,
+            ...primaryActions,
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Einstellungen & weitere Features'),
+              onTap: () {
+                Navigator.pop(context);
+                router.goNamed(AppRouteNames.settings);
+              },
+            ),
+            ExpansionTile(
+              leading: const Icon(Icons.more_horiz),
+              title: const Text('Mehr entdecken'),
+              children: secondaryActions,
+            ),
           ],
         ),
       ),
