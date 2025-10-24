@@ -2,7 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'session_state.freezed.dart';
 part 'session_state.g.dart';
 
-enum SessionStatus { inProgress, completed }
+enum SessionStatus { inProgress, completed, planned, overdue }
 
 @freezed
 class SessionState with _$SessionState {
@@ -14,7 +14,8 @@ class SessionState with _$SessionState {
     @Default(false) bool isPaused,
     required DateTime startedAt,
     DateTime? endAt,
-    @Default(SessionStatus.inProgress) SessionStatus status,
+    DateTime? plannedFor,
+    @Default(SessionStatus.planned) SessionStatus status,
   }) = _SessionState;
 
   factory SessionState.fromJson(Map<String, dynamic> json) =>

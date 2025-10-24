@@ -27,6 +27,7 @@ mixin _$SessionState {
   bool get isPaused => throw _privateConstructorUsedError;
   DateTime get startedAt => throw _privateConstructorUsedError;
   DateTime? get endAt => throw _privateConstructorUsedError;
+  DateTime? get plannedFor => throw _privateConstructorUsedError;
   SessionStatus get status => throw _privateConstructorUsedError;
 
   /// Serializes this SessionState to a JSON map.
@@ -53,6 +54,7 @@ abstract class $SessionStateCopyWith<$Res> {
       bool isPaused,
       DateTime startedAt,
       DateTime? endAt,
+      DateTime? plannedFor,
       SessionStatus status});
 }
 
@@ -78,6 +80,7 @@ class _$SessionStateCopyWithImpl<$Res, $Val extends SessionState>
     Object? isPaused = null,
     Object? startedAt = null,
     Object? endAt = freezed,
+    Object? plannedFor = freezed,
     Object? status = null,
   }) {
     return _then(_value.copyWith(
@@ -109,6 +112,10 @@ class _$SessionStateCopyWithImpl<$Res, $Val extends SessionState>
           ? _value.endAt
           : endAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      plannedFor: freezed == plannedFor
+          ? _value.plannedFor
+          : plannedFor // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -133,6 +140,7 @@ abstract class _$$SessionStateImplCopyWith<$Res>
       bool isPaused,
       DateTime startedAt,
       DateTime? endAt,
+      DateTime? plannedFor,
       SessionStatus status});
 }
 
@@ -156,6 +164,7 @@ class __$$SessionStateImplCopyWithImpl<$Res>
     Object? isPaused = null,
     Object? startedAt = null,
     Object? endAt = freezed,
+    Object? plannedFor = freezed,
     Object? status = null,
   }) {
     return _then(_$SessionStateImpl(
@@ -187,6 +196,10 @@ class __$$SessionStateImplCopyWithImpl<$Res>
           ? _value.endAt
           : endAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      plannedFor: freezed == plannedFor
+          ? _value.plannedFor
+          : plannedFor // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       status: null == status
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
@@ -206,7 +219,8 @@ class _$SessionStateImpl implements _SessionState {
       this.isPaused = false,
       required this.startedAt,
       this.endAt,
-      this.status = SessionStatus.inProgress});
+      this.plannedFor,
+      this.status = SessionStatus.planned});
 
   factory _$SessionStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$SessionStateImplFromJson(json);
@@ -227,12 +241,14 @@ class _$SessionStateImpl implements _SessionState {
   @override
   final DateTime? endAt;
   @override
+  final DateTime? plannedFor;
+  @override
   @JsonKey()
   final SessionStatus status;
 
   @override
   String toString() {
-    return 'SessionState(phaseId: $phaseId, exerciseIndex: $exerciseIndex, completedReps: $completedReps, remainingSeconds: $remainingSeconds, isPaused: $isPaused, startedAt: $startedAt, endAt: $endAt, status: $status)';
+    return 'SessionState(phaseId: $phaseId, exerciseIndex: $exerciseIndex, completedReps: $completedReps, remainingSeconds: $remainingSeconds, isPaused: $isPaused, startedAt: $startedAt, endAt: $endAt, plannedFor: $plannedFor, status: $status)';
   }
 
   @override
@@ -252,13 +268,16 @@ class _$SessionStateImpl implements _SessionState {
             (identical(other.startedAt, startedAt) ||
                 other.startedAt == startedAt) &&
             (identical(other.endAt, endAt) || other.endAt == endAt) &&
+            (identical(other.plannedFor, plannedFor) ||
+                other.plannedFor == plannedFor) &&
             (identical(other.status, status) || other.status == status));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, phaseId, exerciseIndex,
-      completedReps, remainingSeconds, isPaused, startedAt, endAt, status);
+      completedReps, remainingSeconds, isPaused, startedAt, endAt, plannedFor,
+      status);
 
   /// Create a copy of SessionState
   /// with the given fields replaced by the non-null parameter values.

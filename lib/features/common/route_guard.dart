@@ -87,6 +87,9 @@ class _GuardedRouteState extends State<_GuardedRoute> {
     if (routeName == '/training' || routeName == '/training/completed') {
       return true;
     }
+    if (routeName == '/dashboard') {
+      return true;
+    }
     if (routeName.startsWith('/training/moro')) {
       return true;
     }
