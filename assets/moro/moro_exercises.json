@@ -1,9 +1,0 @@
-[
-  {"index":1,"title":"Moro 1","type":"phased4x","repeats":3,"phasesPerRepeat":4,"baseSeconds":3},
-  {"index":2,"title":"Moro 2","type":"phased4x","repeats":3,"phasesPerRepeat":4,"baseSeconds":3},
-  {"index":3,"title":"Moro 3","type":"phased4x","repeats":3,"phasesPerRepeat":4,"baseSeconds":3},
-  {"index":4,"title":"Moro 4","type":"phased4x","repeats":3,"phasesPerRepeat":4,"baseSeconds":3},
-  {"index":5,"title":"Moro 5","type":"phased4x","repeats":3,"phasesPerRepeat":4,"baseSeconds":3},
-  {"index":6,"title":"Moro 6","type":"simple","repeats":6,"phasesPerRepeat":1,"baseSeconds":7},
-  {"index":7,"title":"Moro 7","type":"simple","repeats":6,"phasesPerRepeat":1,"baseSeconds":7}
-]

@@ -1,13 +1,12 @@
 // lib/features/common/dashboard_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:free_base/features/training/training_screen.dart';
 import 'package:free_base/features/calendar/screens/calendar_screen.dart';
 import 'package:free_base/widgets/app_drawer.dart';
 
 /// DashboardScreen
 ///
-/// Startpunkt der App mit Navigation zu Training und Kalender.
+/// Startpunkt der App mit Navigation zum Kalender.
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({Key? key}) : super(key: key);
 
@@ -22,14 +21,6 @@ class DashboardScreen extends StatelessWidget {
           children: [
             const Text('Willkommen im Dashboard!'),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const TrainingScreen()),
-              ),
-              child: const Text('Zum Training'),
-            ),
-            const SizedBox(height: 12),
             ElevatedButton(
               onPressed: () => Navigator.push(
                 context,

@@ -31,8 +31,8 @@ class CalendarService {
     await _calendarBox.delete(id);
   }
 
-  /// Speichert Änderungen an einem einzelnen Tag [event].
-  Future<void> saveTrainingDay(CalendarEvent event) async {
+  /// Speichert Änderungen an einem einzelnen Kalendereintrag [event].
+  Future<void> saveEntry(CalendarEvent event) async {
     await _calendarBox.put(event.id, event);
   }
 

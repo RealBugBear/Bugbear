@@ -8,7 +8,7 @@ import '../widgets/month_bracket.dart';
 import '../widgets/golden_day_banner.dart';
 
 import '../models/calendar_event.dart';
-import '../dialogs/edit_training_day_dialog.dart';
+import '../dialogs/edit_calendar_entry_dialog.dart';
 import '../notifier/calendar_notifier.dart';
 import '../services/calendar_service.dart';
 import 'package:free_base/widgets/app_drawer.dart';
@@ -96,7 +96,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
 
     return Scaffold(
       drawer: const AppDrawer(),
-      appBar: AppBar(title: const Text('Dein Trainingskalender')),
+      appBar: AppBar(title: const Text('Dein Kalender')),
       body: Column(
         children: [
           Container(
@@ -197,7 +197,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                     label: Text(
                       completed
                           ? 'Als nicht erledigt markieren'
-                          : 'Training erledigt',
+                          : 'Eintrag erledigt',
                     ),
                   ),
                 ],
@@ -234,7 +234,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
                 onTap: () async {
                   final updated = await showDialog<CalendarEvent>(
                     context: context,
-                    builder: (_) => EditTrainingDayDialog(event: ev),
+                    builder: (_) => EditCalendarEntryDialog(event: ev),
                   );
                   if (updated != null) {
                     await notifier.loadMonth(notifier.focusedDay);

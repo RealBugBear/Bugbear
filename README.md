@@ -1,16 +1,14 @@
 # Free Base
 
-Free Base is the digital companion for the Free Base reflex-integration program. The Flutter app guides families, athletes, and
-therapists through structured training phases, keeps offline progress safely encrypted, and synchronises results with Firebase so
-coaches always have the latest information.
+Free Base is the digital companion for the Free Base reflex-integration program. The Flutter app keeps families, athletes, and
+therapists organised with secure onboarding, questionnaire tracking, and calendar planning so coaches always have the latest
+information.
 
 ## Project Overview
 
 ### Key Features
 - **Guided onboarding** with Firebase email/password authentication, secure key generation, and role selection for personal,
   parent/child, or trainer journeys.
-- **Daily training companion** featuring phase-based exercise plans, timers, and offline persistence through Hive, with automatic
-  background synchronisation handled by the `SyncService` once connectivity returns.
 - **Calendar and “Golden Day” planning** powered by the `CalendarService` and `GoldenDayService` to monitor adherence and highlight
   milestone celebrations.
 - **Questionnaire and reflex profiles** that pull structured content from local JSON assets, store state securely, and surface
@@ -22,10 +20,9 @@ coaches always have the latest information.
 - Flutter 3 / Dart 3 application organised under `lib/features`, using Provider for dependency injection and state management.
 - Firebase Core, Authentication, and Firestore for backend services; configuration is generated via `firebase_options.dart` and
   platform-specific files created by `flutterfire configure`.
-- Hive (AES encrypted via `SecureStorageService`) for offline-first storage of training sessions, questionnaires, and calendar
-  events.
-- Modular services (`SessionRepository`, `ExerciseRepository`, `SyncService`, `CalendarService`, `GoldenDayService`,
-  `ProfileService`) that keep UI widgets declarative and easy to test.
+- Hive (AES encrypted via `SecureStorageService`) for offline-first storage of questionnaire progress and calendar events.
+- Modular services (`CalendarService`, `GoldenDayService`, `ProfileService`, and authentication helpers) that keep UI widgets
+  declarative and easy to test.
 - Localisation scaffolding (`lib/l10n/*.arb`) prepared for English and German with the shared `appName` key.
 
 ## Getting Started
@@ -94,7 +91,7 @@ Replace the placeholder launcher icons and splash screens with official Free Bas
 
 ## Privacy & Data Protection (EU)
 - Store all Firebase services in an EU region and document the data flows in your privacy policy.
-- Authentication credentials are handled by Firebase Auth; training data and questionnaire answers live in Firestore collections
+- Authentication credentials are handled by Firebase Auth; calendar notes and questionnaire answers live in Firestore collections
   scoped to the user ID.
 - Local Hive boxes are encrypted with an AES key stored via `SecureStorageService` and purged on sign-out.
 - Update the in-app and store privacy disclosures to explain retention periods, user deletion rights, and data processing roles.

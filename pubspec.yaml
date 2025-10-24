@@ -1,5 +1,5 @@
 name: free_base
-description: "The Free Base companion app for planning, training, and tracking reflex integration."
+description: "The Free Base companion app for planning and tracking reflex integration."
 
 publish_to: 'none'
 version: 1.0.0+1
@@ -30,8 +30,6 @@ dependencies:
   google_fonts: ^6.2.1
   json_annotation: ^4.9.0
   freezed_annotation: ^2.1.0
-  audioplayers: ^6.0.0
-  video_player: ^2.7.0
 
   # Offline-Persistence mit Hive (inkl. Verschlüsselung)
   hive: ^2.2.3
@@ -61,10 +59,8 @@ flutter:
     - assets/images/paw.png
     - assets/images/tick.png
     - assets/sounds/
-    - assets/moro/moro_exercises.json
     - assets/quiz_questions_de.json
     - assets/quiz_questions_en.json
-    - assets/videos/test_video.mp4
 
 flutter_intl:
   enabled: true

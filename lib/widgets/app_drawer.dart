@@ -21,14 +21,6 @@ class AppDrawer extends StatelessWidget {
         },
       ),
       ListTile(
-        leading: const Icon(Icons.fitness_center),
-        title: const Text('Training'),
-        onTap: () {
-          Navigator.pop(context);
-          Navigator.pushNamed(context, '/training/moro');
-        },
-      ),
-      ListTile(
         leading: const Icon(Icons.calendar_today),
         title: const Text('Kalender'),
         onTap: () {

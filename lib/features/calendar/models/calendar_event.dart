@@ -1,14 +1,12 @@
 // lib/features/calendar/models/calendar_event.dart
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:free_base/features/training/models/session_state.dart';
-
 part 'calendar_event.freezed.dart';
 part 'calendar_event.g.dart';
 
 /// CalendarEvent
 ///
-/// Modell für einen einzelnen Eintrag im Trainingskalender.
+/// Modell für einen einzelnen Eintrag im Aktivitätskalender.
 /// Wird in Hive persistiert und im UI dargestellt.
 ///
 /// Felder:
@@ -33,19 +31,4 @@ class CalendarEvent with _$CalendarEvent {
   factory CalendarEvent.fromJson(Map<String, dynamic> json) =>
       _$CalendarEventFromJson(json);
 
-  /// Erzeugt einen Kalender-Eintrag aus einer SessionState-Instanz.
-  factory CalendarEvent.fromSession(SessionState session) {
-    return CalendarEvent(
-      id: '${session.phaseId}_${session.startedAt.toIso8601String()}',
-      date: DateTime(
-        session.startedAt.year,
-        session.startedAt.month,
-        session.startedAt.day,
-      ),
-      title: 'Phase ${session.phaseId}',
-      isCompleted: session.status == SessionStatus.completed,
-      isGoldenDay: false,
-      notes: '',
-    );
-  }
 }

@@ -107,7 +107,7 @@ class CalendarNotifier extends ChangeNotifier {
   /// Toggles the completed status of [event] and persists the change.
   Future<void> toggleCompleted(CalendarEvent event) async {
     final updated = event.copyWith(isCompleted: !event.isCompleted);
-    await _service.saveTrainingDay(updated);
+    await _service.saveEntry(updated);
     final key = DateTime(updated.date.year, updated.date.month, updated.date.day);
     final list = _eventsByDay[key];
     if (list != null) {
@@ -133,7 +133,7 @@ class CalendarNotifier extends ChangeNotifier {
       final newEvent = CalendarEvent(
         id: 'manual_${day.toIso8601String()}',
         date: key,
-        title: 'Training',
+        title: 'Eintrag',
         isCompleted: true,
       );
       await _service.addEvent(newEvent);
