@@ -48,7 +48,9 @@ class SessionNotifier extends ChangeNotifier {
     SessionState state,
   )   : _exercises = initialExercises,
         _state = state,
-        _phaseStart = state.startedAt;
+        _phaseStart = state.startedAt {
+    refreshScheduleStatus();
+  }
 
   SessionState get state => _state;
   List<ExerciseItem> get exercises => _exercises;
@@ -64,7 +66,21 @@ class SessionNotifier extends ChangeNotifier {
   void start() {
     if (_timer != null) return;
     if (state.status == SessionStatus.completed) {
-      state = state.copyWith(status: SessionStatus.inProgress);
+      state = state.copyWith(
+        status: SessionStatus.inProgress,
+        startedAt: DateTime.now(),
+        plannedFor: null,
+        endAt: null,
+      );
+    }
+    if (state.status == SessionStatus.planned ||
+        state.status == SessionStatus.overdue) {
+      state = state.copyWith(
+        status: SessionStatus.inProgress,
+        startedAt: DateTime.now(),
+        plannedFor: null,
+        endAt: null,
+      );
     }
     state = state.copyWith(isPaused: false);
     _timer = Timer.periodic(const Duration(seconds: 1), _tick);
@@ -85,15 +101,18 @@ class SessionNotifier extends ChangeNotifier {
     _weeklyCounts.clear();
     _exercises = _exerciseRepo.getExercisesForPhase(newPhaseId);
     final first = _exercises.first;
+    final plannedFor = DateTime.now().add(const Duration(days: 1));
     state = SessionState(
       phaseId: newPhaseId,
       exerciseIndex: 0,
       completedReps: 0,
       remainingSeconds: first.activeSeconds,
       isPaused: true,
-      startedAt: DateTime.now(),
+      startedAt: plannedFor,
+      plannedFor: plannedFor,
+      status: SessionStatus.planned,
     );
-    _phaseStart = state.startedAt;
+    _phaseStart = DateTime.now();
   }
 
   void _tick(Timer timer) {
@@ -142,6 +161,7 @@ class SessionNotifier extends ChangeNotifier {
       state = state.copyWith(
         status: SessionStatus.completed,
         endAt: DateTime.now(),
+        plannedFor: null,
       );
       // Kalender-Event erstellen statt undefined addSessionEvent
       final event = CalendarEvent.fromSession(state);
@@ -169,7 +189,11 @@ class SessionNotifier extends ChangeNotifier {
     }
   }
 
-  void restartSession() {
+  void restartSession({DateTime? plannedFor}) {
+    scheduleNextSession(plannedFor: plannedFor);
+  }
+
+  void scheduleNextSession({DateTime? plannedFor}) {
     _timer?.cancel();
     _timer = null;
     _inRest = false;
@@ -177,15 +201,26 @@ class SessionNotifier extends ChangeNotifier {
       return;
     }
     final first = _exercises.first;
-    state = SessionState(
-      phaseId: state.phaseId,
+    final target = plannedFor ?? DateTime.now().add(const Duration(days: 1));
+    state = state.copyWith(
       exerciseIndex: 0,
       completedReps: 0,
       remainingSeconds: first.activeSeconds,
       isPaused: true,
-      startedAt: DateTime.now(),
+      startedAt: target,
+      plannedFor: target,
+      endAt: null,
+      status: SessionStatus.planned,
     );
-    _phaseStart = state.startedAt;
+    _phaseStart = DateTime.now();
+  }
+
+  void refreshScheduleStatus() {
+    if (state.status == SessionStatus.planned && state.plannedFor != null) {
+      if (DateTime.now().isAfter(state.plannedFor!)) {
+        state = state.copyWith(status: SessionStatus.overdue);
+      }
+    }
   }
 
   void _markFirstSessionCompleted() {

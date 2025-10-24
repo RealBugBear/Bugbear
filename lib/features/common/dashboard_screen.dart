@@ -1,7 +1,11 @@
 // lib/features/common/dashboard_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:free_base/features/common/dashboard_route_args.dart';
+import 'package:free_base/features/training/notifier/session_notifier.dart';
+import 'package:free_base/features/training/widgets/session_status_banner.dart';
 import 'package:free_base/widgets/app_drawer.dart';
 
 /// DashboardScreen
@@ -23,6 +27,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (_intentHandled) return;
     _intentHandled = true;
     final args = ModalRoute.of(context)?.settings.arguments;
+    context.read<SessionNotifier>().refreshScheduleStatus();
     if (args is DashboardRouteArgs && args.startTraining) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
@@ -33,23 +38,42 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final sessionNotifier = context.watch<SessionNotifier>();
+    final state = sessionNotifier.state;
     return Scaffold(
       drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Dashboard')),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(24),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Willkommen im Dashboard!'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/training'),
-              child: const Text('Training starten'),
+            SessionStatusBanner.fromSession(state),
+            const SizedBox(height: 24),
+            Text(
+              'Willkommen im Dashboard!',
+              style: Theme.of(context).textTheme.headlineSmall,
             ),
             const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () => Navigator.pushNamed(context, '/calendar'),
-              child: const Text('Zum Kalender'),
+            Text(
+              'Behalte deinen Trainingsfortschritt im Blick und starte deine nächste Einheit, wenn du bereit bist.',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            const Spacer(),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pushNamed(context, '/training'),
+                child: const Text('Training starten'),
+              ),
+            ),
+            const SizedBox(height: 12),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: () => Navigator.pushNamed(context, '/calendar'),
+                child: const Text('Zum Kalender'),
+              ),
             ),
           ],
         ),

@@ -30,6 +30,7 @@ import 'package:free_base/features/training/services/session_repository.dart';
 import 'package:free_base/features/training/services/sync_service.dart';
 import 'package:free_base/features/training/services/exercise_repository.dart';
 import 'package:free_base/features/training/notifier/session_notifier.dart';
+import 'package:free_base/features/training/widgets/session_sync_listener.dart';
 
 import 'package:free_base/features/calendar/models/calendar_event.dart';
 import 'package:free_base/features/calendar/models/calendar_event_adapter.dart';
@@ -99,14 +100,17 @@ Future<void> main() async {
 
   final sessionRepository = SessionRepository();
   final savedSession = await sessionRepository.load();
+  final plannedFor = DateTime.now().add(const Duration(days: 1));
   final initialSessionState = savedSession ??
       SessionState(
         phaseId: '0',
         exerciseIndex: 0,
         completedReps: 0,
         remainingSeconds: 8,
-        isPaused: false,
-        startedAt: DateTime.now(),
+        isPaused: true,
+        startedAt: plannedFor,
+        plannedFor: plannedFor,
+        status: SessionStatus.planned,
       );
 
   runApp(
@@ -120,8 +124,10 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   final SessionRepository sessionRepository;
   final SessionState initialSessionState;
+  final GlobalKey<ScaffoldMessengerState> _scaffoldMessengerKey =
+      GlobalKey<ScaffoldMessengerState>();
 
-  const MyApp({
+  MyApp({
     super.key,
     required this.sessionRepository,
     required this.initialSessionState,
@@ -181,6 +187,11 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: AppStrings.appName,
         theme: ThemeData(primarySwatch: Colors.blue),
+        scaffoldMessengerKey: _scaffoldMessengerKey,
+        builder: (context, child) => SessionSyncListener(
+          messengerKey: _scaffoldMessengerKey,
+          child: child ?? const SizedBox.shrink(),
+        ),
         initialRoute: '/',
         onGenerateRoute: (settings) {
           final routeName = settings.name ?? '';

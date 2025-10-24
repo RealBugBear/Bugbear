@@ -11,6 +11,9 @@ class SyncService {
   final String _userId; // zum Pfad in Firestore
   final List<SessionState> _queue = [];
 
+  final StreamController<SyncStatusEvent> _statusController =
+      StreamController<SyncStatusEvent>.broadcast();
+
   late final StreamSubscription<ConnectivityResult> _connSub;
 
   SyncService(this._repo, this._firestore, this._userId) {
@@ -24,7 +27,10 @@ class SyncService {
 
   Future<void> dispose() async {
     await _connSub.cancel();
+    await _statusController.close();
   }
+
+  Stream<SyncStatusEvent> get statusStream => _statusController.stream;
 
   Future<void> _loadQueue() async {
     final current = await _repo.load();
@@ -59,10 +65,26 @@ class SyncService {
             .doc(state.startedAt.toIso8601String())
             .set(state.toJson());
         _queue.removeAt(0);
+        _statusController.add(SyncStatusEvent.success(state));
       } catch (e) {
         // Bei Fehler abbrechen und später erneut versuchen
+        _statusController.add(SyncStatusEvent.failure(state, e));
         break;
       }
     }
   }
+}
+
+class SyncStatusEvent {
+  final SessionState state;
+  final bool success;
+  final Object? error;
+
+  const SyncStatusEvent._(this.state, this.success, this.error);
+
+  factory SyncStatusEvent.success(SessionState state) =>
+      SyncStatusEvent._(state, true, null);
+
+  factory SyncStatusEvent.failure(SessionState state, Object error) =>
+      SyncStatusEvent._(state, false, error);
 }
