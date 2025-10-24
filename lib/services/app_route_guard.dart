@@ -65,6 +65,9 @@ class AppRouteGuard {
     if (location == AppRoutePaths.training ||
         location == AppRoutePaths.trainingCompleted ||
         location == AppRoutePaths.dashboard ||
+        // Calendar should remain reachable from the bottom navigation
+        // even before completing the onboarding session.
+        location.startsWith(AppRoutePaths.calendar) ||
         location.startsWith(AppRoutePaths.moroTraining)) {
       return false;
     }
