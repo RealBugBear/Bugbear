@@ -304,6 +304,7 @@ abstract class _SessionState implements SessionState {
       final bool isPaused,
       required final DateTime startedAt,
       final DateTime? endAt,
+      final DateTime? plannedFor,
       final SessionStatus status}) = _$SessionStateImpl;
 
   factory _SessionState.fromJson(Map<String, dynamic> json) =
@@ -323,6 +324,8 @@ abstract class _SessionState implements SessionState {
   DateTime get startedAt;
   @override
   DateTime? get endAt;
+  @override
+  DateTime? get plannedFor;
   @override
   SessionStatus get status;
 
