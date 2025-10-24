@@ -56,6 +56,10 @@ void main() {
 
       await MoroSpeedStore.setOffsetForExercise(2, 1);
       expect(await MoroSpeedStore.getOffsetForExercise(2), 1);
+
+      final box = await Hive.openBox('moro_speed_offsets');
+      await box.put('offsets', {'5': 42});
+      expect(await MoroSpeedStore.getOffsetForExercise(5), 3);
     });
   });
 }

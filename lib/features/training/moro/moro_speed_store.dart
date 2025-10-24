@@ -4,40 +4,35 @@ class MoroSpeedStore {
   static const _boxName = 'moro_speed_offsets';
   static const _offsetsKey = 'offsets';
 
-  static Future<int> getOffsetForExercise(int exerciseIndex) async {
-    final box = await Hive.openBox(_boxName);
+  static Future<Box<dynamic>> _openBox() => Hive.openBox<dynamic>(_boxName);
+
+  static int _sanitizeOffset(num value) => value.clamp(0, 3).toInt();
+
+  static Map<String, int> _readOffsets(Box<dynamic> box) {
     final raw = box.get(_offsetsKey);
     if (raw is Map) {
-      final entry = raw['$exerciseIndex'];
-      if (entry is int) {
-        return entry;
-      }
-      if (entry is num) {
-        return entry.toInt();
-      }
+      final result = <String, int>{};
+      raw.forEach((key, value) {
+        if (value is num) {
+          result[key.toString()] = _sanitizeOffset(value);
+        }
+      });
+      return result;
     }
-    return 0;
+    return <String, int>{};
+  }
+
+  static Future<int> getOffsetForExercise(int exerciseIndex) async {
+    final box = await _openBox();
+    final offsets = _readOffsets(box);
+    final value = offsets['$exerciseIndex'];
+    return value ?? 0;
   }
 
   static Future<void> setOffsetForExercise(int exerciseIndex, int offsetSec) async {
-    final box = await Hive.openBox(_boxName);
-    final dynamic raw = box.get(_offsetsKey);
-    final Map<String, int> map = {};
-    if (raw is Map) {
-      raw.forEach((key, value) {
-        if (value is int) {
-          map[key.toString()] = value;
-        } else if (value is num) {
-          map[key.toString()] = value.toInt();
-        }
-      });
-    }
-    final clamped = offsetSec < 0
-        ? 0
-        : offsetSec > 3
-            ? 3
-            : offsetSec;
-    map['$exerciseIndex'] = clamped;
-    await box.put(_offsetsKey, map);
+    final box = await _openBox();
+    final offsets = _readOffsets(box);
+    offsets['$exerciseIndex'] = _sanitizeOffset(offsetSec);
+    await box.put(_offsetsKey, offsets);
   }
 }
