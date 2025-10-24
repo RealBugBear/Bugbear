@@ -15,6 +15,16 @@ class MoroExerciseScreenArgs {
   });
 }
 
+class MoroExerciseResult {
+  final bool completed;
+  final Duration? duration;
+
+  const MoroExerciseResult({
+    required this.completed,
+    this.duration,
+  });
+}
+
 class MoroExerciseScreen extends StatefulWidget {
   final MoroExercise exercise;
   final int offset;
@@ -51,6 +61,7 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
         phasesPerRepeat: ex.phasesPerRepeat,
         phaseSeconds: ex.baseSeconds + widget.offset,
       );
+      final totalDuration = timer.totalDuration;
       _subscription = timer.run(_cancelToken).listen((event) {
         if (!mounted) return;
         setState(() {
@@ -59,7 +70,12 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
           _remaining = event.remaining;
         });
         if (event.done && mounted) {
-          Navigator.of(context).maybePop();
+          Navigator.of(context).maybePop(
+            MoroExerciseResult(
+              completed: true,
+              duration: totalDuration,
+            ),
+          );
         }
       });
     } else {
@@ -67,6 +83,7 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
         repeats: ex.repeats,
         repeatSeconds: ex.baseSeconds + widget.offset,
       );
+      final totalDuration = timer.totalDuration;
       _subscription = timer.run(_cancelToken).listen((event) {
         if (!mounted) return;
         setState(() {
@@ -75,7 +92,12 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
           _remaining = event.remaining;
         });
         if (event.done && mounted) {
-          Navigator.of(context).maybePop();
+          Navigator.of(context).maybePop(
+            MoroExerciseResult(
+              completed: true,
+              duration: totalDuration,
+            ),
+          );
         }
       });
     }
@@ -92,7 +114,8 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
 
   Future<bool> _handleWillPop() async {
     _cancelToken.cancel();
-    return true;
+    Navigator.of(context).pop(const MoroExerciseResult(completed: false));
+    return false;
   }
 
   @override
@@ -118,7 +141,8 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
             icon: const Icon(Icons.close),
             onPressed: () {
               _cancelToken.cancel();
-              Navigator.of(context).maybePop();
+              Navigator.of(context)
+                  .maybePop(const MoroExerciseResult(completed: false));
             },
           ),
         ),
@@ -142,7 +166,8 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
                 child: OutlinedButton(
                   onPressed: () {
                     _cancelToken.cancel();
-                    Navigator.of(context).maybePop();
+                    Navigator.of(context)
+                        .maybePop(const MoroExerciseResult(completed: false));
                   },
                   child: const Text('Abbrechen'),
                 ),

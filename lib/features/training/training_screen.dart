@@ -3,15 +3,73 @@ import 'package:provider/provider.dart';
 
 import 'package:free_base/features/training/models/session_state.dart';
 import 'package:free_base/features/training/notifier/session_notifier.dart';
+import 'package:free_base/features/training/widgets/control_button_row.dart';
+import 'package:free_base/features/training/widgets/exercise_canvas.dart';
+import 'package:free_base/features/training/widgets/progress_row.dart';
+import 'package:free_base/features/training/widgets/session_completion_dialog.dart';
+import 'package:free_base/features/training/widgets/session_status_banner.dart';
 import 'package:free_base/features/training/widgets/training_header.dart';
 import 'package:free_base/widgets/app_drawer.dart';
-import 'package:free_base/features/training/widgets/progress_row.dart';
-import 'package:free_base/features/training/widgets/exercise_canvas.dart';
-import 'package:free_base/features/training/widgets/control_button_row.dart';
 import 'package:free_base/widgets/connectivity_banner.dart';
 
-class TrainingScreen extends StatelessWidget {
+class TrainingScreen extends StatefulWidget {
   const TrainingScreen({super.key});
+
+  @override
+  State<TrainingScreen> createState() => _TrainingScreenState();
+}
+
+class _TrainingScreenState extends State<TrainingScreen> {
+  bool _dialogShown = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    context.read<SessionNotifier>().refreshScheduleStatus();
+  }
+
+  Future<void> _handleCompletion(
+      SessionNotifier notifier, SessionState state) async {
+    if (_dialogShown) return;
+    _dialogShown = true;
+    final exercises = notifier.exercises;
+    final totalReps = exercises.fold<int>(0, (sum, ex) => sum + ex.repetitions);
+    final duration = state.endAt != null
+        ? state.endAt!.difference(state.startedAt)
+        : const Duration();
+    final action = await showSessionCompletionDialog(
+      context,
+      summary: SessionCompletionSummary(
+        totalDuration: duration,
+        totalExercises: exercises.length,
+        totalRepetitions: totalReps,
+        phaseLabel: 'Phase ${state.phaseId}',
+      ),
+    );
+    if (!mounted) return;
+    notifier.scheduleNextSession();
+    switch (action) {
+      case SessionCompletionAction.openCalendar:
+        Navigator.of(context).pushNamed('/calendar');
+        break;
+      case SessionCompletionAction.giveFeedback:
+        Navigator.of(context).pushNamed('/questionnaire');
+        break;
+      case SessionCompletionAction.planNext:
+      case SessionCompletionAction.close:
+      case null:
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          '/dashboard',
+          (route) => route.isFirst,
+        );
+        break;
+    }
+    if (mounted) {
+      setState(() {
+        _dialogShown = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +79,15 @@ class TrainingScreen extends StatelessWidget {
     final idx = state.exerciseIndex.clamp(0, exercises.length - 1);
     final current = exercises[idx];
 
-    if (state.status == SessionStatus.completed) {
+    if (state.status == SessionStatus.completed && !_dialogShown) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (!context.mounted) return;
-        if (ModalRoute.of(context)?.settings.name == '/training/completed') {
-          return;
-        }
-        Navigator.of(context).pushReplacementNamed('/training/completed');
+        if (!mounted) return;
+        _handleCompletion(sessionNotifier, state);
       });
+    }
+
+    if (state.status != SessionStatus.completed && _dialogShown) {
+      _dialogShown = false;
     }
 
     return Scaffold(
@@ -40,6 +99,10 @@ class TrainingScreen extends StatelessWidget {
       body: Column(
         children: [
           const ConnectivityBanner(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: SessionStatusBanner.fromSession(state),
+          ),
           ProgressRow(
             currentExercise: idx + 1,
             totalExercises: exercises.length,

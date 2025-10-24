@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:free_base/features/training/widgets/session_completion_dialog.dart';
+
 import 'moro_exercise_screen.dart';
 import 'moro_models.dart';
 import 'moro_repository.dart';
@@ -86,13 +88,43 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
     MoroExercise ex,
     int offset,
   ) async {
-    await Navigator.of(context).pushNamed(
+    final result = await Navigator.of(context).pushNamed(
       '/training/moro/${ex.index}',
       arguments: MoroExerciseScreenArgs(
         exercise: ex,
         offset: offset,
       ),
     );
+    if (!mounted) return;
+    if (result is MoroExerciseResult && result.completed) {
+      final summary = SessionCompletionSummary(
+        totalDuration: result.duration ?? const Duration(),
+        totalExercises: 1,
+        totalRepetitions: ex.repeats,
+        phaseLabel: ex.title,
+      );
+      final action = await showSessionCompletionDialog(
+        context,
+        summary: summary,
+      );
+      if (!mounted) return;
+      switch (action) {
+        case SessionCompletionAction.openCalendar:
+          Navigator.of(context).pushNamed('/calendar');
+          break;
+        case SessionCompletionAction.giveFeedback:
+          Navigator.of(context).pushNamed('/questionnaire');
+          break;
+        case SessionCompletionAction.planNext:
+        case SessionCompletionAction.close:
+        case null:
+          Navigator.of(context).pushNamedAndRemoveUntil(
+            '/dashboard',
+            (route) => route.isFirst,
+          );
+          break;
+      }
+    }
   }
 }
 
