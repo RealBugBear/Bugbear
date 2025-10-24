@@ -1,17 +1,20 @@
 // lib/features/calendar/screens/calendar_screen.dart
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
-import '../widgets/level_map_calendar.dart';
-import '../widgets/month_bracket.dart';
-import '../widgets/golden_day_banner.dart';
+import 'package:provider/provider.dart';
 
-import '../models/calendar_event.dart';
+import 'package:free_base/services/app_routes.dart';
+import 'package:free_base/services/training_intent.dart';
+
 import '../dialogs/edit_training_day_dialog.dart';
+import '../models/calendar_event.dart';
 import '../notifier/calendar_notifier.dart';
 import '../services/calendar_service.dart';
-import 'package:free_base/widgets/app_drawer.dart';
+import '../widgets/golden_day_banner.dart';
+import '../widgets/level_map_calendar.dart';
+import '../widgets/month_bracket.dart';
 
 /// CalendarScreen
 ///
@@ -95,7 +98,6 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
     });
 
     return Scaffold(
-      drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Dein Trainingskalender')),
       body: Column(
         children: [
@@ -164,6 +166,14 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
             child: GoldenDayBanner(),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.goNamed(
+          AppRouteNames.training,
+          extra: TrainingIntent.start(),
+        ),
+        icon: const Icon(Icons.fitness_center),
+        label: const Text('Training starten'),
       ),
     );
   }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:free_base/widgets/app_drawer.dart';
 
 /// Generic placeholder screen that communicates disabled or upcoming
 /// functionality. It can be reused for feature-flagged sections so that we
@@ -18,7 +17,6 @@ class FeaturePlaceholderScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(title)),
-      drawer: const AppDrawer(),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(24.0),

@@ -42,9 +42,9 @@ class AppRouter {
         );
 
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
+  static final _calendarNavigatorKey = GlobalKey<NavigatorState>();
   static final _dashboardNavigatorKey = GlobalKey<NavigatorState>();
   static final _trainingNavigatorKey = GlobalKey<NavigatorState>();
-  static final _calendarNavigatorKey = GlobalKey<NavigatorState>();
   static final _profileNavigatorKey = GlobalKey<NavigatorState>();
 
   final AppRouteGuard _guard;
@@ -102,7 +102,19 @@ class AppRouter {
         ),
         branches: [
           StatefulShellBranch(
+            navigatorKey: _calendarNavigatorKey,
+            initialLocation: AppRoutePaths.calendar,
+            routes: [
+              GoRoute(
+                path: AppRoutePaths.calendar,
+                name: AppRouteNames.calendar,
+                builder: (context, state) => const CalendarScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
             navigatorKey: _dashboardNavigatorKey,
+            initialLocation: AppRoutePaths.dashboard,
             routes: [
               GoRoute(
                 path: AppRoutePaths.dashboard,
@@ -124,6 +136,7 @@ class AppRouter {
           ),
           StatefulShellBranch(
             navigatorKey: _trainingNavigatorKey,
+            initialLocation: AppRoutePaths.training,
             routes: [
               GoRoute(
                 path: AppRoutePaths.training,
@@ -178,17 +191,8 @@ class AppRouter {
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _calendarNavigatorKey,
-            routes: [
-              GoRoute(
-                path: AppRoutePaths.calendar,
-                name: AppRouteNames.calendar,
-                builder: (context, state) => const CalendarScreen(),
-              ),
-            ],
-          ),
-          StatefulShellBranch(
             navigatorKey: _profileNavigatorKey,
+            initialLocation: AppRoutePaths.profile,
             routes: [
               GoRoute(
                 path: AppRoutePaths.profile,
