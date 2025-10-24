@@ -9,7 +9,6 @@ import 'package:free_base/features/training/notifier/session_notifier.dart';
 import 'package:free_base/features/training/widgets/session_status_banner.dart';
 import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/training_intent.dart';
-import 'package:free_base/widgets/app_drawer.dart';
 
 /// DashboardScreen
 ///
@@ -49,7 +48,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final sessionNotifier = context.watch<SessionNotifier>();
     final state = sessionNotifier.state;
     return Scaffold(
-      drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Dashboard')),
       body: Padding(
         padding: const EdgeInsets.all(24),

@@ -1,13 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import 'package:free_base/services/app_routes.dart';
-import 'package:free_base/widgets/app_drawer.dart';
+import 'package:free_base/services/feature_flags.dart';
+
+import '../../calendar/widgets/golden_day_banner.dart';
 import '../models/reflex_profile.dart';
 import '../services/profile_service.dart';
-import '../../calendar/widgets/golden_day_banner.dart';
 
 class ProfileOverviewScreen extends StatelessWidget {
   const ProfileOverviewScreen({super.key});
@@ -36,6 +38,7 @@ class ProfileOverviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final uid = FirebaseAuth.instance.currentUser?.uid;
+    final flags = context.watch<FeatureFlags>();
     if (uid == null) {
       return const Scaffold(body: Center(child: Text('Nicht angemeldet')));
     }
@@ -63,9 +66,19 @@ class ProfileOverviewScreen extends StatelessWidget {
               return const Scaffold(body: Center(child: CircularProgressIndicator()));
             }
             final profiles = snap.data!;
+            final showCommunityLinks =
+                flags.forumEnabled || flags.achievementsEnabled;
             return Scaffold(
-              drawer: const AppDrawer(),
-              appBar: AppBar(title: const Text('Reflexprofile')),
+              appBar: AppBar(
+                title: const Text('Reflexprofile'),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.settings_outlined),
+                    tooltip: 'Einstellungen',
+                    onPressed: () => context.pushNamed(AppRouteNames.settings),
+                  ),
+                ],
+              ),
               body: Column(
                 children: [
                   Expanded(
@@ -123,6 +136,31 @@ class ProfileOverviewScreen extends StatelessWidget {
                       child: const Text('Neues Quiz starten'),
                     ),
                   ),
+                  if (showCommunityLinks)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          if (flags.forumEnabled)
+                            OutlinedButton.icon(
+                              onPressed: () =>
+                                  context.pushNamed(AppRouteNames.forum),
+                              icon: const Icon(Icons.forum_outlined),
+                              label: const Text('Zum Forum (Beta)'),
+                            ),
+                          if (flags.forumEnabled && flags.achievementsEnabled)
+                            const SizedBox(height: 12),
+                          if (flags.achievementsEnabled)
+                            OutlinedButton.icon(
+                              onPressed: () =>
+                                  context.pushNamed(AppRouteNames.achievements),
+                              icon: const Icon(Icons.emoji_events_outlined),
+                              label: const Text('Erfolge ansehen'),
+                            ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             );

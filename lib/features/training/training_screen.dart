@@ -12,7 +12,6 @@ import 'package:free_base/features/training/widgets/session_status_banner.dart';
 import 'package:free_base/features/training/widgets/training_header.dart';
 import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/training_intent.dart';
-import 'package:free_base/widgets/app_drawer.dart';
 import 'package:free_base/widgets/connectivity_banner.dart';
 
 class TrainingScreen extends StatefulWidget {
@@ -117,7 +116,6 @@ class _TrainingScreenState extends State<TrainingScreen> {
     }
 
     return Scaffold(
-      drawer: const AppDrawer(),
       appBar: TrainingHeader(
         phaseName: 'Phase ${state.phaseId}',
         phaseId: state.phaseId,

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:free_base/features/onboarding/services/auth_service.dart';
 import 'package:free_base/services/app_routes.dart';
-import 'package:free_base/widgets/app_drawer.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -25,7 +24,6 @@ class SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const AppDrawer(),
       appBar: AppBar(title: const Text('Einstellungen')),
       body: ListView(
         padding: const EdgeInsets.all(16.0),

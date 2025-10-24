@@ -3,7 +3,6 @@ import 'package:free_base/features/training/screens/phase_selection_screen.dart'
 import 'package:free_base/features/training/screens/training_help_screen.dart';
 
 /// TrainingHeader zeigt in der oberen Leiste:
-/// - das automatische Hamburger-Icon (öffnet den Drawer)
 /// - den aktuellen Phasen-Namen (klickbar: öffnet PhaseSelectionScreen)
 /// - ein Hilfesymbol (öffnet ein Overlay mit Erklärungen)
 class TrainingHeader extends StatelessWidget implements PreferredSizeWidget {
@@ -22,7 +21,6 @@ class TrainingHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      // Flutter zeigt automatisch das Hamburger-Icon, wenn ein Drawer vorhanden ist.
       title: GestureDetector(
         onTap: () {
           Navigator.of(context).push(
