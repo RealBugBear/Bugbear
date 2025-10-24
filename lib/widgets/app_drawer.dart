@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:free_base/constants/app_strings.dart';
+import 'package:free_base/features/common/dashboard_route_args.dart';
 import 'package:free_base/services/feature_flags.dart';
 
 class AppDrawer extends StatelessWidget {
@@ -22,10 +23,15 @@ class AppDrawer extends StatelessWidget {
       ),
       ListTile(
         leading: const Icon(Icons.fitness_center),
-        title: const Text('Training'),
+        title: const Text('Training (über Dashboard)'),
+        subtitle: const Text('Starte über den empfohlenen Ablauf'),
         onTap: () {
           Navigator.pop(context);
-          Navigator.pushNamed(context, '/training/moro');
+          Navigator.pushNamed(
+            context,
+            '/dashboard',
+            arguments: const DashboardRouteArgs(startTraining: true),
+          );
         },
       ),
       ListTile(
