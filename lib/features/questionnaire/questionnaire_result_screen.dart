@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/error_handler.dart';
 
 import 'questionnaire_state.dart';
@@ -58,11 +60,7 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
           .read<QuestionnaireState>()
           .saveResult(name: trimmed, context: context);
       if (!context.mounted) return;
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        '/reflexe-profil',
-        ModalRoute.withName('/'),
-      );
+      context.goNamed(AppRouteNames.profile);
     } catch (e) {
       if (!context.mounted) return;
       final locale = Localizations.maybeLocaleOf(context);

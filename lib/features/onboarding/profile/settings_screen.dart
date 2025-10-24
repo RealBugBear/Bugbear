@@ -1,8 +1,10 @@
 // File: lib/screens/profile/settings_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:free_base/features/onboarding/services/auth_service.dart';
+import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/widgets/app_drawer.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -17,7 +19,7 @@ class SettingsScreenState extends State<SettingsScreen> {
     final auth = context.read<AuthService>();
     await auth.signOut();
     if (!mounted) return;
-    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+    context.goNamed(AppRouteNames.login);
   }
 
   @override

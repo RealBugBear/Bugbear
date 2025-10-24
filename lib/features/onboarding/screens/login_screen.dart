@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:free_base/features/onboarding/services/auth_service.dart';
+import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/error_handler.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -35,7 +37,7 @@ class LoginScreenState extends State<LoginScreen> {
         _passwordController.text.trim(),
       );
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/select-role');
+      context.goNamed(AppRouteNames.roleSelection);
     } catch (e) {
       if (!mounted) return;
       final locale = Localizations.maybeLocaleOf(context);
@@ -92,7 +94,7 @@ class LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 12),
             TextButton(
-              onPressed: () => Navigator.pushNamed(context, '/register'),
+              onPressed: () => context.pushNamed(AppRouteNames.register),
               child: const Text('Noch keinen Account? Registrieren'),
             ),
           ],

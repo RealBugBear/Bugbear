@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/error_handler.dart';
 import 'package:free_base/services/feature_flags.dart';
 
@@ -26,7 +28,7 @@ class RoleSelectionScreenState extends State<RoleSelectionScreen> {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/login');
+      context.goNamed(AppRouteNames.login);
       return;
     }
 
@@ -38,7 +40,7 @@ class RoleSelectionScreenState extends State<RoleSelectionScreen> {
           .doc(uid)
           .set({'role': selectedRole}, SetOptions(merge: true));
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/dashboard');
+      context.goNamed(AppRouteNames.dashboard);
     } catch (e) {
       if (!mounted) return;
       ErrorHandler.showError(

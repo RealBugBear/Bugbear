@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:free_base/features/training/widgets/session_completion_dialog.dart';
+import 'package:free_base/services/app_routes.dart';
 
 import 'moro_exercise_screen.dart';
 import 'moro_models.dart';
@@ -88,9 +90,10 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
     MoroExercise ex,
     int offset,
   ) async {
-    final result = await Navigator.of(context).pushNamed(
-      '/training/moro/${ex.index}',
-      arguments: MoroExerciseScreenArgs(
+    final result = await context.pushNamed(
+      AppRouteNames.moroExercise,
+      pathParameters: {'exerciseId': '${ex.index}'},
+      extra: MoroExerciseScreenArgs(
         exercise: ex,
         offset: offset,
       ),
@@ -110,18 +113,15 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
       if (!mounted) return;
       switch (action) {
         case SessionCompletionAction.openCalendar:
-          Navigator.of(context).pushNamed('/calendar');
+          context.goNamed(AppRouteNames.calendar);
           break;
         case SessionCompletionAction.giveFeedback:
-          Navigator.of(context).pushNamed('/questionnaire');
+          context.pushNamed(AppRouteNames.questionnaireIntro);
           break;
         case SessionCompletionAction.planNext:
         case SessionCompletionAction.close:
         case null:
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            '/dashboard',
-            (route) => route.isFirst,
-          );
+          context.goNamed(AppRouteNames.dashboard);
           break;
       }
     }

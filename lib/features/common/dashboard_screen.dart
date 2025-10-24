@@ -1,18 +1,23 @@
 // lib/features/common/dashboard_screen.dart
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:free_base/features/common/dashboard_route_args.dart';
 import 'package:free_base/features/training/notifier/session_notifier.dart';
 import 'package:free_base/features/training/widgets/session_status_banner.dart';
+import 'package:free_base/services/app_routes.dart';
+import 'package:free_base/services/training_intent.dart';
 import 'package:free_base/widgets/app_drawer.dart';
 
 /// DashboardScreen
 ///
 /// Startpunkt der App mit Navigation zu Training und Kalender.
 class DashboardScreen extends StatefulWidget {
-  const DashboardScreen({Key? key}) : super(key: key);
+  final DashboardRouteArgs? routeArgs;
+
+  const DashboardScreen({Key? key, this.routeArgs}) : super(key: key);
 
   @override
   State<DashboardScreen> createState() => _DashboardScreenState();
@@ -26,12 +31,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.didChangeDependencies();
     if (_intentHandled) return;
     _intentHandled = true;
-    final args = ModalRoute.of(context)?.settings.arguments;
     context.read<SessionNotifier>().refreshScheduleStatus();
-    if (args is DashboardRouteArgs && args.startTraining) {
+    final args = widget.routeArgs;
+    if (args != null && args.startTraining) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) return;
-        Navigator.of(context).pushNamed('/training');
+        context.goNamed(
+          AppRouteNames.training,
+          extra: TrainingIntent.start(),
+        );
       });
     }
   }
@@ -63,7 +71,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () => Navigator.pushNamed(context, '/training'),
+                onPressed: () => context.goNamed(
+                  AppRouteNames.training,
+                ),
                 child: const Text('Training starten'),
               ),
             ),
@@ -71,7 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             SizedBox(
               width: double.infinity,
               child: OutlinedButton(
-                onPressed: () => Navigator.pushNamed(context, '/calendar'),
+                onPressed: () => context.goNamed(AppRouteNames.calendar),
                 child: const Text('Zum Kalender'),
               ),
             ),

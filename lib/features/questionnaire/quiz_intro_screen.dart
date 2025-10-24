@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/widgets/app_drawer.dart';
 
 import 'questionnaire_state.dart';
@@ -60,7 +62,7 @@ class QuizIntroScreen extends StatelessWidget {
     }
 
     if (!context.mounted) return;
-    Navigator.pushReplacementNamed(context, '/questionnaire/questions');
+    context.goNamed(AppRouteNames.questionnaire);
   }
 
   @override

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/widgets/app_drawer.dart';
 import '../models/reflex_profile.dart';
 import '../services/profile_service.dart';
@@ -80,10 +82,9 @@ class ProfileOverviewScreen extends StatelessWidget {
                                     : const Icon(Icons.person),
                                 title: Text(p.name),
                                 subtitle: Text(DateFormat('dd.MM.yyyy').format(p.createdAt)),
-                                onTap: () => Navigator.pushNamed(
-                                  context,
-                                  '/reflexe-profil/detail',
-                                  arguments: p,
+                                onTap: () => context.pushNamed(
+                                  AppRouteNames.profileDetail,
+                                  extra: p,
                                 ),
 
                                 tileColor: isMain
@@ -118,7 +119,7 @@ class ProfileOverviewScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(16.0),
                     child: ElevatedButton(
                       onPressed: () =>
-                          Navigator.pushNamed(context, '/questionnaire'),
+                          context.pushNamed(AppRouteNames.questionnaireIntro),
                       child: const Text('Neues Quiz starten'),
                     ),
                   ),
