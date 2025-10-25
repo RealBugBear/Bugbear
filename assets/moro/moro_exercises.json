@@ -1,9 +1,226 @@
 [
-  {"index":1,"title":"Moro 1","type":"phased4x","repeats":3,"phasesPerRepeat":4,"baseSeconds":3},
-  {"index":2,"title":"Moro 2","type":"phased4x","repeats":3,"phasesPerRepeat":4,"baseSeconds":3},
-  {"index":3,"title":"Moro 3","type":"phased4x","repeats":3,"phasesPerRepeat":4,"baseSeconds":3},
-  {"index":4,"title":"Moro 4","type":"phased4x","repeats":3,"phasesPerRepeat":4,"baseSeconds":3},
-  {"index":5,"title":"Moro 5","type":"phased4x","repeats":3,"phasesPerRepeat":4,"baseSeconds":3},
-  {"index":6,"title":"Moro 6","type":"simple","repeats":6,"phasesPerRepeat":1,"baseSeconds":7},
-  {"index":7,"title":"Moro 7","type":"simple","repeats":6,"phasesPerRepeat":1,"baseSeconds":7}
+  {
+    "index": 1,
+    "title": "Moro #1 – Kniependel",
+    "type": "phased4x",
+    "repeats": 3,
+    "phasesPerRepeat": 4,
+    "baseSeconds": 3,
+    "goal": "Sanfte Mobilisation der Lendenwirbelsäule und Beckenkontrolle.",
+    "startPosition": "Rückenlage mit ausgestreckten Beinen, Hände flach neben dem Körper, Augen offen.",
+    "endPosition": "Knie abwechselnd zur Seite geführt, anschließend zurück in Ausgangsposition.",
+    "steps": [
+      {"order": 1, "text": "Atme ruhig ein, lege Hände offen ab und stabilisiere den Kopf neutral."},
+      {"order": 2, "text": "Führe beide Knie in etwa drei Sekunden zur rechten Seite, Schultern bleiben am Boden.", "durationSec": 3},
+      {"order": 3, "text": "Ziehe die Knie in drei Sekunden zurück zur Mitte und wiederhole zur linken Seite.", "durationSec": 3},
+      {"order": 4, "text": "Rolle kontrolliert weiter, bis drei Wiederholungen pro Seite abgeschlossen sind."}
+    ],
+    "cues": [
+      "Lass die Bewegung weich aus dem Becken starten.",
+      "Kniescheiben zeigen nach oben, Füße entspannt.",
+      "Augen bleiben offen für Orientierung."
+    ],
+    "breath": {"pattern": "emphasis-exhale", "exhaleSec": 7, "notes": "Lass die Ausatmung die Bewegung zurück zur Mitte begleiten."},
+    "abortRules": [
+      "Starker Schmerz in Rücken oder Hüfte",
+      "Blockade oder Widerstand im Bewegungsweg",
+      "Deutliche Asymmetrie zwischen rechts und links"
+    ],
+    "notes": "Arbeite mit kleinem Bewegungsradius, wenn die Lendenwirbelsäule empfindlich reagiert.",
+    "tags": ["mobility", "core"],
+    "version": "1.0.0",
+    "media": {"image": "assets/images/placeholder.png"}
+  },
+  {
+    "index": 2,
+    "title": "Moro #2 – Stirn zu den Knien",
+    "type": "phased4x",
+    "repeats": 3,
+    "phasesPerRepeat": 4,
+    "baseSeconds": 3,
+    "goal": "Aktivierung der vorderen Faszienkette und Koordination der Atemspannung.",
+    "startPosition": "Rückenlage, Beine hüftbreit angewinkelt, Hände fassen nicht, sondern liegen flach neben dem Körper.",
+    "endPosition": "Oberkörper und Kopf rollen Richtung Knie, Stirn nähert sich den Knien, danach kontrolliert ablegen.",
+    "steps": [
+      {"order": 1, "text": "Bereite dich mit ruhiger Einatmung vor und entspanne Schultern und Gesicht."},
+      {"order": 2, "text": "Atme lang aus und rolle Oberkörper sowie Kopf innerhalb von drei Sekunden Richtung Knie.", "durationSec": 3},
+      {"order": 3, "text": "Halte die Position für drei Sekunden mit sanfter Bauchspannung."},
+      {"order": 4, "text": "Lege dich in drei Sekunden wieder Wirbel für Wirbel zurück auf die Matte.", "durationSec": 3}
+    ],
+    "cues": [
+      "Core weich aktiv – keine harte Pressatmung.",
+      "Nacken lang lassen, Blick zu den Knien.",
+      "Regression: Schienbeine mit den Händen umfassen, falls nötig."
+    ],
+    "breath": {"pattern": "emphasis-exhale", "exhaleSec": 7, "notes": "Lange Ausatmung trägt dich in die Flexion."},
+    "abortRules": [
+      "Schmerz im Nacken oder Ziehen in der Halswirbelsäule",
+      "Schwindel oder starke Spannung im Bauch",
+      "Asymmetrisches Hochrollen"
+    ],
+    "notes": "Arbeite nur so hoch wie sich der Nacken wohlfühlt; Fokus auf gleichmäßige Bewegung.",
+    "tags": ["core", "stability"],
+    "version": "1.0.0",
+    "media": {"image": "assets/images/placeholder.png"}
+  },
+  {
+    "index": 3,
+    "title": "Moro #3 – Halb-Frosch",
+    "type": "phased4x",
+    "repeats": 3,
+    "phasesPerRepeat": 4,
+    "baseSeconds": 3,
+    "goal": "Differenzierte Hüftöffnung mit Kontaktführung und Beckenstabilität.",
+    "startPosition": "Rückenlage, ein Bein ausgestreckt, anderes Bein beginnt gleitend an der Innenseite entlang.",
+    "endPosition": "Fußsohle gleitet bis zur Leiste und kehrt dann entlang des Beins zurück.",
+    "steps": [
+      {"order": 1, "text": "Lege Hände offen ab, Blick zur Decke, halte Becken zentriert."},
+      {"order": 2, "text": "Führe die Fußsohle in drei Sekunden entlang des gestreckten Beins nach oben – der Kontakt bleibt erhalten.", "durationSec": 3},
+      {"order": 3, "text": "Gleite in drei Sekunden zurück nach unten, ohne das Becken zu drehen.", "durationSec": 3},
+      {"order": 4, "text": "Wechsle kontrolliert nach jeder Wiederholung die Seite."}
+    ],
+    "cues": [
+      "Nur so weit öffnen, wie der Fuß Kontakt hält.",
+      "Becken bleibt ruhig, Lendenwirbelsäule neutral.",
+      "Schultern und Hände bleiben weich auf der Unterlage."
+    ],
+    "breath": {"pattern": "emphasis-exhale", "exhaleSec": 7, "notes": "Ausatmung unterstützt das Zurückgleiten."},
+    "abortRules": [
+      "Blockaden im Hüftgelenk",
+      "Schmerzhaftes Ziehen an der Innenseite des Beins",
+      "Unkontrollierbare Beckenrotation"
+    ],
+    "notes": "Platziere ggf. ein Tuch unter der gleitenden Ferse für weniger Reibung.",
+    "tags": ["mobility", "hip"],
+    "version": "1.0.0",
+    "media": {"image": "assets/images/placeholder.png"}
+  },
+  {
+    "index": 4,
+    "title": "Moro #4 – Frosch",
+    "type": "phased4x",
+    "repeats": 3,
+    "phasesPerRepeat": 4,
+    "baseSeconds": 3,
+    "goal": "Symmetrische Hüftöffnung mit Fokus auf Weichheit und Kontakt der Fußsohlen.",
+    "startPosition": "Rückenlage, Fußsohlen berühren sich, Knie fallen entspannt nach außen.",
+    "endPosition": "Fersen gleiten Richtung Becken und kehren zurück, Fußsohlen bleiben komplett in Kontakt.",
+    "steps": [
+      {"order": 1, "text": "Lege Hände offen neben dem Körper und richte Blick nach oben."},
+      {"order": 2, "text": "Ziehe die Fersen in drei Sekunden Richtung Körper, ohne den Fußkontakt zu verlieren.", "durationSec": 3},
+      {"order": 3, "text": "Lass die Beine in drei Sekunden kontrolliert wieder nach außen gleiten.", "durationSec": 3},
+      {"order": 4, "text": "Halte Schultern und Bauch entspannt, wiederhole drei Durchgänge."}
+    ],
+    "cues": [
+      "Nur so weit ziehen, wie die Fußsohlen flächig bleiben.",
+      "Atme weich in den Bauch, lass die Leisten los.",
+      "Knie hängen schwer, nicht aktiv nach unten drücken."
+    ],
+    "breath": {"pattern": "emphasis-exhale", "exhaleSec": 7, "notes": "Ausatmung begleitet das Öffnen der Knie."},
+    "abortRules": [
+      "Stechender Schmerz in der Leiste",
+      "Taubheitsgefühl in den Oberschenkeln",
+      "Blockade im unteren Rücken"
+    ],
+    "notes": "Unterstütze die Knie bei Bedarf mit Blöcken oder Kissen.",
+    "tags": ["mobility", "hip"],
+    "version": "1.0.0",
+    "media": {"image": "assets/images/placeholder.png"}
+  },
+  {
+    "index": 5,
+    "title": "Moro #5 – Beinauflage",
+    "type": "phased4x",
+    "repeats": 3,
+    "phasesPerRepeat": 4,
+    "baseSeconds": 3,
+    "goal": "Rotation und diagonale Streckung zur Integration der Körpermitte.",
+    "startPosition": "Rückenlage, ein Bein bleibt lang, das andere hebt zur Auflage auf dem Schienbein.",
+    "endPosition": "Aktives Bein liegt vollständig auf dem anderen Schienbein, danach zurückführen und Seite wechseln.",
+    "steps": [
+      {"order": 1, "text": "Stabilisiere Arme und Hände in der Preroll-Position, Blick zur Decke."},
+      {"order": 2, "text": "Hebe ein Bein in drei Sekunden an und führe es kontrolliert über das andere Bein.", "durationSec": 3},
+      {"order": 3, "text": "Lege den Unterschenkel vollständig ab, halte kurz Kontakt.", "durationSec": 3},
+      {"order": 4, "text": "Führe das Bein in drei Sekunden zurück und wechsle die Seite.", "durationSec": 3}
+    ],
+    "cues": [
+      "Das ruhende Bein bleibt am Boden verankert.",
+      "Hände drücken sanft in die Unterlage für Stabilität.",
+      "Augen bleiben offen und folgen der Bewegung nicht."
+    ],
+    "breath": {"pattern": "emphasis-exhale", "exhaleSec": 7, "notes": "Ausatmung unterstützt das Zurückbringen des Beins."},
+    "abortRules": [
+      "Schmerz in Hüfte oder Knie",
+      "Gefühl von Instabilität im Becken",
+      "Schwindel beim Seitenwechsel"
+    ],
+    "notes": "Nutze einen Gurt, falls das Ablegen des Unterschenkels schwer fällt.",
+    "tags": ["mobility", "coordination"],
+    "version": "1.0.0",
+    "media": {"image": "assets/images/placeholder.png"}
+  },
+  {
+    "index": 6,
+    "title": "Moro #6 – Druck & Gegendruck",
+    "type": "simple",
+    "repeats": 6,
+    "phasesPerRepeat": 1,
+    "baseSeconds": 7,
+    "goal": "Aufbau von Rumpfspannung über sanften Widerstand und koordinierte Atmung.",
+    "startPosition": "Rückenlage, Hände an die Knie gelegt, Beine leicht vom Körper weg, Arme gestreckt.",
+    "endPosition": "Beine drücken sanft nach vorne, Hände halten gleichmäßig dagegen, danach in Ausgangsposition lösen.",
+    "steps": [
+      {"order": 1, "text": "Bereite dich mit tiefer Einatmung vor, Hände liegen flach auf den Knien."},
+      {"order": 2, "text": "Strecke Beine sanft nach vorne und bau über sieben Sekunden Gegendruck mit den Handflächen auf.", "durationSec": 7},
+      {"order": 3, "text": "Halte die Spannung kurz, atme nach, löse für drei Sekunden.", "durationSec": 3},
+      {"order": 4, "text": "Wiederhole insgesamt sechs Runden mit ruhiger Atmung."}
+    ],
+    "cues": [
+      "Spannung gleichmäßig auf beide Seiten verteilen.",
+      "Nacken bleibt lang, Hinterkopf am Boden.",
+      "Ausatmung fließt durch den Mund, ohne Pressen."
+    ],
+    "breath": {"pattern": "emphasis-exhale", "exhaleSec": 7, "notes": "Jede Wiederholung begleitet eine etwa sieben Sekunden lange Ausatmung."},
+    "abortRules": [
+      "Schmerz im unteren Rücken",
+      "Taubheit in Füßen oder Händen",
+      "Atemnot oder Schwindel"
+    ],
+    "notes": "Passe den Druck an – Ziel ist ein gleichmäßiger Widerstand, kein Zittern.",
+    "tags": ["stability", "core"],
+    "version": "1.0.0",
+    "media": {"image": "assets/images/placeholder.png"}
+  },
+  {
+    "index": 7,
+    "title": "Moro #7 – Überkreuzer",
+    "type": "simple",
+    "repeats": 6,
+    "phasesPerRepeat": 1,
+    "baseSeconds": 7,
+    "goal": "Diagonale Spannung und Ganzkörperintegration durch gekreuzten Gegendruck.",
+    "startPosition": "Rückenlage, Arme überkreuzen auf den Oberschenkeln, Kopf leicht zur Brust geneigt.",
+    "endPosition": "Beine ziehen Richtung Körper, Arme arbeiten diagonal dagegen, nach drei Durchgängen Armkreuz wechseln.",
+    "steps": [
+      {"order": 1, "text": "Leg die Arme überkreuz auf Oberschenkel und finde eine lange Halswirbelsäule."},
+      {"order": 2, "text": "Zieh die Beine mit der Ausatmung für sieben Sekunden zum Körper, Hände halten gleichmäßig dagegen.", "durationSec": 7},
+      {"order": 3, "text": "Halte drei Sekunden Pause, lass Schultern sinken und atme nach.", "durationSec": 3},
+      {"order": 4, "text": "Nach drei Wiederholungen Arme neu kreuzen und Richtung wechseln."}
+    ],
+    "cues": [
+      "Kopf bleibt leicht zur Brust geneigt, Blick weich nach vorne.",
+      "Zieh gleichmäßig aus beiden Beinen, ohne zu ruckeln.",
+      "Spür die diagonale Verbindung zwischen Händen und Rumpf."
+    ],
+    "breath": {"pattern": "emphasis-exhale", "exhaleSec": 7, "notes": "Jeder Zug nach innen begleitet eine lange Ausatmung mit anschließendem kurzen Innehalten."},
+    "abortRules": [
+      "Nackenschmerz oder Kopfdruck",
+      "Asymmetrische Kraftentwicklung",
+      "Atemnot oder Schwindel"
+    ],
+    "notes": "Unterstütze den Kopf bei Bedarf mit einem kleinen Kissen.",
+    "tags": ["stability", "coordination"],
+    "version": "1.0.0",
+    "media": {"image": "assets/images/placeholder.png"}
+  }
 ]
