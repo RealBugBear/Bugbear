@@ -21,9 +21,7 @@ import 'package:free_base/features/questionnaire/quiz_intro_screen.dart';
 import 'package:free_base/features/training/moro/moro_exercise_screen.dart';
 import 'package:free_base/features/training/moro/moro_training_screen.dart';
 import 'package:free_base/features/training/training_completed_screen.dart';
-import 'package:free_base/features/training/training_screen.dart';
 import 'package:free_base/services/app_route_guard.dart';
-import 'package:free_base/services/training_intent.dart';
 import 'package:free_base/services/app_shell.dart';
 import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/feature_flags.dart';
@@ -141,22 +139,7 @@ class AppRouter {
               GoRoute(
                 path: AppRoutePaths.training,
                 name: AppRouteNames.training,
-                builder: (context, state) {
-                  final extra = state.extra;
-                  TrainingIntent? intent;
-                  if (extra is TrainingIntent) {
-                    intent = extra;
-                  } else {
-                    final start = state.uri.queryParameters['start'];
-                    final resumeId = state.uri.queryParameters['sessionId'];
-                    if (start == 'true') {
-                      intent = TrainingIntent.start();
-                    } else if (resumeId != null && resumeId.isNotEmpty) {
-                      intent = TrainingIntent.resume(resumeId);
-                    }
-                  }
-                  return TrainingScreen(intent: intent);
-                },
+                builder: (context, state) => const MoroTrainingScreen(),
                 routes: [
                   GoRoute(
                     path: 'completed',
@@ -164,27 +147,20 @@ class AppRouter {
                     builder: (context, state) => const TrainingCompletedScreen(),
                   ),
                   GoRoute(
-                    path: 'moro',
-                    name: AppRouteNames.moroTraining,
-                    builder: (context, state) => const MoroTrainingScreen(),
-                    routes: [
-                      GoRoute(
-                        path: ':exerciseId',
-                        name: AppRouteNames.moroExercise,
-                        builder: (context, state) {
-                          final args = state.extra;
-                          if (args is MoroExerciseScreenArgs) {
-                            return MoroExerciseScreen(
-                              exercise: args.exercise,
-                              offset: args.offset,
-                            );
-                          }
-                          return const ErrorScreen(
-                            message: 'Ungültige Trainingsparameter.',
-                          );
-                        },
-                      ),
-                    ],
+                    path: 'moro/:exerciseId',
+                    name: AppRouteNames.moroExercise,
+                    builder: (context, state) {
+                      final args = state.extra;
+                      if (args is MoroExerciseScreenArgs) {
+                        return MoroExerciseScreen(
+                          exercise: args.exercise,
+                          offset: args.offset,
+                        );
+                      }
+                      return const ErrorScreen(
+                        message: 'Ungültige Trainingsparameter.',
+                      );
+                    },
                   ),
                 ],
               ),
