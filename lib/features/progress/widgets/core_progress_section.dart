@@ -1,7 +1,12 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:free_base/features/progress/models/week_progress.dart';
+import 'package:free_base/services/telemetry/telemetry_service.dart';
 
 /// Callback used when a day node in the progress bar is tapped.
 typedef ProgressNodeTapCallback = void Function(DayProgressNode node);
@@ -40,10 +45,12 @@ class ProgressFeedbackHooks {
 }
 
 /// High level section combining the progress widgets for the dashboard.
-class CoreProgressSection extends StatelessWidget {
+class CoreProgressSection extends StatefulWidget {
   const CoreProgressSection({
     super.key,
     required this.progress,
+    this.autoplayEnabled = true,
+    this.audioEnabled = true,
     this.onNodeTap,
     this.onNodeLongPress,
     this.onStartTraining,
@@ -53,6 +60,8 @@ class CoreProgressSection extends StatelessWidget {
   });
 
   final CoreWeekProgress progress;
+  final bool autoplayEnabled;
+  final bool audioEnabled;
   final ProgressNodeTapCallback? onNodeTap;
   final ProgressNodeLongPressCallback? onNodeLongPress;
   final VoidCallback? onStartTraining;
@@ -61,37 +70,94 @@ class CoreProgressSection extends StatelessWidget {
   final ProgressFeedbackHooks? feedbackHooks;
 
   @override
+  State<CoreProgressSection> createState() => _CoreProgressSectionState();
+}
+
+class _CoreProgressSectionState extends State<CoreProgressSection> {
+  static const String _nodeTapAsset = 'sounds/clocktick.mp3';
+  static const String _nodeLongPressAsset = 'sounds/pause.mp3';
+  static const String _startTrainingAsset = 'sounds/start.mp3';
+  static const String _startNextWeekAsset = 'sounds/letsego.mp3';
+  static const String _openReflectionAsset = 'sounds/ende.mp3';
+
+  late final AudioPlayer _audioPlayer;
+  final Set<String> _loggedCompletedDays = <String>{};
+  bool _viewLogged = false;
+  bool _weekLogged = false;
+  String? _windowKey;
+
+  @override
+  void initState() {
+    super.initState();
+    _windowKey = _windowKeyFor(widget.progress);
+    _audioPlayer = AudioPlayer(playerId: 'progress_feedback_${hashCode}');
+    unawaited(_configureAudioPlayer());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _logTelemetryViewIfNeeded();
+    _trackCompletionTelemetry();
+  }
+
+  @override
+  void didUpdateWidget(covariant CoreProgressSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final newKey = _windowKeyFor(widget.progress);
+    if (newKey != _windowKey) {
+      _windowKey = newKey;
+      _loggedCompletedDays.clear();
+      _viewLogged = false;
+      _weekLogged = false;
+    }
+    _logTelemetryViewIfNeeded();
+    _trackCompletionTelemetry();
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final stats = progress.stats;
+    final stats = widget.progress.stats;
     final disableAnimations =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
+    final feedbackHooks = _mergedFeedbackHooks();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CoreHeader(progress: progress),
+        CoreHeader(progress: widget.progress),
         const SizedBox(height: 16),
         WeekProgressBar(
-          progress: progress,
-          onNodeTap: onNodeTap,
-          onNodeLongPress: onNodeLongPress,
+          progress: widget.progress,
+          onNodeTap: widget.onNodeTap,
+          onNodeLongPress: widget.onNodeLongPress,
           feedbackHooks: feedbackHooks,
         ),
         const SizedBox(height: 16),
         StatsStrip(stats: stats),
-        if (onStartTraining != null || onStartNextWeek != null) ...[
-          const SizedBox(height: 16),
-          TrainingCta(
-            onStartTraining: onStartTraining,
-            onStartNextWeek: onStartNextWeek,
-            feedbackHooks: feedbackHooks,
-          ),
-        ],
-        if (stats.hasPendingReflections && onOpenReflection != null) ...[
+        if (widget.onStartTraining != null || widget.onStartNextWeek != null)
+          ...[
+            const SizedBox(height: 16),
+            TrainingCta(
+              onStartTraining:
+                  widget.onStartTraining != null ? _handleStartTrainingTap : null,
+              onStartNextWeek: widget.onStartNextWeek != null
+                  ? _handleStartNextWeekTap
+                  : null,
+              feedbackHooks: feedbackHooks,
+            ),
+          ],
+        if (stats.hasPendingReflections && widget.onOpenReflection != null) ...[
           const SizedBox(height: 16),
           ReflectionCard(
             pendingReflections: stats.pendingReflections,
-            onOpenReflection: onOpenReflection!,
+            onOpenReflection: _handleOpenReflectionTap,
             feedbackHooks: feedbackHooks,
             disableAnimations: disableAnimations,
           ),
@@ -99,6 +165,219 @@ class CoreProgressSection extends StatelessWidget {
       ],
     );
   }
+
+  Future<void> _configureAudioPlayer() async {
+    await _audioPlayer.setReleaseMode(ReleaseMode.stop);
+    if (!kIsWeb) {
+      await _audioPlayer.setAudioContext(
+        const AudioContext(
+          android: AudioContextAndroid(
+            isSpeakerphoneOn: false,
+            stayAwake: false,
+            contentType: AndroidAudioContentType.sonification,
+            usageType: AndroidAudioUsageType.assistanceSonification,
+            audioFocus: AndroidAudioFocus.gainTransientMayDuck,
+          ),
+          iOS: AudioContextIOS(
+            category: AVAudioSessionCategory.ambient,
+            options: {AVAudioSessionOptions.mixWithOthers},
+          ),
+        ),
+      );
+    }
+  }
+
+  ProgressFeedbackHooks _mergedFeedbackHooks() {
+    final external = widget.feedbackHooks;
+
+    Future<void> Function(DayProgressNode node)? nodeTapAudio;
+    if (external?.onNodeTapAudio != null || widget.audioEnabled) {
+      nodeTapAudio = (node) async {
+        if (external?.onNodeTapAudio != null) {
+          await Future.sync(() => external!.onNodeTapAudio!(node));
+        }
+        await _playAsset(_nodeTapAsset);
+      };
+    }
+
+    Future<void> Function(DayProgressNode node)? nodeLongPressAudio;
+    if (external?.onNodeLongPressAudio != null || widget.audioEnabled) {
+      nodeLongPressAudio = (node) async {
+        if (external?.onNodeLongPressAudio != null) {
+          await Future.sync(() => external!.onNodeLongPressAudio!(node));
+        }
+        await _playAsset(_nodeLongPressAsset);
+      };
+    }
+
+    Future<void> Function()? startTrainingAudio;
+    if (external?.onStartTrainingAudio != null || widget.audioEnabled) {
+      startTrainingAudio = () async {
+        if (external?.onStartTrainingAudio != null) {
+          await Future.sync(() => external!.onStartTrainingAudio!());
+        }
+        await _playAsset(_startTrainingAsset);
+      };
+    }
+
+    Future<void> Function()? startNextWeekAudio;
+    if (external?.onStartNextWeekAudio != null || widget.audioEnabled) {
+      startNextWeekAudio = () async {
+        if (external?.onStartNextWeekAudio != null) {
+          await Future.sync(() => external!.onStartNextWeekAudio!());
+        }
+        await _playAsset(_startNextWeekAsset);
+      };
+    }
+
+    Future<void> Function()? openReflectionAudio;
+    if (external?.onOpenReflectionAudio != null || widget.audioEnabled) {
+      openReflectionAudio = () async {
+        if (external?.onOpenReflectionAudio != null) {
+          await Future.sync(() => external!.onOpenReflectionAudio!());
+        }
+        await _playAsset(_openReflectionAsset);
+      };
+    }
+
+    return ProgressFeedbackHooks(
+      onNodeTapHaptic: external?.onNodeTapHaptic,
+      onNodeTapAudio: nodeTapAudio,
+      onNodeLongPressHaptic: external?.onNodeLongPressHaptic,
+      onNodeLongPressAudio: nodeLongPressAudio,
+      onStartTrainingHaptic: external?.onStartTrainingHaptic,
+      onStartTrainingAudio: startTrainingAudio,
+      onStartNextWeekHaptic: external?.onStartNextWeekHaptic,
+      onStartNextWeekAudio: startNextWeekAudio,
+      onOpenReflectionHaptic: external?.onOpenReflectionHaptic,
+      onOpenReflectionAudio: openReflectionAudio,
+    );
+  }
+
+  Future<void> _playAsset(String asset) async {
+    if (!widget.audioEnabled) {
+      return;
+    }
+    try {
+      await _audioPlayer.stop();
+      await _audioPlayer.play(AssetSource(asset));
+    } catch (error) {
+      debugPrint('Failed to play audio asset $asset: $error');
+    }
+  }
+
+  void _handleStartTrainingTap() {
+    _logCtaEvent('dashboard_progress_start_training_tap');
+    widget.onStartTraining?.call();
+  }
+
+  void _handleStartNextWeekTap() {
+    _logCtaEvent('dashboard_progress_start_next_week_tap');
+    widget.onStartNextWeek?.call();
+  }
+
+  void _handleOpenReflectionTap() {
+    _logCtaEvent('dashboard_progress_open_reflection_tap');
+    widget.onOpenReflection?.call();
+  }
+
+  void _logTelemetryViewIfNeeded() {
+    if (_viewLogged) {
+      return;
+    }
+    final telemetry = _telemetryOrNull();
+    if (telemetry == null) {
+      return;
+    }
+    _viewLogged = true;
+    final stats = widget.progress.stats;
+    final props = _baseTelemetryProperties(
+      additional: {
+        'pending_reflections': stats.pendingReflections,
+        'has_golden_day': widget.progress.hasGoldenDay,
+      },
+    );
+    unawaited(telemetry.logEvent('dashboard_progress_view', properties: props));
+  }
+
+  void _trackCompletionTelemetry() {
+    final telemetry = _telemetryOrNull();
+    if (telemetry == null) {
+      return;
+    }
+
+    for (final node in widget.progress.days) {
+      if (!node.isCompleted) {
+        continue;
+      }
+      final key = node.date.toIso8601String();
+      if (_loggedCompletedDays.add(key)) {
+        final props = _baseTelemetryProperties(
+          additional: {
+            'date': key,
+            'is_today': node.isToday,
+            'is_planned': node.isPlanned,
+            'requires_reflection': node.requiresReflection,
+          },
+        );
+        unawaited(
+          telemetry.logEvent('dashboard_progress_day_completed', properties: props),
+        );
+      }
+    }
+
+    final planned = widget.progress.plannedDaysCount;
+    final completed = widget.progress.completedDaysCount;
+    if (!_weekLogged && planned > 0 && completed >= planned) {
+      _weekLogged = true;
+      final props = _baseTelemetryProperties(
+        additional: {
+          'planned_days': planned,
+          'completed_days': completed,
+        },
+      );
+      unawaited(
+        telemetry.logEvent('dashboard_progress_week_completed', properties: props),
+      );
+    }
+  }
+
+  void _logCtaEvent(
+    String name, {
+    Map<String, Object?> additional = const {},
+  }) {
+    final telemetry = _telemetryOrNull();
+    if (telemetry == null) {
+      return;
+    }
+    final props = _baseTelemetryProperties(additional: additional);
+    unawaited(telemetry.logEvent(name, properties: props));
+  }
+
+  TelemetryService? _telemetryOrNull() {
+    try {
+      return context.read<TelemetryService>();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Map<String, Object?> _baseTelemetryProperties({
+    Map<String, Object?> additional = const {},
+  }) {
+    return {
+      'window_start': widget.progress.windowStart.toIso8601String(),
+      'window_end': widget.progress.windowEnd.toIso8601String(),
+      'planned_days_total': widget.progress.plannedDaysCount,
+      'completed_days_total': widget.progress.completedDaysCount,
+      'autoplay_enabled': widget.autoplayEnabled,
+      'audio_enabled': widget.audioEnabled,
+      ...additional,
+    };
+  }
+
+  String _windowKeyFor(CoreWeekProgress progress) =>
+      '${progress.windowStart.toIso8601String()}-${progress.windowEnd.toIso8601String()}';
 }
 
 /// Header describing the current tracked week.

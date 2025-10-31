@@ -86,12 +86,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
           const SizedBox(height: 16),
           SessionStatusBanner.fromSession(state),
           const SizedBox(height: 24),
-          Selector<DashboardViewModel, CoreWeekProgress>(
-            selector: (_, vm) => vm.currentWeekProgress,
-            builder: (context, progress, _) {
-              final stats = progress.stats;
+          Selector<DashboardViewModel, _ProgressSectionData>(
+            selector: (_, vm) => _ProgressSectionData(
+              progress: vm.currentWeekProgress,
+              autoplayEnabled: vm.autoplayEnabled,
+              audioEnabled: vm.audioEnabled,
+            ),
+            builder: (context, data, _) {
+              final stats = data.progress.stats;
               return CoreProgressSection(
-                progress: progress,
+                progress: data.progress,
+                autoplayEnabled: data.autoplayEnabled,
+                audioEnabled: data.audioEnabled,
                 onStartTraining: () => _startTraining(context),
                 onStartNextWeek: () => _startNextWeek(context),
                 onOpenReflection: stats.hasPendingReflections
@@ -326,5 +332,33 @@ class _ReminderStatus {
   int get hashCode => Object.hash(
         hasScheduledReminder,
         scheduledReminder,
+      );
+}
+
+class _ProgressSectionData {
+  const _ProgressSectionData({
+    required this.progress,
+    required this.autoplayEnabled,
+    required this.audioEnabled,
+  });
+
+  final CoreWeekProgress progress;
+  final bool autoplayEnabled;
+  final bool audioEnabled;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is _ProgressSectionData &&
+        other.progress == progress &&
+        other.autoplayEnabled == autoplayEnabled &&
+        other.audioEnabled == audioEnabled;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        progress,
+        autoplayEnabled,
+        audioEnabled,
       );
 }
