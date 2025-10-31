@@ -1,5 +1,5 @@
-import 'package:free_base/features/calendar/notifier/calendar_notifier.dart';
 import 'package:free_base/features/training/notifier/session_notifier.dart';
+import 'package:free_base/features/progress/state/progress_store.dart';
 
 class DayCompletionResult {
   const DayCompletionResult({
@@ -13,9 +13,9 @@ class DayCompletionResult {
   final bool requiresReflection;
 }
 
-Future<DayCompletionResult> markDayCompletion({
+  Future<DayCompletionResult> markDayCompletion({
   required SessionNotifier sessionNotifier,
-  required CalendarNotifier calendarNotifier,
+  required ProgressStore progressStore,
   required DateTime completionTime,
   int? xpReward,
 }) async {
@@ -45,14 +45,14 @@ Future<DayCompletionResult> markDayCompletion({
     }
   }
 
-  final alreadyCompleted = calendarNotifier.dayIsCompleted(normalized);
+  final alreadyCompleted = progressStore.isDayCompleted(normalized);
   if (!alreadyCompleted) {
-    await calendarNotifier.toggleDayCompleted(normalized);
+    await progressStore.setDayCompleted(normalized, true);
   }
 
   return DayCompletionResult(
     date: normalized,
     wasAlreadyCompleted: alreadyCompleted,
-    requiresReflection: calendarNotifier.requiresReflection(normalized),
+    requiresReflection: progressStore.requiresReflection(normalized),
   );
 }

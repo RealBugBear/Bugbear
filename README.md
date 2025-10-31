@@ -11,8 +11,7 @@ coaches always have the latest information.
   parent/child, or trainer journeys.
 - **Daily training companion** featuring phase-based exercise plans, timers, and offline persistence through Hive, with automatic
   background synchronisation handled by the `SyncService` once connectivity returns.
-- **Calendar and “Golden Day” planning** powered by the `CalendarService` and `GoldenDayService` to monitor adherence and highlight
-  milestone celebrations.
+- **Weekly progress overview** driven by the Hive-backed `ProgressStore` to monitor adherence and celebrate milestone streaks.
 - **Questionnaire and reflex profiles** that pull structured content from local JSON assets, store state securely, and surface
   insights through the profile screens.
 - **Cross-platform shell** with platform-specific assets (icons, splash screens) ready to be replaced with branded Free Base
@@ -22,10 +21,10 @@ coaches always have the latest information.
 - Flutter 3 / Dart 3 application organised under `lib/features`, using Provider for dependency injection and state management.
 - Firebase Core, Authentication, and Firestore for backend services; configuration is generated via `firebase_options.dart` and
   platform-specific files created by `flutterfire configure`.
-- Hive (AES encrypted via `SecureStorageService`) for offline-first storage of training sessions, questionnaires, and calendar
-  events.
-- Modular services (`SessionRepository`, `ExerciseRepository`, `SyncService`, `CalendarService`, `GoldenDayService`,
-  `ProfileService`) that keep UI widgets declarative and easy to test.
+- Hive (AES encrypted via `SecureStorageService`) for offline-first storage of training sessions, questionnaires, and daily
+  progress flags.
+- Modular services (`SessionRepository`, `ExerciseRepository`, `SyncService`, `ProfileService`) plus stores such as the
+  `ProgressStore` that keep UI widgets declarative and easy to test.
 - Localisation scaffolding (`lib/l10n/*.arb`) prepared for English and German with the shared `appName` key.
 
 ## Getting Started

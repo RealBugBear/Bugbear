@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/feature_flags.dart';
 
-import '../../calendar/widgets/golden_day_banner.dart';
 import '../models/reflex_profile.dart';
 import '../services/profile_service.dart';
 
@@ -213,11 +212,6 @@ class ProfileOverviewScreen extends StatelessWidget {
                             },
                           ),
                   ),
-                  if (mainId != null)
-                    const Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: GoldenDayBanner(),
-                    ),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: ElevatedButton(
