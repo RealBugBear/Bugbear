@@ -12,7 +12,6 @@ import 'package:free_base/services/reminder/reminder_service.dart';
 import '../dialogs/edit_training_day_dialog.dart';
 import '../models/calendar_event.dart';
 import '../notifier/calendar_notifier.dart';
-import '../services/calendar_service.dart';
 import '../widgets/golden_day_banner.dart';
 import '../widgets/level_map_calendar.dart';
 import '../widgets/month_bracket.dart';
@@ -116,7 +115,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
       },
     );
 
-    if (!mounted) return;
+    if (!context.mounted) return;
 
     if (action == 'change') {
       await _pickReminderTime(reminderService);
@@ -137,7 +136,7 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
     );
     if (result != null) {
       await service.scheduleDailyReminder(result);
-      if (!mounted) return;
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Reminder gesetzt für ${result.format(context)}.'),

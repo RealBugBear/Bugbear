@@ -34,15 +34,15 @@ class _ConsentScreenState extends State<ConsentScreen> {
   Future<void> _acceptConsent() async {
     final locale = Localizations.maybeLocaleOf(context)?.toLanguageTag() ?? 'de';
     final consentNotifier = context.read<ConsentNotifier>();
-    await consentNotifier.accept(locale: locale);
-
     final telemetry = context.read<TelemetryService>();
+    final featureFlags = context.read<FeatureFlags>();
+
+    await consentNotifier.accept(locale: locale);
     await telemetry.logEvent('consent_accepted', properties: {
       'locale': locale,
     });
 
-    if (!mounted) return;
-    final featureFlags = context.read<FeatureFlags>();
+    if (!context.mounted) return;
     final targetRoute = featureFlags.consentRequired
         ? AppRouteNames.dashboard
         : AppRouteNames.training;
@@ -75,6 +75,12 @@ class _ConsentScreenState extends State<ConsentScreen> {
       message: isGerman
           ? 'Um Corejourney zu nutzen, benötigen wir deine Zustimmung zur vorläufigen Datenschutzerklärung. Die finalen Texte folgen in einer späteren Version.'
           : 'To continue using Corejourney you need to accept the placeholder privacy agreement. The final copy will arrive in a future update.',
+      primaryActionLabel:
+          isGerman ? 'Zustimmen und fortfahren' : 'Accept and continue',
+      onPrimaryAction: _acceptConsent,
+      secondaryActionLabel: isGerman ? 'Ablehnen' : 'Decline',
+      onSecondaryAction: _showDeclineInfo,
+      icon: Icons.privacy_tip_outlined,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -100,12 +106,6 @@ class _ConsentScreenState extends State<ConsentScreen> {
           ),
         ],
       ),
-      primaryActionLabel:
-          isGerman ? 'Zustimmen und fortfahren' : 'Accept and continue',
-      onPrimaryAction: _acceptConsent,
-      secondaryActionLabel: isGerman ? 'Ablehnen' : 'Decline',
-      onSecondaryAction: _showDeclineInfo,
-      icon: Icons.privacy_tip_outlined,
     );
   }
 }

@@ -118,7 +118,7 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
                                     ),
                                     Chip(
                                       label: Text(lockLabel),
-                                      backgroundColor: lockColor.withOpacity(0.1),
+                                      backgroundColor: lockColor.withAlpha(26),
                                       labelStyle: TextStyle(color: labelColor),
                                     ),
                                   ],
@@ -203,7 +203,7 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
         offset: offset,
       ),
     );
-    if (!mounted) return;
+    if (!context.mounted) return;
     if (result is MoroExerciseResult && result.completed) {
       await MoroProgressStore.markCompleted(ex.index, totalExercises);
       await _refreshProgress(totalExercises);
@@ -217,7 +217,7 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
         context,
         summary: summary,
       );
-      if (!mounted) return;
+      if (!context.mounted) return;
       switch (action) {
         case SessionCompletionAction.openCalendar:
           context.goNamed(AppRouteNames.calendar);

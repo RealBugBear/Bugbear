@@ -61,7 +61,6 @@ class ReminderService extends ChangeNotifier {
       scheduleDate,
       details,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
     _scheduledTime = time;

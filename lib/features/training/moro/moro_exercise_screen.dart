@@ -88,10 +88,9 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
     super.dispose();
   }
 
-  Future<bool> _handleWillPop() async {
+  Future<void> _handleWillPop() async {
     _cancelTimer();
     Navigator.of(context).pop(const MoroExerciseResult(completed: false));
-    return false;
   }
 
   void _cancelTimer() {
@@ -481,8 +480,14 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
   @override
   Widget build(BuildContext context) {
     final ex = widget.exercise;
-    return WillPopScope(
-      onWillPop: _handleWillPop,
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) async {
+        if (didPop) {
+          return;
+        }
+        await _handleWillPop();
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text(ex.title),

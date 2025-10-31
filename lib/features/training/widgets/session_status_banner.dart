@@ -58,7 +58,6 @@ class SessionStatusBanner extends StatelessWidget {
       case SessionStatusBannerState.overdue:
         return 'Session überfällig';
       case SessionStatusBannerState.planned:
-      default:
         return 'Session geplant';
     }
   }
@@ -78,7 +77,6 @@ class SessionStatusBanner extends StatelessWidget {
         }
         return 'Starte deine Session, um wieder im Plan zu sein.';
       case SessionStatusBannerState.planned:
-      default:
         if (plannedFor != null) {
           if (plannedFor.isAfter(DateTime.now())) {
             return 'Geplant für ${DateFormat.yMMMMd().format(plannedFor)}';
@@ -92,12 +90,11 @@ class SessionStatusBanner extends StatelessWidget {
   Color _backgroundColor(BuildContext context) {
     switch (status) {
       case SessionStatusBannerState.inProgress:
-        return Theme.of(context).colorScheme.primary.withOpacity(0.12);
+        return Theme.of(context).colorScheme.primary.withAlpha(31);
       case SessionStatusBannerState.overdue:
-        return Theme.of(context).colorScheme.error.withOpacity(0.12);
+        return Theme.of(context).colorScheme.error.withAlpha(31);
       case SessionStatusBannerState.planned:
-      default:
-        return Theme.of(context).colorScheme.secondary.withOpacity(0.12);
+        return Theme.of(context).colorScheme.secondary.withAlpha(31);
     }
   }
 
@@ -108,7 +105,6 @@ class SessionStatusBanner extends StatelessWidget {
       case SessionStatusBannerState.overdue:
         return Theme.of(context).colorScheme.error;
       case SessionStatusBannerState.planned:
-      default:
         return Theme.of(context).colorScheme.secondary;
     }
   }
@@ -120,7 +116,6 @@ class SessionStatusBanner extends StatelessWidget {
       case SessionStatusBannerState.overdue:
         return Icons.warning_amber_rounded;
       case SessionStatusBannerState.planned:
-      default:
         return Icons.schedule;
     }
   }
