@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:free_base/features/calendar/notifier/calendar_notifier.dart';
+import 'package:free_base/features/common/utils/day_completion_util.dart';
 import 'package:free_base/features/progress/models/week_progress.dart';
 import 'package:free_base/features/training/notifier/session_notifier.dart';
 import 'package:free_base/services/reminder/reminder_service.dart';
+import 'package:free_base/services/telemetry/telemetry_service.dart';
 
 class DashboardViewModel extends ChangeNotifier {
   static const int _xpPerLevel = 100;
@@ -13,11 +17,13 @@ class DashboardViewModel extends ChangeNotifier {
     ReminderService reminderService, {
     bool autoplayEnabled = true,
     bool audioEnabled = true,
+    TelemetryService? telemetryService,
   })  : _sessionNotifier = sessionNotifier,
         _calendarNotifier = calendarNotifier,
         _reminderService = reminderService,
         _autoplayEnabled = autoplayEnabled,
-        _audioEnabled = audioEnabled {
+        _audioEnabled = audioEnabled,
+        _telemetry = telemetryService {
     _sessionNotifier.addListener(_sessionListener);
     _calendarNotifier.addListener(_calendarListener);
     _reminderService.addListener(_reminderListener);
@@ -26,6 +32,7 @@ class DashboardViewModel extends ChangeNotifier {
   late SessionNotifier _sessionNotifier;
   late CalendarNotifier _calendarNotifier;
   late ReminderService _reminderService;
+  TelemetryService? _telemetry;
   bool _autoplayEnabled = true;
   bool _audioEnabled = true;
 
@@ -33,6 +40,7 @@ class DashboardViewModel extends ChangeNotifier {
     SessionNotifier sessionNotifier,
     CalendarNotifier calendarNotifier,
     ReminderService reminderService,
+    TelemetryService telemetryService,
   ) {
     if (!identical(_sessionNotifier, sessionNotifier)) {
       _sessionNotifier.removeListener(_sessionListener);
@@ -48,6 +56,9 @@ class DashboardViewModel extends ChangeNotifier {
       _reminderService.removeListener(_reminderListener);
       _reminderService = reminderService;
       _reminderService.addListener(_reminderListener);
+    }
+    if (!identical(_telemetry, telemetryService)) {
+      _telemetry = telemetryService;
     }
     notifyListeners();
   }
@@ -116,8 +127,9 @@ class DashboardViewModel extends ChangeNotifier {
   }
 
   Future<bool> startNextWeek() async {
+    final progress = currentWeekProgress;
     final nextWeekStart =
-        currentWeekProgress.windowEnd.add(const Duration(days: 1));
+        progress.windowEnd.add(const Duration(days: 1));
     final normalized = DateTime(
       nextWeekStart.year,
       nextWeekStart.month,
@@ -128,6 +140,22 @@ class DashboardViewModel extends ChangeNotifier {
       ensureWeekForDay: normalized,
     );
     _calendarNotifier.selectDay(normalized);
+
+    final telemetry = _telemetry;
+    if (telemetry != null) {
+      final stats = progress.stats;
+      unawaited(
+        telemetry.logEvent(
+          'dashboard_start_next_week',
+          properties: {
+            'next_week_start': normalized.toIso8601String(),
+            'planned_days': stats.plannedDays,
+            'completed_days': stats.completedDays,
+            'pending_reflections': stats.pendingReflections,
+          },
+        ),
+      );
+    }
     return true;
   }
 
@@ -140,6 +168,21 @@ class DashboardViewModel extends ChangeNotifier {
         break;
       }
     }
+
+    final telemetry = _telemetry;
+    if (telemetry != null) {
+      final stats = progress.stats;
+      unawaited(
+        telemetry.logEvent(
+          'dashboard_open_reflection',
+          properties: {
+            'has_pending': pending != null,
+            'target_date': pending?.date.toIso8601String(),
+            'pending_reflections': stats.pendingReflections,
+          },
+        ),
+      );
+    }
     if (pending == null) {
       return false;
     }
@@ -149,6 +192,39 @@ class DashboardViewModel extends ChangeNotifier {
     );
     _calendarNotifier.selectDay(pending.date);
     return true;
+  }
+
+  Future<DayCompletionResult> markTodayComplete({
+    DateTime? completionTime,
+    int? xpReward,
+  }) async {
+    final completion = (completionTime ?? DateTime.now()).toLocal();
+    final result = await markDayCompletion(
+      sessionNotifier: _sessionNotifier,
+      calendarNotifier: _calendarNotifier,
+      completionTime: completion,
+      xpReward: xpReward,
+    );
+
+    final telemetry = _telemetry;
+    if (telemetry != null) {
+      final stats = currentWeekProgress.stats;
+      unawaited(
+        telemetry.logEvent(
+          'dashboard_mark_today_complete',
+          properties: {
+            'completion_date': result.date.toIso8601String(),
+            'already_completed': result.wasAlreadyCompleted,
+            'requires_reflection': result.requiresReflection,
+            'pending_reflections': stats.pendingReflections,
+            'daily_xp': _sessionNotifier.state.dailyXp,
+            'streak_count': _sessionNotifier.state.streakCount,
+          },
+        ),
+      );
+    }
+
+    return result;
   }
 
   CoreWeekProgress _calculateCurrentWeekProgress() {

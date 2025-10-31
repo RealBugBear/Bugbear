@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'package:free_base/features/common/state/dashboard_view_model.dart';
 import 'package:free_base/features/training/notifier/session_notifier.dart';
 import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/training_intent.dart';
@@ -367,6 +368,12 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
         context.read<SessionNotifier>().applyXpReward(xp: ex.xpReward);
         await MoroProgressStore.markCompleted(ex.index, totalExercises);
         await _refreshProgress(totalExercises);
+        if (!context.mounted) return;
+        if (!result.hasNextExercise) {
+          await context.read<DashboardViewModel>().markTodayComplete(
+                completionTime: DateTime.now().toLocal(),
+              );
+        }
         if (result.hasNextExercise && result.autoplayEnabled) {
           final nextIndex = ex.index + 1;
           final nextExercise = allExercises.firstWhere(

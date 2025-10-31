@@ -270,17 +270,22 @@ class _MyAppState extends State<MyApp> {
             cacheBox: widget.cosmeticsBox,
           ),
         ),
-        ChangeNotifierProxyProvider3<SessionNotifier, CalendarNotifier,
-            ReminderService, DashboardViewModel>(
+        ChangeNotifierProxyProvider4<SessionNotifier, CalendarNotifier,
+            ReminderService, TelemetryService, DashboardViewModel>(
           create: (ctx) => DashboardViewModel(
             ctx.read<SessionNotifier>(),
             ctx.read<CalendarNotifier>(),
             ctx.read<ReminderService>(),
+            telemetryService: ctx.read<TelemetryService>(),
           ),
-          update: (ctx, session, calendar, reminder, previous) {
-            final model = previous ??
-                DashboardViewModel(session, calendar, reminder);
-            model.updateSources(session, calendar, reminder);
+          update: (ctx, session, calendar, reminder, telemetry, previous) {
+            final model = previous ?? DashboardViewModel(
+              session,
+              calendar,
+              reminder,
+              telemetryService: telemetry,
+            );
+            model.updateSources(session, calendar, reminder, telemetry);
             return model;
           },
         ),
