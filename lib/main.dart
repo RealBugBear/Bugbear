@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
@@ -12,6 +14,7 @@ import 'package:free_base/firebase_options.dart';
 import 'package:free_base/features/onboarding/services/auth_service.dart';
 import 'package:free_base/features/onboarding/services/secure_storage_service.dart';
 import 'package:free_base/features/onboarding/state/auth_provider.dart';
+import 'package:free_base/features/onboarding/state/consent_notifier.dart';
 import 'package:free_base/features/common/error_screen.dart';
 
 import 'package:free_base/features/training/models/session_state.dart';
@@ -31,12 +34,17 @@ import 'package:free_base/services/app_intent_handler.dart';
 import 'package:free_base/services/app_route_guard.dart';
 import 'package:free_base/services/app_router.dart';
 import 'package:free_base/services/feature_flags.dart';
+import 'package:free_base/services/telemetry/telemetry_service.dart';
+
+import 'package:free_base/features/onboarding/models/consent_state.dart';
 
 const FeatureFlags _localFeatureFlags = FeatureFlags(
   parentsTrackEnabled: true,
   trainerTrackEnabled: true,
   forumEnabled: false,
   achievementsEnabled: false,
+  consentRequired: true,
+  remindersEnabled: false,
 );
 
 Future<void> main() async {
@@ -76,7 +84,11 @@ Future<void> main() async {
 
   Hive.registerAdapter(SessionStatusAdapter());
   Hive.registerAdapter(SessionStateAdapter());
+  Hive.registerAdapter(ConsentStateAdapter());
   await Hive.openBox<SessionState>('session_state',
+      encryptionCipher: HiveAesCipher(encryptionKey));
+
+  final consentBox = await Hive.openBox<ConsentState>('user_settings',
       encryptionCipher: HiveAesCipher(encryptionKey));
 
   await Hive.openBox('questionnaire_progress',
@@ -105,6 +117,7 @@ Future<void> main() async {
     MyApp(
       sessionRepository: sessionRepository,
       initialSessionState: initialSessionState,
+      consentBox: consentBox,
     ),
   );
 }
@@ -112,6 +125,7 @@ Future<void> main() async {
 class MyApp extends StatefulWidget {
   final SessionRepository sessionRepository;
   final SessionState initialSessionState;
+  final Box<ConsentState> consentBox;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
 
@@ -119,6 +133,7 @@ class MyApp extends StatefulWidget {
     super.key,
     required this.sessionRepository,
     required this.initialSessionState,
+    required this.consentBox,
   });
 
   @override
@@ -126,14 +141,43 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late final AppRouteGuard _routeGuard = AppRouteGuard();
+  final TelemetryService _telemetry = DebugTelemetryService();
+  late final ConsentNotifier _consentNotifier;
+  late final AppRouteGuard _routeGuard;
   GoRouter? _router;
   AppIntentHandler? _intentHandler;
   bool _intentInitialized = false;
 
   @override
+  void initState() {
+    super.initState();
+    final localeTag =
+        WidgetsBinding.instance.platformDispatcher.locale.toLanguageTag();
+    _consentNotifier = ConsentNotifier(
+      widget.consentBox,
+      defaultLocale: localeTag,
+    );
+    _routeGuard = AppRouteGuard(
+      consentNotifier: _consentNotifier,
+      loadSessionState: widget.sessionRepository.load,
+      consentRequired: _localFeatureFlags.consentRequired,
+    );
+    unawaited(
+      _telemetry.logEvent(
+        'app_open',
+        properties: {
+          'locale': localeTag,
+          'feature_flag_snapshot': _localFeatureFlags.toMap().toString(),
+          'connectivity_status': 'unknown',
+        },
+      ),
+    );
+  }
+
+  @override
   void dispose() {
     _intentHandler?.dispose();
+    _consentNotifier.dispose();
     super.dispose();
   }
 
@@ -144,8 +188,14 @@ class _MyAppState extends State<MyApp> {
         Provider<FeatureFlags>.value(
           value: _localFeatureFlags,
         ),
+        Provider<TelemetryService>.value(
+          value: _telemetry,
+        ),
         ChangeNotifierProvider<AppAuthProvider>(
           create: (_) => AppAuthProvider(),
+        ),
+        ChangeNotifierProvider<ConsentNotifier>.value(
+          value: _consentNotifier,
         ),
         Provider<AuthService>(
           create: (_) => AuthService(),
@@ -191,8 +241,12 @@ class _MyAppState extends State<MyApp> {
       child: Builder(
         builder: (context) {
           final authProvider = context.watch<AppAuthProvider>();
+          final consentNotifier = context.watch<ConsentNotifier>();
+          final sessionNotifier = context.watch<SessionNotifier>();
+          final refreshListenable =
+              Listenable.merge([authProvider, consentNotifier, sessionNotifier]);
           _router ??= AppRouter(
-            refreshListenable: authProvider,
+            refreshListenable: refreshListenable,
             guard: _routeGuard,
           ).router;
 

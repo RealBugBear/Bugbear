@@ -4,6 +4,10 @@ import 'package:provider/provider.dart';
 
 import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/error_handler.dart';
+import 'package:free_base/services/feature_flags.dart';
+import 'package:free_base/services/telemetry/telemetry_service.dart';
+
+import 'package:free_base/features/training/notifier/session_notifier.dart';
 
 import 'questionnaire_state.dart';
 
@@ -59,6 +63,17 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
       await context
           .read<QuestionnaireState>()
           .saveResult(name: trimmed, context: context);
+
+      context.read<SessionNotifier>().markOnboardingComplete();
+      final telemetry = context.read<TelemetryService>();
+      final featureFlags = context.read<FeatureFlags>();
+      final locale = Localizations.maybeLocaleOf(context)?.toLanguageTag() ?? 'de';
+      await telemetry.logEvent('onboarding_complete', properties: {
+        'locale': locale,
+        'feature_flag_snapshot': featureFlags.toMap().toString(),
+        'connectivity_status': 'unknown',
+      });
+
       if (!context.mounted) return;
       context.goNamed(AppRouteNames.profile);
     } catch (e) {

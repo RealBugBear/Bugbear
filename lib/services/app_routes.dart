@@ -2,6 +2,7 @@ class AppRoutePaths {
   static const splash = '/';
   static const login = '/login';
   static const register = '/register';
+  static const consent = '/consent';
   static const roleSelection = '/select-role';
   static const dashboard = '/dashboard';
   static const training = '/training';
@@ -21,6 +22,7 @@ class AppRouteNames {
   static const splash = 'splash';
   static const login = 'login';
   static const register = 'register';
+  static const consent = 'consent';
   static const roleSelection = 'roleSelection';
   static const dashboard = 'dashboard';
   static const training = 'training';

@@ -29,6 +29,7 @@ mixin _$SessionState {
   DateTime? get endAt => throw _privateConstructorUsedError;
   DateTime? get plannedFor => throw _privateConstructorUsedError;
   SessionStatus get status => throw _privateConstructorUsedError;
+  bool get onboardingComplete => throw _privateConstructorUsedError;
 
   /// Serializes this SessionState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -55,7 +56,8 @@ abstract class $SessionStateCopyWith<$Res> {
       DateTime startedAt,
       DateTime? endAt,
       DateTime? plannedFor,
-      SessionStatus status});
+      SessionStatus status,
+      bool onboardingComplete});
 }
 
 /// @nodoc
@@ -82,6 +84,7 @@ class _$SessionStateCopyWithImpl<$Res, $Val extends SessionState>
     Object? endAt = freezed,
     Object? plannedFor = freezed,
     Object? status = null,
+    Object? onboardingComplete = null,
   }) {
     return _then(_value.copyWith(
       phaseId: null == phaseId
@@ -120,6 +123,10 @@ class _$SessionStateCopyWithImpl<$Res, $Val extends SessionState>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as SessionStatus,
+      onboardingComplete: null == onboardingComplete
+          ? _value.onboardingComplete
+          : onboardingComplete // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -141,7 +148,8 @@ abstract class _$$SessionStateImplCopyWith<$Res>
       DateTime startedAt,
       DateTime? endAt,
       DateTime? plannedFor,
-      SessionStatus status});
+      SessionStatus status,
+      bool onboardingComplete});
 }
 
 /// @nodoc
@@ -166,6 +174,7 @@ class __$$SessionStateImplCopyWithImpl<$Res>
     Object? endAt = freezed,
     Object? plannedFor = freezed,
     Object? status = null,
+    Object? onboardingComplete = null,
   }) {
     return _then(_$SessionStateImpl(
       phaseId: null == phaseId
@@ -204,6 +213,10 @@ class __$$SessionStateImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as SessionStatus,
+      onboardingComplete: null == onboardingComplete
+          ? _value.onboardingComplete
+          : onboardingComplete // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -220,7 +233,8 @@ class _$SessionStateImpl implements _SessionState {
       required this.startedAt,
       this.endAt,
       this.plannedFor,
-      this.status = SessionStatus.planned});
+      this.status = SessionStatus.planned,
+      this.onboardingComplete = false});
 
   factory _$SessionStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$SessionStateImplFromJson(json);
@@ -245,10 +259,13 @@ class _$SessionStateImpl implements _SessionState {
   @override
   @JsonKey()
   final SessionStatus status;
+  @override
+  @JsonKey()
+  final bool onboardingComplete;
 
   @override
   String toString() {
-    return 'SessionState(phaseId: $phaseId, exerciseIndex: $exerciseIndex, completedReps: $completedReps, remainingSeconds: $remainingSeconds, isPaused: $isPaused, startedAt: $startedAt, endAt: $endAt, plannedFor: $plannedFor, status: $status)';
+    return 'SessionState(phaseId: $phaseId, exerciseIndex: $exerciseIndex, completedReps: $completedReps, remainingSeconds: $remainingSeconds, isPaused: $isPaused, startedAt: $startedAt, endAt: $endAt, plannedFor: $plannedFor, status: $status, onboardingComplete: $onboardingComplete)';
   }
 
   @override
@@ -270,14 +287,16 @@ class _$SessionStateImpl implements _SessionState {
             (identical(other.endAt, endAt) || other.endAt == endAt) &&
             (identical(other.plannedFor, plannedFor) ||
                 other.plannedFor == plannedFor) &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.onboardingComplete, onboardingComplete) ||
+                other.onboardingComplete == onboardingComplete));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, phaseId, exerciseIndex,
       completedReps, remainingSeconds, isPaused, startedAt, endAt, plannedFor,
-      status);
+      status, onboardingComplete);
 
   /// Create a copy of SessionState
   /// with the given fields replaced by the non-null parameter values.
@@ -305,7 +324,8 @@ abstract class _SessionState implements SessionState {
       required final DateTime startedAt,
       final DateTime? endAt,
       final DateTime? plannedFor,
-      final SessionStatus status}) = _$SessionStateImpl;
+      final SessionStatus status,
+      final bool onboardingComplete}) = _$SessionStateImpl;
 
   factory _SessionState.fromJson(Map<String, dynamic> json) =
       _$SessionStateImpl.fromJson;
@@ -328,6 +348,8 @@ abstract class _SessionState implements SessionState {
   DateTime? get plannedFor;
   @override
   SessionStatus get status;
+  @override
+  bool get onboardingComplete;
 
   /// Create a copy of SessionState
   /// with the given fields replaced by the non-null parameter values.

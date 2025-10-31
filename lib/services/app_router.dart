@@ -9,6 +9,7 @@ import 'package:free_base/features/common/error_screen.dart';
 import 'package:free_base/features/common/feature_placeholder_screen.dart';
 import 'package:free_base/features/common/splash_screen.dart';
 import 'package:free_base/features/onboarding/profile/settings_screen.dart';
+import 'package:free_base/features/onboarding/screens/consent_screen.dart';
 import 'package:free_base/features/onboarding/screens/login_screen.dart';
 import 'package:free_base/features/onboarding/screens/register_screen.dart';
 import 'package:free_base/features/onboarding/screens/role_selection_screen.dart';
@@ -64,6 +65,11 @@ class AppRouter {
         path: AppRoutePaths.register,
         name: AppRouteNames.register,
         builder: (context, state) => const RegisterScreen(),
+      ),
+      GoRoute(
+        path: AppRoutePaths.consent,
+        name: AppRouteNames.consent,
+        builder: (context, state) => const ConsentScreen(),
       ),
       GoRoute(
         path: AppRoutePaths.roleSelection,

@@ -22,6 +22,7 @@ _$SessionStateImpl _$$SessionStateImplFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['plannedFor'] as String),
       status: $enumDecodeNullable(_$SessionStatusEnumMap, json['status']) ??
           SessionStatus.planned,
+      onboardingComplete: json['onboardingComplete'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$SessionStateImplToJson(_$SessionStateImpl instance) =>
@@ -35,6 +36,7 @@ Map<String, dynamic> _$$SessionStateImplToJson(_$SessionStateImpl instance) =>
       'endAt': instance.endAt?.toIso8601String(),
       'plannedFor': instance.plannedFor?.toIso8601String(),
       'status': _$SessionStatusEnumMap[instance.status]!,
+      'onboardingComplete': instance.onboardingComplete,
     };
 
 const _$SessionStatusEnumMap = {

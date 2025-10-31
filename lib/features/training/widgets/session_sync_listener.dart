@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:free_base/features/training/services/sync_service.dart';
+import 'package:free_base/services/telemetry/telemetry_service.dart';
 
 class SessionSyncListener extends StatefulWidget {
   final Widget child;
@@ -67,6 +68,16 @@ class _SessionSyncListenerState extends State<SessionSyncListener> {
             ),
           ],
         ),
+      ),
+    );
+
+    final telemetry = context.read<TelemetryService>();
+    unawaited(
+      telemetry.logEvent(
+        'session_sync',
+        properties: {
+          'status': isSuccess ? 'success' : 'failure',
+        },
       ),
     );
   }
