@@ -71,9 +71,14 @@ void main() {
     );
 
     await tester.enterText(
-        find.byType(TextField).at(0), 'test@example.com');
-    await tester.enterText(find.byType(TextField).at(1), 'password123');
-    await tester.tap(find.text('Anmelden'));
+      find.byKey(LoginScreenState.emailFieldKey),
+      'test@example.com',
+    );
+    await tester.enterText(
+      find.byKey(LoginScreenState.passwordFieldKey),
+      'password123',
+    );
+    await tester.tap(find.byKey(LoginScreenState.submitButtonKey));
 
     await tester.pump();
     await tester.pumpAndSettle();
