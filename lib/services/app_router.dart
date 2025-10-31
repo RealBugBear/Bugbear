@@ -28,6 +28,7 @@ import 'package:free_base/services/app_route_guard.dart';
 import 'package:free_base/services/app_shell.dart';
 import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/feature_flags.dart';
+import 'package:free_base/services/training_intent.dart';
 
 class AppRouter {
   AppRouter({
@@ -149,7 +150,12 @@ class AppRouter {
               GoRoute(
                 path: AppRoutePaths.training,
                 name: AppRouteNames.training,
-                builder: (context, state) => const MoroTrainingScreen(),
+                builder: (context, state) {
+                  final extra = state.extra;
+                  return MoroTrainingScreen(
+                    intent: extra is TrainingIntent ? extra : null,
+                  );
+                },
                 routes: [
                   GoRoute(
                     path: 'completed',

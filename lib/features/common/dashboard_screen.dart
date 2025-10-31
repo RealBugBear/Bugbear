@@ -94,6 +94,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: ElevatedButton(
                   onPressed: () => context.goNamed(
                     AppRouteNames.training,
+                    extra: TrainingIntent.start(),
                   ),
                   child: const Text('Training starten'),
                 ),

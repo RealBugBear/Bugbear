@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:free_base/features/training/notifier/session_notifier.dart';
 import 'package:free_base/services/app_routes.dart';
+import 'package:free_base/services/training_intent.dart';
 
 import 'moro_exercise_screen.dart';
 import 'moro_models.dart';
@@ -13,7 +16,9 @@ import 'moro_speed_store.dart';
 import 'pre_check_screen.dart';
 
 class MoroTrainingScreen extends StatefulWidget {
-  const MoroTrainingScreen({super.key});
+  final TrainingIntent? intent;
+
+  const MoroTrainingScreen({super.key, this.intent});
   @override
   State<MoroTrainingScreen> createState() => _MoroTrainingScreenState();
 }
@@ -25,6 +30,15 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
   bool _autoplayEnabled = true;
   int _autoplayDelaySeconds = 3;
   bool _autoplayInitialized = false;
+  bool _intentHandled = false;
+
+  @override
+  void didUpdateWidget(covariant MoroTrainingScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.intent != oldWidget.intent) {
+      _intentHandled = false;
+    }
+  }
 
   @override
   void initState() {
@@ -180,6 +194,20 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
               }
               final progress = progressSnap.data!;
               final sessionNotifier = context.watch<SessionNotifier>();
+              final intent = widget.intent;
+              if (intent != null && !_intentHandled) {
+                _intentHandled = true;
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (!mounted) return;
+                  _handleIntent(
+                    context,
+                    intent,
+                    items,
+                    progress,
+                    sessionNotifier,
+                  );
+                });
+              }
               final header = _buildStartCard(
                 context,
                 items,
@@ -362,6 +390,106 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
         }
       }
     }
+  }
+
+  void _handleIntent(
+    BuildContext context,
+    TrainingIntent intent,
+    List<MoroExercise> items,
+    MoroProgressData progress,
+    SessionNotifier notifier,
+  ) {
+    switch (intent.type) {
+      case TrainingIntentType.start:
+        unawaited(_startFromPrecheck(context, items, progress, notifier));
+        break;
+      case TrainingIntentType.resume:
+        unawaited(
+          _resumeFromIntent(
+            context,
+            items,
+            progress,
+            notifier,
+            intent.sessionId,
+          ),
+        );
+        break;
+    }
+  }
+
+  Future<void> _resumeFromIntent(
+    BuildContext context,
+    List<MoroExercise> items,
+    MoroProgressData progress,
+    SessionNotifier notifier,
+    String? sessionId,
+  ) async {
+    final resumeKey = _resolveResumeKey(sessionId, notifier, items);
+    if (resumeKey == null) {
+      await _startFromPrecheck(context, items, progress, notifier);
+      return;
+    }
+    MoroExercise? exercise;
+    for (final ex in items) {
+      if (ex.resumeKey == resumeKey) {
+        exercise = ex;
+        break;
+      }
+    }
+    exercise ??= _determineStartExercise(items, progress, notifier);
+    if (!notifier.state.moroResume.containsKey(exercise.resumeKey)) {
+      await _startFromPrecheck(context, items, progress, notifier);
+      return;
+    }
+    final offset = await _getOffset(exercise.index);
+    if (!mounted) return;
+    await _openExercise(context, exercise, offset, items.length, items);
+  }
+
+  String? _resolveResumeKey(
+    String? sessionId,
+    SessionNotifier notifier,
+    List<MoroExercise> items,
+  ) {
+    if (sessionId == null || sessionId.isEmpty) {
+      return null;
+    }
+    final resume = notifier.state.moroResume;
+    if (resume.containsKey(sessionId)) {
+      return sessionId;
+    }
+    final normalized = sessionId.toLowerCase();
+    for (final key in resume.keys) {
+      if (key.toLowerCase() == normalized) {
+        return key;
+      }
+    }
+    final colonIndex = normalized.lastIndexOf(':');
+    if (colonIndex != -1 && colonIndex < normalized.length - 1) {
+      final suffix = normalized.substring(colonIndex + 1);
+      if (resume.containsKey(suffix)) {
+        return suffix;
+      }
+      for (final key in resume.keys) {
+        if (key.toLowerCase() == suffix) {
+          return key;
+        }
+      }
+    }
+    final digitsMatch = RegExp(r'\d+').firstMatch(normalized);
+    if (digitsMatch != null) {
+      final idx = int.tryParse(digitsMatch.group(0)!);
+      if (idx != null) {
+        for (final ex in items) {
+          if (ex.index == idx) {
+            if (resume.containsKey(ex.resumeKey)) {
+              return ex.resumeKey;
+            }
+          }
+        }
+      }
+    }
+    return null;
   }
 }
 
