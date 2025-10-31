@@ -1,39 +1,37 @@
 # Training Mode 1 Overview and User Guide
 
 ## Overview
-Mode 1 delivers the core, phase-based training loop: it steers athletes through their programmed exercises with timed active and rest intervals, persists their place between app launches, and updates the training calendar once a session is complete. The flow is powered by a notifier-driven architecture, lightweight repositories for persistence and sync, and a widget set that keeps the UI focused on the current exercise state.
+Mode 1 now centres on the Moro training experience: athletes step through rich multimedia exercises, optionally resume where they left off, and earn XP as they progress. A notifier-driven architecture persists every change, keeping the dashboard and profile areas in sync even when the device is offline.
 
 ## Architecture Summary
-- **State management** – `SessionNotifier` owns the live `SessionState`, drives the timer, and advances through repetitions and exercises for the active phase.【F:lib/features/training/notifier/session_notifier.dart†L1-L145】
-- **Session model** – `SessionState` captures phase metadata, the active exercise index, repetition counts, timing, and completion status. Each `ExerciseItem` provides the duration presets and assets for a single step.【F:lib/features/training/models/session_state.dart†L1-L20】【F:lib/features/training/models/exercise_item.dart†L1-L19】
-- **Repositories and services** – `SessionRepository` persists the latest session snapshot, `ExerciseRepository` loads the exercise list for a phase, `SyncService` forwards finished sessions, and calendar-related services log completions and golden-day projections.【F:lib/features/training/services/session_repository.dart†L1-L23】【F:lib/features/training/services/exercise_repository.dart†L1-L32】【F:lib/features/training/services/sync_service.dart†L1-L74】【F:lib/features/calendar/services/golden_day_service.dart†L1-L60】
-- **User interface** – `TrainingScreen` composes the header, connectivity banner, progress indicators, exercise canvas, and control buttons so users can monitor progress, view cues, and control playback.【F:lib/features/training/training_screen.dart†L1-L70】【F:lib/features/training/widgets/training_header.dart†L1-L58】【F:lib/features/training/widgets/progress_row.dart†L1-L58】【F:lib/features/training/widgets/exercise_canvas.dart†L1-L37】【F:lib/features/training/widgets/control_button_row.dart†L1-L46】
-- **Phase management** – Athletes can switch to another phase via the header, which resets state and loads the correct exercises while keeping persistence and sync intact.【F:lib/features/training/widgets/training_header.dart†L17-L52】【F:lib/features/training/notifier/session_notifier.dart†L65-L118】
+- **State management** – `SessionNotifier` owns the persisted `SessionState`, exposes planning helpers, manages Moro resume points, and applies XP or streak updates whenever training activity is recorded.【F:lib/features/training/notifier/session_notifier.dart†L16-L157】
+- **Session model** – `SessionState` stores phase metadata, counts, scheduling details, and the Moro resume map. Each `ExerciseItem` describes timing defaults and assets for a single exercise step.【F:lib/features/training/models/session_state.dart†L1-L22】【F:lib/features/training/models/exercise_item.dart†L1-L19】
+- **Moro experience** – `MoroTrainingScreen` loads the exercise catalog, pulls persisted progress, reacts to deep-link intents, and launches exercises with autoplay/resume support.【F:lib/features/training/moro/moro_training_screen.dart†L18-L196】
+- **Progress stores** – `MoroProgressStore` records completed Moro exercises, while `MoroSpeedStore` persists user-specific autoplay offsets per exercise.【F:lib/features/training/moro/moro_progress_store.dart†L17-L74】【F:lib/features/training/moro/moro_speed_store.dart†L7-L27】
+- **Persistence and sync** – `SessionRepository` writes the latest session snapshot to Hive, `ExerciseRepository` supplies the phase plan, and `SyncService` queues updates for backend synchronisation.【F:lib/features/training/services/session_repository.dart†L1-L23】【F:lib/features/training/services/exercise_repository.dart†L1-L32】【F:lib/features/training/services/sync_service.dart†L1-L74】
 
 ## Feature Walkthrough (Mode 1)
-1. **Bootstrapping** – `SessionNotifier` is provided to the widget tree with injected repositories and initial exercises, immediately exposing the exercise list and saving each state change for resilience.【F:lib/features/training/notifier/session_notifier.dart†L19-L57】
-2. **Starting a session** – Pressing Play on `TrainingScreen` triggers `SessionNotifier.start()`, which flips the pause flag, starts a one-second timer, and handles the 8s/4s active-rest rotation automatically.【F:lib/features/training/training_screen.dart†L36-L60】【F:lib/features/training/notifier/session_notifier.dart†L59-L97】
-3. **Exercise transitions** – Completed repetitions lead into rest windows and, once finished, advance to the next exercise or mark the session complete. Manual navigation resets counters and durations appropriately.【F:lib/features/training/training_screen.dart†L22-L64】【F:lib/features/training/notifier/session_notifier.dart†L97-L144】
-4. **Persistence and sync** – Every mutation is written to Hive and queued for upload; when a session completes, calendar events and golden-day calculations are updated to reflect the workout.【F:lib/features/training/notifier/session_notifier.dart†L37-L144】【F:lib/features/training/services/session_repository.dart†L1-L23】【F:lib/features/training/services/sync_service.dart†L1-L74】【F:lib/features/calendar/services/golden_day_service.dart†L1-L60】
+1. **Bootstrapping** – `SessionNotifier` is injected with repositories and the initial `SessionState`, immediately saving subsequent mutations for resilience.【F:lib/features/training/notifier/session_notifier.dart†L34-L61】
+2. **Preparing a Moro session** – `MoroTrainingScreen` fetches the Moro exercise list, loads stored progress, resolves autoplay defaults, and handles start/resume intents before presenting the launch card.【F:lib/features/training/moro/moro_training_screen.dart†L24-L136】
+3. **Running exercises** – After the pre-check, `_openExercise` drives each exercise screen, applies XP rewards via `SessionNotifier.applyXpReward`, chains autoplay navigation, and routes to the completion screen when finished.【F:lib/features/training/moro/moro_training_screen.dart†L260-L401】
+4. **Scheduling the next session** – From the completion screen users can plan the following session through `SessionNotifier.scheduleNextSession`, resetting counters and marking the session as planned.【F:lib/features/training/training_completed_screen.dart†L91-L137】【F:lib/features/training/notifier/session_notifier.dart†L92-L115】
 
 ## User Guide (Mode 1)
 ### Launching a Session
-1. Open the Training screen. The header reveals the active phase and quick actions for switching plans or reaching help.【F:lib/features/training/training_screen.dart†L14-L68】【F:lib/features/training/widgets/training_header.dart†L17-L58】
-2. Check the progress row to monitor exercise index, repetition counts, and the live timer, while the canvas shows the current cue image.【F:lib/features/training/widgets/progress_row.dart†L1-L58】【F:lib/features/training/widgets/exercise_canvas.dart†L1-L37】
-3. Use the control buttons to manage playback and navigation:
-   - **Play/Pause** toggles the timer.【F:lib/features/training/training_screen.dart†L36-L54】
-   - **Back/Next** rewinds or advances to neighbouring exercises, resetting repetitions and timers as needed.【F:lib/features/training/training_screen.dart†L22-L64】
-4. Let the session auto-progress through repetitions (default 8s active, 4s rest). When the last exercise completes, the workout is marked finished and logged to the calendar.【F:lib/features/training/notifier/session_notifier.dart†L69-L144】
+1. Navigate to Training. The Moro start card shows the upcoming exercise, indicates saved resume points, and exposes autoplay controls.【F:lib/features/training/moro/moro_training_screen.dart†L64-L118】
+2. Select “Training starten” to pass through the Moro pre-check, adjust autoplay timing, and begin the session.【F:lib/features/training/moro/moro_training_screen.dart†L96-L172】
+3. Work through each exercise. Completed items award XP immediately, update stored progress, and automatically advance when autoplay is enabled.【F:lib/features/training/moro/moro_training_screen.dart†L360-L401】【F:lib/features/training/notifier/session_notifier.dart†L143-L157】
+4. When the final exercise is done, the app navigates to the completion screen where you can celebrate, return to the dashboard, or plan the next session.【F:lib/features/training/moro/moro_training_screen.dart†L360-L401】【F:lib/features/training/training_completed_screen.dart†L25-L139】
 
-### Switching Phases or Getting Help
-1. Tap the phase name in the header to open the selector. Choosing a new phase reloads its exercise plan and restarts the session state.【F:lib/features/training/widgets/training_header.dart†L23-L41】【F:lib/features/training/notifier/session_notifier.dart†L65-L118】
-2. Use the help icon to jump into the Training Help screen for contextual instructions or media clips per exercise.【F:lib/features/training/widgets/training_header.dart†L42-L52】【F:lib/features/training/screens/training_help_screen.dart†L1-L63】
+### Managing Progress and Planning
+- Use resume points to jump back into partially completed Moro content; they’re stored and retrieved via `SessionNotifier` helpers.【F:lib/features/training/notifier/session_notifier.dart†L117-L141】
+- Tap “Nächste Session planen” on the completion screen to schedule tomorrow’s workout; the notifier resets the session to a planned state with fresh counters.【F:lib/features/training/training_completed_screen.dart†L118-L137】【F:lib/features/training/notifier/session_notifier.dart†L92-L115】
 
 ### Offline Usage Notes
-- Progress is saved locally so leaving the app or losing connectivity preserves your spot.【F:lib/features/training/notifier/session_notifier.dart†L37-L57】【F:lib/features/training/services/session_repository.dart†L1-L23】
-- When connectivity returns, queued updates sync automatically—no manual intervention required.【F:lib/features/training/services/sync_service.dart†L1-L74】
+- Session state is saved locally so progress survives app restarts or network outages.【F:lib/features/training/notifier/session_notifier.dart†L34-L61】【F:lib/features/training/services/session_repository.dart†L1-L23】
+- Once connectivity returns, queued changes propagate automatically via `SyncService`—no manual action required.【F:lib/features/training/services/sync_service.dart†L1-L74】
 
 ### Tips for Practitioners
-- Adjust pacing defaults or populate real assets by editing `ExerciseRepository` entries for each phase.【F:lib/features/training/services/exercise_repository.dart†L1-L32】
-- Expand Training Help coverage by mapping additional exercises to asset IDs in `_videoPaths`.【F:lib/features/training/screens/training_help_screen.dart†L16-L60】
-- Tailor calendar behaviour or golden-day thresholds via `GoldenDayService` if your programme needs different cadence targets.【F:lib/features/calendar/services/golden_day_service.dart†L1-L60】
+- Extend the Moro catalog or adjust defaults by editing `MoroRepository` data and exercise definitions.【F:lib/features/training/moro/moro_repository.dart†L9-L96】
+- Tune autoplay defaults per exercise through `MoroSpeedStore` if different pacing is desired.【F:lib/features/training/moro/moro_speed_store.dart†L7-L27】
+- Customise XP rewards by tweaking `SessionNotifier.computeXp` or calling `applyXpReward` with scenario-specific values.【F:lib/features/training/notifier/session_notifier.dart†L123-L157】

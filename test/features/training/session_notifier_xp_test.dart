@@ -1,7 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:free_base/features/calendar/models/calendar_event.dart';
-import 'package:free_base/features/calendar/services/calendar_service.dart';
-import 'package:free_base/features/calendar/services/golden_day_service.dart';
 import 'package:free_base/features/training/models/exercise_item.dart';
 import 'package:free_base/features/training/models/session_state.dart';
 import 'package:free_base/features/training/notifier/session_notifier.dart';
@@ -37,28 +34,6 @@ class _TestSyncService implements SyncService {
   Stream<SyncStatusEvent> get statusStream => Stream<SyncStatusEvent>.empty();
 }
 
-class _TestCalendarService implements CalendarService {
-  final List<CalendarEvent> addedEvents = [];
-
-  @override
-  Future<void> addEvent(CalendarEvent event) async {
-    addedEvents.add(event);
-  }
-
-  @override
-  Future<void> removeEvent(String id) async {}
-
-  @override
-  Future<List<CalendarEvent>> loadEventsForMonth(DateTime month) async =>
-      const <CalendarEvent>[];
-
-  @override
-  Future<void> saveTrainingDay(CalendarEvent event) async {}
-
-  @override
-  Future<DateTime?> loadUpcomingGoldenDay() async => null;
-}
-
 class _TestExerciseRepository extends ExerciseRepository {
   _TestExerciseRepository(this.items);
 
@@ -82,12 +57,9 @@ SessionNotifier _createNotifier({DateTime? plannedFor}) {
   });
   final exerciseRepo = _TestExerciseRepository(exercises);
   final sessionRepository = _TestSessionRepository();
-  final calendarService = _TestCalendarService();
   final notifier = SessionNotifier(
     sessionRepository,
     _TestSyncService(),
-    calendarService,
-    GoldenDayService(),
     exerciseRepo,
     exercises,
     SessionState(

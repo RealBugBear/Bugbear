@@ -250,8 +250,6 @@ class _MyAppState extends State<MyApp> {
             return SessionNotifier(
               widget.sessionRepository,
               ctx.read<SyncService>(),
-              ctx.read<CalendarService>(),
-              ctx.read<GoldenDayService>(),
               exRepo,
               initialExercises,
               widget.initialSessionState,

@@ -6,9 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 
-import 'package:free_base/features/calendar/models/calendar_event.dart';
-import 'package:free_base/features/calendar/services/calendar_service.dart';
-import 'package:free_base/features/calendar/services/golden_day_service.dart';
 import 'package:free_base/features/training/models/exercise_item.dart';
 import 'package:free_base/features/training/models/session_state.dart';
 import 'package:free_base/features/training/moro/moro_training_screen.dart';
@@ -48,23 +45,6 @@ class _TestSyncService implements SyncService {
   Stream<SyncStatusEvent> get statusStream => const Stream.empty();
 }
 
-class _TestCalendarService implements CalendarService {
-  @override
-  Future<void> addEvent(CalendarEvent event) async {}
-
-  @override
-  Future<void> removeEvent(String id) async {}
-
-  @override
-  Future<List<CalendarEvent>> loadEventsForMonth(DateTime month) async => const [];
-
-  @override
-  Future<void> saveTrainingDay(CalendarEvent event) async {}
-
-  @override
-  Future<DateTime?> loadUpcomingGoldenDay() async => null;
-}
-
 class _TestExerciseRepository extends ExerciseRepository {
   final List<ExerciseItem> _items;
 
@@ -90,8 +70,6 @@ SessionNotifier _createNotifier() {
   final notifier = SessionNotifier(
     repo,
     _TestSyncService(),
-    _TestCalendarService(),
-    GoldenDayService(),
     _TestExerciseRepository(items),
     items,
     SessionState(
