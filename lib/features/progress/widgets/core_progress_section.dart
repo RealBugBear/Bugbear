@@ -115,7 +115,7 @@ class CoreHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final disableAnimations =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
-    final ratio = progress.progressRatio.clamp(0, 1);
+    final ratio = progress.progressRatio.clamp(0.0, 1.0).toDouble();
 
     final periodLabel =
         '${_formatDate(progress.windowStart)} – ${_formatDate(progress.windowEnd)}';
@@ -124,7 +124,7 @@ class CoreHeader extends StatelessWidget {
         ? Padding(
             padding: const EdgeInsetsDirectional.only(start: 8),
             child: AnimatedScale(
-              scale: disableAnimations ? 1 : 1.05,
+              scale: disableAnimations ? 1.0 : 1.05,
               duration:
                   disableAnimations ? Duration.zero : const Duration(milliseconds: 300),
               curve: Curves.easeOut,
@@ -166,7 +166,7 @@ class CoreHeader extends StatelessWidget {
           const SizedBox(height: 8),
           TweenAnimationBuilder<double>(
             key: ValueKey(ratio),
-            tween: Tween<double>(begin: 0, end: ratio),
+            tween: Tween<double>(begin: 0.0, end: ratio),
             duration:
                 disableAnimations ? Duration.zero : const Duration(milliseconds: 600),
             curve: Curves.easeOutCubic,
@@ -292,7 +292,7 @@ class _WeekProgressBarState extends State<WeekProgressBar>
     final Color neutralColor = theme.colorScheme.surfaceVariant;
     final Color outlineColor = theme.colorScheme.outlineVariant;
 
-    const double size = 56;
+    const double size = 56.0;
 
     final semanticsLabel = StringBuffer()
       ..write('Tag ${_formatDate(node.date)}')
@@ -324,7 +324,7 @@ class _WeekProgressBarState extends State<WeekProgressBar>
           customBorder: const CircleBorder(),
           child: SizedBox(
             width: size,
-            height: size + 32,
+            height: size + 32.0,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -334,15 +334,15 @@ class _WeekProgressBarState extends State<WeekProgressBar>
                     builder: (context, child) {
                       final glowStrength = highlight && !disableAnimations
                           ? 0.35 + 0.45 * _pulseAnimation.value
-                          : 0;
+                          : 0.0;
                       final List<BoxShadow> shadows;
-                      if (glowStrength > 0) {
+                      if (glowStrength > 0.0) {
                         shadows = [
                           BoxShadow(
                             color: theme.colorScheme.tertiary
                                 .withOpacity(glowStrength),
-                            blurRadius: 16 + 12 * glowStrength,
-                            spreadRadius: 1 + 4 * glowStrength,
+                            blurRadius: 16.0 + 12.0 * glowStrength,
+                            spreadRadius: 1.0 + 4.0 * glowStrength,
                           ),
                         ];
                       } else {
@@ -360,7 +360,7 @@ class _WeekProgressBarState extends State<WeekProgressBar>
                             ? Duration.zero
                             : const Duration(milliseconds: 220),
                         curve: Curves.easeOut,
-                        scale: isToday && !disableAnimations ? 1.05 : 1,
+                        scale: isToday && !disableAnimations ? 1.05 : 1.0,
                         child: Container(
                           width: size,
                           height: size,
@@ -369,7 +369,7 @@ class _WeekProgressBarState extends State<WeekProgressBar>
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: outlineColor,
-                              width: 1,
+                              width: 1.0,
                             ),
                             boxShadow: shadows,
                           ),
@@ -379,8 +379,9 @@ class _WeekProgressBarState extends State<WeekProgressBar>
                               '${node.date.toIso8601String()}-${isCompleted ? 'done' : isPlanned ? 'planned' : 'idle'}',
                             ),
                             tween: Tween<double>(
-                              begin: isCompleted ? 0.4 : 0,
-                              end: isCompleted ? 1 : (isPlanned ? 0.35 : 0),
+                              begin: isCompleted ? 0.4 : 0.0,
+                              end:
+                                  isCompleted ? 1.0 : (isPlanned ? 0.35 : 0.0),
                             ),
                             duration: disableAnimations
                                 ? Duration.zero
@@ -398,8 +399,9 @@ class _WeekProgressBarState extends State<WeekProgressBar>
                                     : (isPlanned
                                         ? Icons.calendar_today
                                         : Icons.remove_circle_outline),
-                                color: iconColor.withOpacity(value.clamp(0.35, 1)),
-                                size: 20 + 6 * value,
+                                color: iconColor
+                                    .withOpacity(value.clamp(0.35, 1.0).toDouble()),
+                                size: 20.0 + 6.0 * value,
                               );
                             },
                           ),
@@ -623,7 +625,7 @@ class ReflectionCard extends StatelessWidget {
       hint: 'Tippen um Reflexion zu öffnen',
       button: true,
       child: AnimatedScale(
-        scale: disableAnimations ? 1 : 1.02,
+        scale: disableAnimations ? 1.0 : 1.02,
         duration:
             disableAnimations ? Duration.zero : const Duration(milliseconds: 260),
         curve: Curves.easeOut,
