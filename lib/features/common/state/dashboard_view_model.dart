@@ -10,10 +10,14 @@ class DashboardViewModel extends ChangeNotifier {
   DashboardViewModel(
     SessionNotifier sessionNotifier,
     CalendarNotifier calendarNotifier,
-    ReminderService reminderService,
-  )   : _sessionNotifier = sessionNotifier,
+    ReminderService reminderService, {
+    bool autoplayEnabled = true,
+    bool audioEnabled = true,
+  })  : _sessionNotifier = sessionNotifier,
         _calendarNotifier = calendarNotifier,
-        _reminderService = reminderService {
+        _reminderService = reminderService,
+        _autoplayEnabled = autoplayEnabled,
+        _audioEnabled = audioEnabled {
     _sessionNotifier.addListener(_sessionListener);
     _calendarNotifier.addListener(_calendarListener);
     _reminderService.addListener(_reminderListener);
@@ -22,6 +26,8 @@ class DashboardViewModel extends ChangeNotifier {
   late SessionNotifier _sessionNotifier;
   late CalendarNotifier _calendarNotifier;
   late ReminderService _reminderService;
+  bool _autoplayEnabled = true;
+  bool _audioEnabled = true;
 
   void updateSources(
     SessionNotifier sessionNotifier,
@@ -80,6 +86,26 @@ class DashboardViewModel extends ChangeNotifier {
   TimeOfDay? get scheduledReminder => _reminderService.scheduledTime;
 
   bool get hasScheduledReminder => _reminderService.hasScheduledReminder;
+
+  bool get autoplayEnabled => _autoplayEnabled;
+
+  bool get audioEnabled => _audioEnabled;
+
+  void setAutoplayEnabled(bool value) {
+    if (_autoplayEnabled == value) {
+      return;
+    }
+    _autoplayEnabled = value;
+    notifyListeners();
+  }
+
+  void setAudioEnabled(bool value) {
+    if (_audioEnabled == value) {
+      return;
+    }
+    _audioEnabled = value;
+    notifyListeners();
+  }
 
   Future<void> scheduleReminder(TimeOfDay time) async {
     await _reminderService.scheduleDailyReminder(time);
