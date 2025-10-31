@@ -52,22 +52,49 @@ class CalendarNotifier extends ChangeNotifier {
   /// Lädt alle Events des Monats [month] und behält bereits
   /// geladene Monate im Speicher, damit Marker beim Scrollen
   /// nicht verloren gehen.
-  Future<void> loadMonth(DateTime month) async {
+  Future<void> loadMonth(
+    DateTime month, {
+    DateTime? ensureWeekForDay,
+  }) async {
     _focusedDay = month;
-    final events = await _service.loadEventsForMonth(month);
 
-    // Entferne nur die Einträge des geladenen Monats, damit
-    // andere Monate weiterhin angezeigt werden können.
-    final keysToRemove = _eventsByDay.keys
-        .where((d) => d.year == month.year && d.month == month.month)
-        .toList();
-    for (final key in keysToRemove) {
-      _eventsByDay.remove(key);
+    final monthsToLoad = <DateTime>{
+      DateTime(month.year, month.month),
+    };
+
+    final weekAnchor = ensureWeekForDay ?? _selectedDay;
+    final weekStart = weekAnchor.subtract(Duration(days: weekAnchor.weekday - DateTime.monday));
+    final weekEnd = weekStart.add(const Duration(days: 6));
+
+    void addMonth(DateTime date) {
+      monthsToLoad.add(DateTime(date.year, date.month));
     }
 
-    for (var ev in events) {
-      final key = DateTime(ev.date.year, ev.date.month, ev.date.day);
-      _eventsByDay.putIfAbsent(key, () => []).add(ev);
+    addMonth(weekStart);
+    addMonth(weekEnd);
+
+    DateTime cursor = DateTime(weekStart.year, weekStart.month);
+    final lastMonth = DateTime(weekEnd.year, weekEnd.month);
+    while (cursor.year < lastMonth.year ||
+        (cursor.year == lastMonth.year && cursor.month < lastMonth.month)) {
+      cursor = _nextMonth(cursor);
+      monthsToLoad.add(cursor);
+    }
+
+    for (final monthKey in monthsToLoad) {
+      final events = await _service.loadEventsForMonth(monthKey);
+
+      final keysToRemove = _eventsByDay.keys
+          .where((d) => d.year == monthKey.year && d.month == monthKey.month)
+          .toList();
+      for (final key in keysToRemove) {
+        _eventsByDay.remove(key);
+      }
+
+      for (var ev in events) {
+        final key = DateTime(ev.date.year, ev.date.month, ev.date.day);
+        _eventsByDay.putIfAbsent(key, () => []).add(ev);
+      }
     }
     notifyListeners();
   }
@@ -76,7 +103,7 @@ class CalendarNotifier extends ChangeNotifier {
   void selectDay(DateTime day) {
     _selectedDay = day;
     if (day.year != _focusedDay.year || day.month != _focusedDay.month) {
-      loadMonth(day);
+      loadMonth(day, ensureWeekForDay: day);
     } else {
       notifyListeners();
     }
@@ -143,6 +170,30 @@ class CalendarNotifier extends ChangeNotifier {
     }
 
     await toggleCompleted(list.first);
+  }
+
+  /// Returns true when a day has been completed but no reflection has been saved yet.
+  bool requiresReflection(DateTime day) {
+    final events = eventsForDay(day);
+    if (events.isEmpty) {
+      return false;
+    }
+    final today = DateTime.now();
+    final normalizedDay = DateTime(day.year, day.month, day.day);
+    final normalizedToday = DateTime(today.year, today.month, today.day);
+    if (!normalizedDay.isBefore(normalizedToday)) {
+      return false;
+    }
+    final hasCompletion = events.any((e) => e.isCompleted);
+    final hasReflection = events.any((e) => e.notes.trim().isNotEmpty);
+    return hasCompletion && !hasReflection;
+  }
+
+  DateTime _nextMonth(DateTime date) {
+    if (date.month == 12) {
+      return DateTime(date.year + 1, 1);
+    }
+    return DateTime(date.year, date.month + 1);
   }
 
 }
