@@ -30,6 +30,11 @@ mixin _$SessionState {
   DateTime? get plannedFor => throw _privateConstructorUsedError;
   SessionStatus get status => throw _privateConstructorUsedError;
   bool get onboardingComplete => throw _privateConstructorUsedError;
+  int get xpTotal => throw _privateConstructorUsedError;
+  int get dailyXp => throw _privateConstructorUsedError;
+  int get streakCount => throw _privateConstructorUsedError;
+  DateTime? get streakFrozenUntil => throw _privateConstructorUsedError;
+  DateTime? get lastCompletedOn => throw _privateConstructorUsedError;
 
   /// Serializes this SessionState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -57,7 +62,12 @@ abstract class $SessionStateCopyWith<$Res> {
       DateTime? endAt,
       DateTime? plannedFor,
       SessionStatus status,
-      bool onboardingComplete});
+      bool onboardingComplete,
+      int xpTotal,
+      int dailyXp,
+      int streakCount,
+      DateTime? streakFrozenUntil,
+      DateTime? lastCompletedOn});
 }
 
 /// @nodoc
@@ -85,6 +95,11 @@ class _$SessionStateCopyWithImpl<$Res, $Val extends SessionState>
     Object? plannedFor = freezed,
     Object? status = null,
     Object? onboardingComplete = null,
+    Object? xpTotal = null,
+    Object? dailyXp = null,
+    Object? streakCount = null,
+    Object? streakFrozenUntil = freezed,
+    Object? lastCompletedOn = freezed,
   }) {
     return _then(_value.copyWith(
       phaseId: null == phaseId
@@ -127,6 +142,26 @@ class _$SessionStateCopyWithImpl<$Res, $Val extends SessionState>
           ? _value.onboardingComplete
           : onboardingComplete // ignore: cast_nullable_to_non_nullable
               as bool,
+      xpTotal: null == xpTotal
+          ? _value.xpTotal
+          : xpTotal // ignore: cast_nullable_to_non_nullable
+              as int,
+      dailyXp: null == dailyXp
+          ? _value.dailyXp
+          : dailyXp // ignore: cast_nullable_to_non_nullable
+              as int,
+      streakCount: null == streakCount
+          ? _value.streakCount
+          : streakCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      streakFrozenUntil: freezed == streakFrozenUntil
+          ? _value.streakFrozenUntil
+          : streakFrozenUntil // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      lastCompletedOn: freezed == lastCompletedOn
+          ? _value.lastCompletedOn
+          : lastCompletedOn // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -175,6 +210,11 @@ class __$$SessionStateImplCopyWithImpl<$Res>
     Object? plannedFor = freezed,
     Object? status = null,
     Object? onboardingComplete = null,
+    Object? xpTotal = null,
+    Object? dailyXp = null,
+    Object? streakCount = null,
+    Object? streakFrozenUntil = freezed,
+    Object? lastCompletedOn = freezed,
   }) {
     return _then(_$SessionStateImpl(
       phaseId: null == phaseId
@@ -217,6 +257,26 @@ class __$$SessionStateImplCopyWithImpl<$Res>
           ? _value.onboardingComplete
           : onboardingComplete // ignore: cast_nullable_to_non_nullable
               as bool,
+      xpTotal: null == xpTotal
+          ? _value.xpTotal
+          : xpTotal // ignore: cast_nullable_to_non_nullable
+              as int,
+      dailyXp: null == dailyXp
+          ? _value.dailyXp
+          : dailyXp // ignore: cast_nullable_to_non_nullable
+              as int,
+      streakCount: null == streakCount
+          ? _value.streakCount
+          : streakCount // ignore: cast_nullable_to_non_nullable
+              as int,
+      streakFrozenUntil: freezed == streakFrozenUntil
+          ? _value.streakFrozenUntil
+          : streakFrozenUntil // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      lastCompletedOn: freezed == lastCompletedOn
+          ? _value.lastCompletedOn
+          : lastCompletedOn // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -234,7 +294,12 @@ class _$SessionStateImpl implements _SessionState {
       this.endAt,
       this.plannedFor,
       this.status = SessionStatus.planned,
-      this.onboardingComplete = false});
+      this.onboardingComplete = false,
+      this.xpTotal = 0,
+      this.dailyXp = 0,
+      this.streakCount = 0,
+      this.streakFrozenUntil,
+      this.lastCompletedOn});
 
   factory _$SessionStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$SessionStateImplFromJson(json);
@@ -262,10 +327,23 @@ class _$SessionStateImpl implements _SessionState {
   @override
   @JsonKey()
   final bool onboardingComplete;
+  @override
+  @JsonKey()
+  final int xpTotal;
+  @override
+  @JsonKey()
+  final int dailyXp;
+  @override
+  @JsonKey()
+  final int streakCount;
+  @override
+  final DateTime? streakFrozenUntil;
+  @override
+  final DateTime? lastCompletedOn;
 
   @override
   String toString() {
-    return 'SessionState(phaseId: $phaseId, exerciseIndex: $exerciseIndex, completedReps: $completedReps, remainingSeconds: $remainingSeconds, isPaused: $isPaused, startedAt: $startedAt, endAt: $endAt, plannedFor: $plannedFor, status: $status, onboardingComplete: $onboardingComplete)';
+    return 'SessionState(phaseId: $phaseId, exerciseIndex: $exerciseIndex, completedReps: $completedReps, remainingSeconds: $remainingSeconds, isPaused: $isPaused, startedAt: $startedAt, endAt: $endAt, plannedFor: $plannedFor, status: $status, onboardingComplete: $onboardingComplete, xpTotal: $xpTotal, dailyXp: $dailyXp, streakCount: $streakCount, streakFrozenUntil: $streakFrozenUntil, lastCompletedOn: $lastCompletedOn)';
   }
 
   @override
@@ -289,14 +367,36 @@ class _$SessionStateImpl implements _SessionState {
                 other.plannedFor == plannedFor) &&
             (identical(other.status, status) || other.status == status) &&
             (identical(other.onboardingComplete, onboardingComplete) ||
-                other.onboardingComplete == onboardingComplete));
+                other.onboardingComplete == onboardingComplete) &&
+            (identical(other.xpTotal, xpTotal) || other.xpTotal == xpTotal) &&
+            (identical(other.dailyXp, dailyXp) || other.dailyXp == dailyXp) &&
+            (identical(other.streakCount, streakCount) ||
+                other.streakCount == streakCount) &&
+            (identical(other.streakFrozenUntil, streakFrozenUntil) ||
+                other.streakFrozenUntil == streakFrozenUntil) &&
+            (identical(other.lastCompletedOn, lastCompletedOn) ||
+                other.lastCompletedOn == lastCompletedOn));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, phaseId, exerciseIndex,
-      completedReps, remainingSeconds, isPaused, startedAt, endAt, plannedFor,
-      status, onboardingComplete);
+  int get hashCode => Object.hash(
+      runtimeType,
+      phaseId,
+      exerciseIndex,
+      completedReps,
+      remainingSeconds,
+      isPaused,
+      startedAt,
+      endAt,
+      plannedFor,
+      status,
+      onboardingComplete,
+      xpTotal,
+      dailyXp,
+      streakCount,
+      streakFrozenUntil,
+      lastCompletedOn);
 
   /// Create a copy of SessionState
   /// with the given fields replaced by the non-null parameter values.
@@ -325,7 +425,12 @@ abstract class _SessionState implements SessionState {
       final DateTime? endAt,
       final DateTime? plannedFor,
       final SessionStatus status,
-      final bool onboardingComplete}) = _$SessionStateImpl;
+      final bool onboardingComplete,
+      final int xpTotal,
+      final int dailyXp,
+      final int streakCount,
+      final DateTime? streakFrozenUntil,
+      final DateTime? lastCompletedOn}) = _$SessionStateImpl;
 
   factory _SessionState.fromJson(Map<String, dynamic> json) =
       _$SessionStateImpl.fromJson;
@@ -350,6 +455,16 @@ abstract class _SessionState implements SessionState {
   SessionStatus get status;
   @override
   bool get onboardingComplete;
+  @override
+  int get xpTotal;
+  @override
+  int get dailyXp;
+  @override
+  int get streakCount;
+  @override
+  DateTime? get streakFrozenUntil;
+  @override
+  DateTime? get lastCompletedOn;
 
   /// Create a copy of SessionState
   /// with the given fields replaced by the non-null parameter values.

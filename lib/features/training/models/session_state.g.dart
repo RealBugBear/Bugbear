@@ -23,6 +23,15 @@ _$SessionStateImpl _$$SessionStateImplFromJson(Map<String, dynamic> json) =>
       status: $enumDecodeNullable(_$SessionStatusEnumMap, json['status']) ??
           SessionStatus.planned,
       onboardingComplete: json['onboardingComplete'] as bool? ?? false,
+      xpTotal: (json['xpTotal'] as num?)?.toInt() ?? 0,
+      dailyXp: (json['dailyXp'] as num?)?.toInt() ?? 0,
+      streakCount: (json['streakCount'] as num?)?.toInt() ?? 0,
+      streakFrozenUntil: json['streakFrozenUntil'] == null
+          ? null
+          : DateTime.parse(json['streakFrozenUntil'] as String),
+      lastCompletedOn: json['lastCompletedOn'] == null
+          ? null
+          : DateTime.parse(json['lastCompletedOn'] as String),
     );
 
 Map<String, dynamic> _$$SessionStateImplToJson(_$SessionStateImpl instance) =>
@@ -37,6 +46,11 @@ Map<String, dynamic> _$$SessionStateImplToJson(_$SessionStateImpl instance) =>
       'plannedFor': instance.plannedFor?.toIso8601String(),
       'status': _$SessionStatusEnumMap[instance.status]!,
       'onboardingComplete': instance.onboardingComplete,
+      'xpTotal': instance.xpTotal,
+      'dailyXp': instance.dailyXp,
+      'streakCount': instance.streakCount,
+      'streakFrozenUntil': instance.streakFrozenUntil?.toIso8601String(),
+      'lastCompletedOn': instance.lastCompletedOn?.toIso8601String(),
     };
 
 const _$SessionStatusEnumMap = {
