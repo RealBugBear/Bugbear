@@ -16,6 +16,7 @@ import 'package:free_base/features/onboarding/screens/role_selection_screen.dart
 import 'package:free_base/features/profile/models/reflex_profile.dart';
 import 'package:free_base/features/profile/screens/profile_overview_screen.dart';
 import 'package:free_base/features/profile/screens/reflex_profile_detail_screen.dart';
+import 'package:free_base/features/profile/screens/shop_screen.dart';
 import 'package:free_base/features/questionnaire/questionnaire_result_screen.dart';
 import 'package:free_base/features/questionnaire/questionnaire_screen.dart';
 import 'package:free_base/features/questionnaire/quiz_intro_screen.dart';
@@ -193,6 +194,19 @@ class AppRouter {
                       }
                       return const ErrorScreen(
                         message: 'Das Profil konnte nicht geladen werden.',
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'shop',
+                    name: AppRouteNames.profileShop,
+                    builder: (context, state) {
+                      final profile = state.extra;
+                      if (profile is ReflexProfile) {
+                        return ShopScreen(profile: profile);
+                      }
+                      return const ErrorScreen(
+                        message: 'Der Shop konnte nicht geöffnet werden.',
                       );
                     },
                   ),

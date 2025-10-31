@@ -53,6 +53,8 @@ class QuestionnaireState extends ChangeNotifier {
   bool _isGerman = true;
   bool _initialized = false;
 
+  static const String questionnaireVersion = 'v1';
+
   QuestionnaireState(this._box);
 
   bool get isInitialized => _initialized;
@@ -186,7 +188,7 @@ class QuestionnaireState extends ChangeNotifier {
   }
 
   /// Speichert Ergebnis in Firestore und leert den lokalen Fortschritt.
-  Future<void> saveResult({
+  Future<ReflexProfile?> saveResult({
     String name = 'Reflexprofil',
     BuildContext? context,
   }) async {
@@ -198,7 +200,7 @@ class QuestionnaireState extends ChangeNotifier {
             : 'Please sign in to save the profile.';
         ErrorHandler.showErrorSnack(context, message);
       }
-      return;
+      return null;
     }
 
     try {
@@ -231,6 +233,8 @@ class QuestionnaireState extends ChangeNotifier {
         isMainProfile: isMainProfile,
         reflexScores: summary,
         answers: answers,
+        xpSpent: 0,
+        questionnaireVersion: questionnaireVersion,
       );
 
       await service.saveProfile(profile);
@@ -239,6 +243,7 @@ class QuestionnaireState extends ChangeNotifier {
       }
       await _box.clear();
       resetState();
+      return profile;
     } on FirebaseException catch (e, st) {
       if (kDebugMode) {
         debugPrint(
@@ -262,6 +267,7 @@ class QuestionnaireState extends ChangeNotifier {
         );
         ErrorHandler.showErrorSnack(context, message);
       }
+      return null;
     } catch (e, st) {
       if (kDebugMode) {
         debugPrint('Error saving questionnaire result: $e');
@@ -276,6 +282,7 @@ class QuestionnaireState extends ChangeNotifier {
             : 'Error saving. Please try again.';
         ErrorHandler.showErrorSnack(context, message);
       }
+      return null;
     }
   }
 }

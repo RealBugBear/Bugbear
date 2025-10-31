@@ -14,6 +14,29 @@ import '../services/profile_service.dart';
 class ProfileOverviewScreen extends StatelessWidget {
   const ProfileOverviewScreen({super.key});
 
+  Color _avatarColor(String? itemId, ThemeData theme) {
+    if (itemId == null || itemId.isEmpty) {
+      return theme.colorScheme.secondary.withOpacity(0.2);
+    }
+    final hash = itemId.codeUnits.fold<int>(0, (acc, code) => acc + code);
+    final hue = (hash % 360).toDouble();
+    return HSVColor.fromAHSV(1, hue, 0.4, 0.8).toColor();
+  }
+
+  Widget _buildAvatarPreview(ReflexProfile profile, ThemeData theme, {double radius = 24}) {
+    final color = _avatarColor(profile.avatarItemId, theme);
+    final brightness = ThemeData.estimateBrightnessForColor(color);
+    final iconColor = brightness == Brightness.dark ? Colors.white : Colors.black87;
+    return CircleAvatar(
+      radius: radius,
+      backgroundColor: color,
+      child: Icon(
+        Icons.person,
+        color: iconColor,
+      ),
+    );
+  }
+
   Future<void> _deleteProfile(BuildContext context, String userId, String profileId, bool isMain) async {
     final confirm = await showDialog<bool>(
       context: context,
@@ -68,6 +91,16 @@ class ProfileOverviewScreen extends StatelessWidget {
             final profiles = snap.data!;
             final showCommunityLinks =
                 flags.forumEnabled || flags.achievementsEnabled;
+            final theme = Theme.of(context);
+            ReflexProfile? mainProfile;
+            if (mainId != null) {
+              try {
+                mainProfile = profiles.firstWhere((p) => p.id == mainId);
+              } catch (_) {
+                mainProfile = profiles.isNotEmpty ? profiles.first : null;
+              }
+            }
+            mainProfile ??= profiles.isNotEmpty ? profiles.first : null;
             return Scaffold(
               appBar: AppBar(
                 title: const Text('Reflexprofile'),
@@ -89,10 +122,24 @@ class ProfileOverviewScreen extends StatelessWidget {
                             itemBuilder: (ctx, i) {
                               final p = profiles[i];
                               final isMain = p.id == mainId;
+                              final preview = _buildAvatarPreview(p, theme);
                               return ListTile(
-                                leading: isMain
-                                    ? const Icon(Icons.star, color: Colors.orange)
-                                    : const Icon(Icons.person),
+                                leading: Stack(
+                                  alignment: Alignment.bottomRight,
+                                  children: [
+                                    preview,
+                                    if (isMain)
+                                      const Positioned(
+                                        right: -2,
+                                        bottom: -2,
+                                        child: Icon(
+                                          Icons.star,
+                                          color: Colors.orange,
+                                          size: 16,
+                                        ),
+                                      ),
+                                  ],
+                                ),
                                 title: Text(p.name),
                                 subtitle: Text(DateFormat('dd.MM.yyyy').format(p.createdAt)),
                                 onTap: () => context.pushNamed(
@@ -105,17 +152,60 @@ class ProfileOverviewScreen extends StatelessWidget {
                                         .withAlpha((0.2 * 255).round())
                                     : null,
 
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
+                                trailing: PopupMenuButton<_ProfileAction>(
+                                  onSelected: (action) async {
+                                    switch (action) {
+                                      case _ProfileAction.setMain:
+                                        final confirm = await showDialog<bool>(
+                                          context: context,
+                                          builder: (ctx) => AlertDialog(
+                                            title: const Text('Profil wechseln?'),
+                                            content: Text(
+                                                'Möchtest du "${p.name}" als aktives Profil nutzen?'),
+                                            actions: [
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(ctx, false),
+                                                child: const Text('Abbrechen'),
+                                              ),
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(ctx, true),
+                                                child: const Text('Ja'),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                        if (confirm == true) {
+                                          await service.setMainProfile(uid, p.id);
+                                        }
+                                        break;
+                                      case _ProfileAction.openShop:
+                                        if (!context.mounted) return;
+                                        context.pushNamed(AppRouteNames.profileShop, extra: p);
+                                        break;
+                                      case _ProfileAction.delete:
+                                        await _deleteProfile(context, uid, p.id, isMain);
+                                        break;
+                                    }
+                                  },
+                                  itemBuilder: (ctx) => [
                                     if (!isMain)
-                                      IconButton(
-                                        icon: const Icon(Icons.star_border),
-                                        onPressed: () => service.setMainProfile(uid, p.id),
+                                      const PopupMenuItem(
+                                        value: _ProfileAction.setMain,
+                                        child: Text('Als Hauptprofil nutzen'),
                                       ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () => _deleteProfile(context, uid, p.id, isMain),
+                                    PopupMenuItem(
+                                      value: _ProfileAction.openShop,
+                                      child: Row(
+                                        children: const [
+                                          Icon(Icons.style, size: 18),
+                                          SizedBox(width: 8),
+                                          Text('Profil anpassen'),
+                                        ],
+                                      ),
+                                    ),
+                                    const PopupMenuItem(
+                                      value: _ProfileAction.delete,
+                                      child: Text('Löschen'),
                                     ),
                                   ],
                                 ),
@@ -136,6 +226,28 @@ class ProfileOverviewScreen extends StatelessWidget {
                       child: const Text('Neues Quiz starten'),
                     ),
                   ),
+                  if (mainProfile != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          OutlinedButton.icon(
+                            onPressed: () =>
+                                context.pushNamed(AppRouteNames.profileDetail, extra: mainProfile),
+                            icon: const Icon(Icons.insights_outlined),
+                            label: const Text('Ergebnisse anzeigen'),
+                          ),
+                          const SizedBox(height: 12),
+                          ElevatedButton.icon(
+                            onPressed: () =>
+                                context.pushNamed(AppRouteNames.profileShop, extra: mainProfile),
+                            icon: const Icon(Icons.style),
+                            label: const Text('Profil anpassen'),
+                          ),
+                        ],
+                      ),
+                    ),
                   if (showCommunityLinks)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
@@ -170,3 +282,5 @@ class ProfileOverviewScreen extends StatelessWidget {
     );
   }
 }
+
+enum _ProfileAction { setMain, openShop, delete }

@@ -8,6 +8,7 @@ import 'package:free_base/services/feature_flags.dart';
 import 'package:free_base/services/telemetry/telemetry_service.dart';
 
 import 'package:free_base/features/training/notifier/session_notifier.dart';
+import 'package:free_base/features/profile/mappers/reflex_score_mapper.dart';
 
 import 'questionnaire_state.dart';
 
@@ -64,7 +65,8 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
     final telemetry = context.read<TelemetryService>();
     final featureFlags = context.read<FeatureFlags>();
     try {
-      await questionnaireState.saveResult(name: trimmed, context: context);
+      final profile =
+          await questionnaireState.saveResult(name: trimmed, context: context);
 
       sessionNotifier.markOnboardingComplete();
       final locale = Localizations.maybeLocaleOf(context)?.toLanguageTag() ?? 'de';
@@ -75,7 +77,11 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
       });
 
       if (!context.mounted) return;
-      context.goNamed(AppRouteNames.profile);
+      if (profile != null) {
+        context.goNamed(AppRouteNames.profileDetail, extra: profile);
+      } else {
+        context.goNamed(AppRouteNames.profile);
+      }
     } catch (e) {
       if (!context.mounted) return;
       final locale = Localizations.maybeLocaleOf(context);
@@ -96,6 +102,7 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
   @override
   Widget build(BuildContext context) {
     final summary = context.watch<QuestionnaireState>().calculateReflexSummary();
+    final viewModels = ReflexScoreMapper.fromSummary(summary);
 
     return Scaffold(
       appBar: AppBar(title: const Text('Ergebnis')),
@@ -106,14 +113,11 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
           children: [
             Expanded(
               child: ListView(
-                children: summary.entries.map((e) {
-                  final name = e.key;
-                  final yes = e.value[0];
-                  final total = e.value[1];
-                  final ratio = total == 0 ? 0.0 : yes / total;
-                  final percent = (ratio * 100).round();
+                children: viewModels.map((vm) {
+                  final ratio = vm.ratio;
+                  final percent = vm.percentage;
                   return ListTile(
-                    title: Text(name),
+                    title: Text(vm.reflexName),
                     subtitle: Padding(
                       padding: const EdgeInsets.only(top: 4.0),
                       child: LinearProgressIndicator(

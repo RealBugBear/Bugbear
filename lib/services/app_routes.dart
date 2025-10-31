@@ -8,6 +8,7 @@ class AppRoutePaths {
   static const training = '/training';
   static const calendar = '/calendar';
   static const profile = '/profile';
+  static const profileShop = '/profile/shop';
   static const settings = '/settings';
   static const questionnaireIntro = '/questionnaire';
   static const questionnaire = '/questionnaire/questions';
@@ -31,6 +32,7 @@ class AppRouteNames {
   static const calendar = 'calendar';
   static const profile = 'profile';
   static const profileDetail = 'profileDetail';
+  static const profileShop = 'profileShop';
   static const settings = 'settings';
   static const questionnaireIntro = 'questionnaireIntro';
   static const questionnaire = 'questionnaire';

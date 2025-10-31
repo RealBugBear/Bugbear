@@ -319,6 +319,17 @@ class SessionNotifier extends ChangeNotifier {
     }
   }
 
+  bool spendXp(int amount) {
+    if (amount <= 0) {
+      return true;
+    }
+    if (state.xpTotal < amount) {
+      return false;
+    }
+    state = state.copyWith(xpTotal: state.xpTotal - amount);
+    return true;
+  }
+
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 

@@ -8,6 +8,9 @@ class ReflexProfile {
   final bool isMainProfile;
   final Map<String, dynamic> reflexScores;
   final Map<String, String> answers;
+  final String? avatarItemId;
+  final int xpSpent;
+  final String questionnaireVersion;
 
   ReflexProfile({
     required this.id,
@@ -17,6 +20,9 @@ class ReflexProfile {
     required this.isMainProfile,
     required this.reflexScores,
     required this.answers,
+    this.avatarItemId,
+    this.xpSpent = 0,
+    this.questionnaireVersion = 'v1',
   });
 
   factory ReflexProfile.fromMap(Map<String, dynamic> data, String docId) {
@@ -28,6 +34,10 @@ class ReflexProfile {
       isMainProfile: data['isMainProfile'] as bool? ?? false,
       reflexScores: Map<String, dynamic>.from(data['reflexScores'] ?? {}),
       answers: Map<String, String>.from(data['answers'] ?? {}),
+      avatarItemId: data['avatarItemId'] as String?,
+      xpSpent: (data['xpSpent'] as num?)?.round() ?? 0,
+      questionnaireVersion:
+          data['questionnaireVersion'] as String? ?? 'v1',
     );
   }
 
@@ -38,5 +48,8 @@ class ReflexProfile {
         'isMainProfile': isMainProfile,
         'reflexScores': reflexScores,
         'answers': answers,
+        'avatarItemId': avatarItemId,
+        'xpSpent': xpSpent,
+        'questionnaireVersion': questionnaireVersion,
       };
 }
