@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
-import 'package:free_base/features/training/widgets/session_completion_dialog.dart';
+import 'package:free_base/features/training/notifier/session_notifier.dart';
 import 'package:free_base/services/app_routes.dart';
 
 import 'moro_exercise_screen.dart';
@@ -9,6 +10,7 @@ import 'moro_models.dart';
 import 'moro_progress_store.dart';
 import 'moro_repository.dart';
 import 'moro_speed_store.dart';
+import 'pre_check_screen.dart';
 
 class MoroTrainingScreen extends StatefulWidget {
   const MoroTrainingScreen({super.key});
@@ -20,6 +22,9 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
   late Future<List<MoroExercise>> _future;
   final Map<int, int> _offsets = {}; // exerciseIndex -> offset (0..3)
   Future<MoroProgressData>? _progressFuture;
+  bool _autoplayEnabled = true;
+  int _autoplayDelaySeconds = 3;
+  bool _autoplayInitialized = false;
 
   @override
   void initState() {
@@ -48,6 +53,104 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
     });
   }
 
+  Widget _buildStartCard(
+    BuildContext context,
+    List<MoroExercise> items,
+    MoroProgressData progress,
+    SessionNotifier notifier,
+  ) {
+    final startExercise = _determineStartExercise(items, progress, notifier);
+    final hasResume = notifier.state.moroResume.isNotEmpty;
+    final subtitle = hasResume
+        ? 'Fortsetzen bei Übung ${startExercise.index}'
+        : 'Nächste Übung: ${startExercise.index}. ${startExercise.title}';
+    final autoplayLabel = _autoplayEnabled
+        ? 'Autoplay ${_autoplayDelaySeconds}s'
+        : 'Autoplay aus';
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Moro-Session'),
+              subtitle: Text(subtitle),
+              trailing: Chip(label: Text(autoplayLabel)),
+            ),
+            if (hasResume)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: Text(
+                  'Zwischenspeicher gefunden – du kannst jederzeit neu starten.',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.play_arrow),
+                label: Text(hasResume ? 'Fortsetzen' : 'Training starten'),
+                onPressed: () => _startFromPrecheck(
+                  context,
+                  items,
+                  progress,
+                  notifier,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  MoroExercise _determineStartExercise(
+    List<MoroExercise> items,
+    MoroProgressData progress,
+    SessionNotifier notifier,
+  ) {
+    final resume = notifier.state.moroResume;
+    for (final ex in items) {
+      if (resume.containsKey(ex.resumeKey)) {
+        return ex;
+      }
+    }
+    for (final ex in items) {
+      if (!progress.completed.contains(ex.index)) {
+        return ex;
+      }
+    }
+    if (items.isNotEmpty) {
+      return items.first;
+    }
+    throw StateError('Es wurden keine Moro-Übungen konfiguriert.');
+  }
+
+  Future<void> _startFromPrecheck(
+    BuildContext context,
+    List<MoroExercise> items,
+    MoroProgressData progress,
+    SessionNotifier notifier,
+  ) async {
+    final result = await context.pushNamed(AppRouteNames.moroPrecheck);
+    if (result is! MoroPreCheckResult) {
+      return;
+    }
+    setState(() {
+      _autoplayEnabled = result.autoplayEnabled;
+      _autoplayDelaySeconds = result.autoplayDelaySeconds;
+      _autoplayInitialized = true;
+    });
+    notifier.startMoroSession();
+    final startExercise = _determineStartExercise(items, progress, notifier);
+    final offset = await _getOffset(startExercise.index);
+    if (!mounted) return;
+    await _openExercise(context, startExercise, offset, items.length, items);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,6 +168,10 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
           if (_progressFuture == null) {
             _progressFuture = MoroProgressStore.load(totalExercises: items.length);
           }
+          if (!_autoplayInitialized && items.isNotEmpty) {
+            _autoplayDelaySeconds = items.first.autoplayDefault;
+            _autoplayInitialized = true;
+          }
           return FutureBuilder<MoroProgressData>(
             future: _progressFuture,
             builder: (context, progressSnap) {
@@ -72,12 +179,14 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
                 return const Center(child: CircularProgressIndicator());
               }
               final progress = progressSnap.data!;
-              return RefreshIndicator(
-                onRefresh: () => _refreshProgress(items.length),
-                child: ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(16),
-                  children: items.map((ex) {
+              final sessionNotifier = context.watch<SessionNotifier>();
+              final header = _buildStartCard(
+                context,
+                items,
+                progress,
+                sessionNotifier,
+              );
+              final tiles = items.map((ex) {
                     final isUnlocked = ex.index <= progress.highestUnlocked;
                     final isCompleted = progress.completed.contains(ex.index);
                     final lockLabel = isUnlocked
@@ -166,7 +275,13 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
                                     const Spacer(),
                                     ElevatedButton.icon(
                                       onPressed: isUnlocked
-                                          ? () => _openExercise(context, ex, offs, items.length)
+                                          ? () => _openExercise(
+                                                context,
+                                                ex,
+                                                offs,
+                                                items.length,
+                                                items,
+                                              )
                                           : null,
                                       icon: const Icon(Icons.play_arrow),
                                       label: const Text('Start'),
@@ -179,7 +294,17 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
                         );
                       },
                     );
-                  }).toList(),
+                  }).toList();
+              return RefreshIndicator(
+                onRefresh: () => _refreshProgress(items.length),
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(16),
+                  children: [
+                    header,
+                    const SizedBox(height: 12),
+                    ...tiles,
+                  ],
                 ),
               );
             },
@@ -194,42 +319,47 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
     MoroExercise ex,
     int offset,
     int totalExercises,
+    List<MoroExercise> allExercises,
   ) async {
+    context.read<SessionNotifier>().startMoroSession();
     final result = await context.pushNamed(
       AppRouteNames.moroExercise,
       pathParameters: {'exerciseId': '${ex.index}'},
       extra: MoroExerciseScreenArgs(
         exercise: ex,
         offset: offset,
+        autoplay: _autoplayEnabled,
+        autoplayDelaySeconds: _autoplayDelaySeconds,
+        totalExercises: totalExercises,
       ),
     );
     if (!context.mounted) return;
-    if (result is MoroExerciseResult && result.completed) {
-      await MoroProgressStore.markCompleted(ex.index, totalExercises);
-      await _refreshProgress(totalExercises);
-      final summary = SessionCompletionSummary(
-        totalDuration: result.duration ?? const Duration(),
-        totalExercises: 1,
-        totalRepetitions: ex.repeats,
-        phaseLabel: ex.title,
-      );
-      final action = await showSessionCompletionDialog(
-        context,
-        summary: summary,
-      );
-      if (!context.mounted) return;
-      switch (action) {
-        case SessionCompletionAction.openCalendar:
-          context.goNamed(AppRouteNames.calendar);
-          break;
-        case SessionCompletionAction.giveFeedback:
-          context.pushNamed(AppRouteNames.questionnaireIntro);
-          break;
-        case SessionCompletionAction.planNext:
-        case SessionCompletionAction.close:
-        case null:
-          context.goNamed(AppRouteNames.dashboard);
-          break;
+    if (result is MoroExerciseResult) {
+      if (result.completed) {
+        context.read<SessionNotifier>().applyXpReward(xp: ex.xpReward);
+        await MoroProgressStore.markCompleted(ex.index, totalExercises);
+        await _refreshProgress(totalExercises);
+        if (result.hasNextExercise && result.autoplayEnabled) {
+          final nextIndex = ex.index + 1;
+          final nextExercise = allExercises.firstWhere(
+            (element) => element.index == nextIndex,
+            orElse: () => allExercises.last,
+          );
+          final nextOffset = await _getOffset(nextExercise.index);
+          if (!context.mounted) return;
+          await _openExercise(
+            context,
+            nextExercise,
+            nextOffset,
+            totalExercises,
+            allExercises,
+          );
+          return;
+        }
+        if (!result.hasNextExercise) {
+          if (!context.mounted) return;
+          context.goNamed(AppRouteNames.trainingCompleted);
+        }
       }
     }
   }

@@ -22,6 +22,7 @@ class SessionState with _$SessionState {
     @Default(0) int streakCount,
     DateTime? streakFrozenUntil,
     DateTime? lastCompletedOn,
+    @Default(<String, dynamic>{}) Map<String, dynamic> moroResume,
   }) = _SessionState;
 
   factory SessionState.fromJson(Map<String, dynamic> json) =>

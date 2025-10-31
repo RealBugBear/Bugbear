@@ -41,6 +41,10 @@ class MoroRepository {
         image: mediaRaw['image'] as String?,
         video: mediaRaw['video'] as String?,
       );
+      final resumeKey = e['resumeKey'] as String? ?? 'moro_${e['index']}';
+      final autoplayDefault = e['autoplayDefault'] as int? ?? 3;
+      final fallbackImage = e['mediaFallbackImage'] as String? ?? media.image;
+      final xpReward = e['xpReward'] as int? ?? (type == MoroExerciseType.simple ? 60 : 30);
       return MoroExercise(
         index: e['index'] as int,
         title: e['title'] as String,
@@ -48,6 +52,7 @@ class MoroRepository {
         repeats: e['repeats'] as int,
         phasesPerRepeat: e['phasesPerRepeat'] as int,
         baseSeconds: e['baseSeconds'] as int,
+        autoplayDefault: autoplayDefault,
         goal: e['goal'] as String? ?? '',
         startPosition: e['startPosition'] as String? ?? '',
         endPosition: e['endPosition'] as String?,
@@ -59,6 +64,9 @@ class MoroRepository {
         tags: tags,
         version: e['version'] as String? ?? '1.0.0',
         media: media,
+        resumeKey: resumeKey,
+        mediaFallbackImage: fallbackImage,
+        xpReward: xpReward,
       );
     }).toList();
     items.sort((a, b) => a.index.compareTo(b.index));

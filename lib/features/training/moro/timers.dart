@@ -30,13 +30,26 @@ class PhasedMoroTimer {
     return Duration(seconds: active + rests);
   }
 
-  Stream<({int repeatIdx, int phaseIdx, Duration remaining, bool done})> run(CancelToken token) async* {
+  Stream<({int repeatIdx, int phaseIdx, Duration remaining, bool done})> run(
+    CancelToken token, {
+    int startRepeat = 1,
+    int startPhase = 1,
+    int? initialRemainingMilliseconds,
+  }) async* {
     for (var r = 1; r <= repeats; r++) {
       for (var p = 1; p <= phasesPerRepeat; p++) {
+        if (r < startRepeat || (r == startRepeat && p < startPhase)) {
+          continue;
+        }
         if (token.canceled) return;
         await Beeper.beep();
         await Haptics.phase();
-        final dur = Duration(seconds: phaseSeconds);
+        final durationMs =
+            (r == startRepeat && p == startPhase && initialRemainingMilliseconds != null)
+                ? initialRemainingMilliseconds
+                : phaseSeconds * 1000;
+        final clamped = durationMs.clamp(0, phaseSeconds * 1000) as num;
+        final dur = Duration(milliseconds: clamped.round());
         final sw = Stopwatch()..start();
         while (sw.elapsed < dur) {
           if (token.canceled) return;
@@ -45,6 +58,9 @@ class PhasedMoroTimer {
         }
       }
       if (r < repeats) {
+        if (r < startRepeat) {
+          continue;
+        }
         final rest = Duration(seconds: restBetweenRepeatsSeconds);
         final rsw = Stopwatch()..start();
         while (rsw.elapsed < rest) {
@@ -77,12 +93,24 @@ class SimpleMoroTimer {
     return Duration(seconds: active + rests);
   }
 
-  Stream<({int repeatIdx, Duration remaining, bool done, bool justStarted, bool justEnded})> run(CancelToken token) async* {
+  Stream<({int repeatIdx, Duration remaining, bool done, bool justStarted, bool justEnded})> run(
+    CancelToken token, {
+    int startRepeat = 1,
+    int? initialRemainingMilliseconds,
+  }) async* {
     for (var r = 1; r <= repeats; r++) {
+      if (r < startRepeat) {
+        continue;
+      }
       if (token.canceled) return;
       await Beeper.beep();
       await Haptics.repStart();
-      final dur = Duration(seconds: repeatSeconds);
+      final durationMs =
+          (r == startRepeat && initialRemainingMilliseconds != null)
+              ? initialRemainingMilliseconds
+              : repeatSeconds * 1000;
+      final clamped = durationMs.clamp(0, repeatSeconds * 1000) as num;
+      final dur = Duration(milliseconds: clamped.round());
       final sw = Stopwatch()..start();
       var first = true;
       while (sw.elapsed < dur) {
@@ -96,6 +124,9 @@ class SimpleMoroTimer {
       yield (repeatIdx: r, remaining: Duration.zero, done: false, justStarted: false, justEnded: true);
 
       if (r < repeats) {
+        if (r < startRepeat) {
+          continue;
+        }
         final rest = Duration(seconds: restBetweenRepeatsSeconds);
         final rsw = Stopwatch()..start();
         while (rsw.elapsed < rest) {

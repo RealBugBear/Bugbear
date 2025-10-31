@@ -65,6 +65,7 @@ flutter:
     - assets/images/tick.png
     - assets/sounds/
     - assets/moro/moro_exercises.json
+    - assets/moro/transcripts/
     - assets/quiz_questions_de.json
     - assets/quiz_questions_en.json
     - assets/videos/test_video.mp4

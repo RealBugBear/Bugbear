@@ -21,6 +21,7 @@ import 'package:free_base/features/questionnaire/questionnaire_result_screen.dar
 import 'package:free_base/features/questionnaire/questionnaire_screen.dart';
 import 'package:free_base/features/questionnaire/quiz_intro_screen.dart';
 import 'package:free_base/features/training/moro/moro_exercise_screen.dart';
+import 'package:free_base/features/training/moro/pre_check_screen.dart';
 import 'package:free_base/features/training/moro/moro_training_screen.dart';
 import 'package:free_base/features/training/training_completed_screen.dart';
 import 'package:free_base/services/app_route_guard.dart';
@@ -156,6 +157,11 @@ class AppRouter {
                     builder: (context, state) => const TrainingCompletedScreen(),
                   ),
                   GoRoute(
+                    path: 'moro/precheck',
+                    name: AppRouteNames.moroPrecheck,
+                    builder: (context, state) => const MoroPreCheckScreen(),
+                  ),
+                  GoRoute(
                     path: 'moro/:exerciseId',
                     name: AppRouteNames.moroExercise,
                     builder: (context, state) {
@@ -164,6 +170,9 @@ class AppRouter {
                         return MoroExerciseScreen(
                           exercise: args.exercise,
                           offset: args.offset,
+                          autoplay: args.autoplay,
+                          autoplayDelaySeconds: args.autoplayDelaySeconds,
+                          totalExercises: args.totalExercises,
                         );
                       }
                       return const ErrorScreen(
