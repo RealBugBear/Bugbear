@@ -10,14 +10,14 @@ class ProgressStore extends ChangeNotifier {
   /// Returns `true` if the given [day] was marked as completed.
   bool isDayCompleted(DateTime day) {
     final key = _keyFor(day);
-    return _box.get(key, defaultValue: false);
+    return _box.get(key, defaultValue: false) ?? false;
   }
 
   /// Sets the completion status for the given [day].
   Future<void> setDayCompleted(DateTime day, bool completed) async {
     final normalized = _normalize(day);
     final key = _keyFor(normalized);
-    final current = _box.get(key, defaultValue: false);
+    final current = _box.get(key, defaultValue: false) ?? false;
     if (current == completed) {
       return;
     }
@@ -33,7 +33,7 @@ class ProgressStore extends ChangeNotifier {
   Future<void> toggleDayCompleted(DateTime day) async {
     final normalized = _normalize(day);
     final key = _keyFor(normalized);
-    final current = _box.get(key, defaultValue: false);
+    final current = _box.get(key, defaultValue: false) ?? false;
     if (current) {
       await _box.delete(key);
     } else {
