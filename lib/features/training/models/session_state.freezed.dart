@@ -5,6 +5,9 @@
 
 part of 'session_state.dart';
 
+// ignore_for_file: unnecessary_import
+import 'package:collection/collection.dart';
+
 // **************************************************************************
 // FreezedGenerator
 // **************************************************************************
@@ -35,6 +38,7 @@ mixin _$SessionState {
   int get streakCount => throw _privateConstructorUsedError;
   DateTime? get streakFrozenUntil => throw _privateConstructorUsedError;
   DateTime? get lastCompletedOn => throw _privateConstructorUsedError;
+  Map<String, dynamic> get moroResume => throw _privateConstructorUsedError;
 
   /// Serializes this SessionState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -67,7 +71,8 @@ abstract class $SessionStateCopyWith<$Res> {
       int dailyXp,
       int streakCount,
       DateTime? streakFrozenUntil,
-      DateTime? lastCompletedOn});
+      DateTime? lastCompletedOn,
+      Map<String, dynamic> moroResume});
 }
 
 /// @nodoc
@@ -100,6 +105,7 @@ class _$SessionStateCopyWithImpl<$Res, $Val extends SessionState>
     Object? streakCount = null,
     Object? streakFrozenUntil = freezed,
     Object? lastCompletedOn = freezed,
+    Object? moroResume = null,
   }) {
     return _then(_value.copyWith(
       phaseId: null == phaseId
@@ -162,6 +168,10 @@ class _$SessionStateCopyWithImpl<$Res, $Val extends SessionState>
           ? _value.lastCompletedOn
           : lastCompletedOn // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      moroResume: null == moroResume
+          ? _value.moroResume
+          : moroResume // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ) as $Val);
   }
 }
@@ -189,7 +199,8 @@ abstract class _$$SessionStateImplCopyWith<$Res>
       int dailyXp,
       int streakCount,
       DateTime? streakFrozenUntil,
-      DateTime? lastCompletedOn});
+      DateTime? lastCompletedOn,
+      Map<String, dynamic> moroResume});
 }
 
 /// @nodoc
@@ -220,6 +231,7 @@ class __$$SessionStateImplCopyWithImpl<$Res>
     Object? streakCount = null,
     Object? streakFrozenUntil = freezed,
     Object? lastCompletedOn = freezed,
+    Object? moroResume = null,
   }) {
     return _then(_$SessionStateImpl(
       phaseId: null == phaseId
@@ -282,6 +294,10 @@ class __$$SessionStateImplCopyWithImpl<$Res>
           ? _value.lastCompletedOn
           : lastCompletedOn // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      moroResume: null == moroResume
+          ? _value.moroResume
+          : moroResume // ignore: cast_nullable_to_non_nullable
+              as Map<String, dynamic>,
     ));
   }
 }
@@ -304,7 +320,9 @@ class _$SessionStateImpl implements _SessionState {
       this.dailyXp = 0,
       this.streakCount = 0,
       this.streakFrozenUntil,
-      this.lastCompletedOn});
+      this.lastCompletedOn,
+      final Map<String, dynamic> moroResume = const <String, dynamic>{}})
+      : _moroResume = moroResume;
 
   factory _$SessionStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$SessionStateImplFromJson(json);
@@ -345,10 +363,17 @@ class _$SessionStateImpl implements _SessionState {
   final DateTime? streakFrozenUntil;
   @override
   final DateTime? lastCompletedOn;
+  final Map<String, dynamic> _moroResume;
+  @override
+  @JsonKey()
+  Map<String, dynamic> get moroResume {
+    if (_moroResume is EqualUnmodifiableMapView) return _moroResume;
+    return EqualUnmodifiableMapView(_moroResume);
+  }
 
   @override
   String toString() {
-    return 'SessionState(phaseId: $phaseId, exerciseIndex: $exerciseIndex, completedReps: $completedReps, remainingSeconds: $remainingSeconds, isPaused: $isPaused, startedAt: $startedAt, endAt: $endAt, plannedFor: $plannedFor, status: $status, onboardingComplete: $onboardingComplete, xpTotal: $xpTotal, dailyXp: $dailyXp, streakCount: $streakCount, streakFrozenUntil: $streakFrozenUntil, lastCompletedOn: $lastCompletedOn)';
+    return 'SessionState(phaseId: $phaseId, exerciseIndex: $exerciseIndex, completedReps: $completedReps, remainingSeconds: $remainingSeconds, isPaused: $isPaused, startedAt: $startedAt, endAt: $endAt, plannedFor: $plannedFor, status: $status, onboardingComplete: $onboardingComplete, xpTotal: $xpTotal, dailyXp: $dailyXp, streakCount: $streakCount, streakFrozenUntil: $streakFrozenUntil, lastCompletedOn: $lastCompletedOn, moroResume: $moroResume)';
   }
 
   @override
@@ -380,7 +405,9 @@ class _$SessionStateImpl implements _SessionState {
             (identical(other.streakFrozenUntil, streakFrozenUntil) ||
                 other.streakFrozenUntil == streakFrozenUntil) &&
             (identical(other.lastCompletedOn, lastCompletedOn) ||
-                other.lastCompletedOn == lastCompletedOn));
+                other.lastCompletedOn == lastCompletedOn) &&
+            const DeepCollectionEquality()
+                .equals(other.moroResume, moroResume));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -401,7 +428,8 @@ class _$SessionStateImpl implements _SessionState {
       dailyXp,
       streakCount,
       streakFrozenUntil,
-      lastCompletedOn);
+      lastCompletedOn,
+      const DeepCollectionEquality().hash(moroResume));
 
   /// Create a copy of SessionState
   /// with the given fields replaced by the non-null parameter values.
@@ -435,7 +463,8 @@ abstract class _SessionState implements SessionState {
       final int dailyXp,
       final int streakCount,
       final DateTime? streakFrozenUntil,
-      final DateTime? lastCompletedOn}) = _$SessionStateImpl;
+      final DateTime? lastCompletedOn,
+      final Map<String, dynamic> moroResume}) = _$SessionStateImpl;
 
   factory _SessionState.fromJson(Map<String, dynamic> json) =
       _$SessionStateImpl.fromJson;

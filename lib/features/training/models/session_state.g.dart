@@ -32,6 +32,8 @@ _$SessionStateImpl _$$SessionStateImplFromJson(Map<String, dynamic> json) =>
       lastCompletedOn: json['lastCompletedOn'] == null
           ? null
           : DateTime.parse(json['lastCompletedOn'] as String),
+      moroResume: (json['moroResume'] as Map<String, dynamic>?) ??
+          const <String, dynamic>{},
     );
 
 Map<String, dynamic> _$$SessionStateImplToJson(_$SessionStateImpl instance) =>
@@ -51,6 +53,7 @@ Map<String, dynamic> _$$SessionStateImplToJson(_$SessionStateImpl instance) =>
       'streakCount': instance.streakCount,
       'streakFrozenUntil': instance.streakFrozenUntil?.toIso8601String(),
       'lastCompletedOn': instance.lastCompletedOn?.toIso8601String(),
+      'moroResume': instance.moroResume,
     };
 
 const _$SessionStatusEnumMap = {

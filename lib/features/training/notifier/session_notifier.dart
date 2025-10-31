@@ -330,6 +330,55 @@ class SessionNotifier extends ChangeNotifier {
     return true;
   }
 
+  void startMoroSession() {
+    state = state.copyWith(
+      status: SessionStatus.inProgress,
+      startedAt: DateTime.now(),
+      plannedFor: null,
+      isPaused: false,
+    );
+  }
+
+  Map<String, dynamic>? getResumePoint(String resumeKey) {
+    final entry = state.moroResume[resumeKey];
+    if (entry is Map<String, dynamic>) {
+      return Map<String, dynamic>.from(entry);
+    }
+    return null;
+  }
+
+  void saveResumePoint(String resumeKey, Map<String, dynamic> snapshot) {
+    final updated = Map<String, dynamic>.from(state.moroResume)
+      ..[resumeKey] = snapshot;
+    state = state.copyWith(moroResume: updated);
+  }
+
+  void clearResumePoint(String resumeKey) {
+    if (!state.moroResume.containsKey(resumeKey)) {
+      return;
+    }
+    final updated = Map<String, dynamic>.from(state.moroResume)
+      ..remove(resumeKey);
+    state = state.copyWith(moroResume: updated);
+  }
+
+  void applyXpReward({required int xp, DateTime? completionTime}) {
+    if (xp <= 0) {
+      return;
+    }
+    final completion = completionTime ?? DateTime.now();
+    final normalized = _normalizeDate(completion);
+    final lastCompleted = state.lastCompletedOn;
+    final sameDay = lastCompleted != null && _isSameDay(lastCompleted, normalized);
+    final newDaily = sameDay ? state.dailyXp + xp : xp;
+    state = state.copyWith(
+      xpTotal: state.xpTotal + xp,
+      dailyXp: newDaily,
+      lastCompletedOn: normalized,
+    );
+    updateStreakFreeze(referenceDate: normalized);
+  }
+
   bool _isSameDay(DateTime a, DateTime b) =>
       a.year == b.year && a.month == b.month && a.day == b.day;
 

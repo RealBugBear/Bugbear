@@ -1,0 +1,1 @@
+Dies ist ein Transkript-Platzhalter für Moro-Übung ${i}. Beschreibe die Bewegungen, Atemhinweise und Sicherheitsaspekte klar und in ganzer Satzstruktur, damit Screenreader den Ablauf wiedergeben können.

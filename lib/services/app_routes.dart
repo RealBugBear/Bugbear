@@ -15,6 +15,7 @@ class AppRoutePaths {
   static const questionnaireResult = '/questionnaire/result';
   static const trainingCompleted = '/training/completed';
   static const moroExercise = '/training/moro/:exerciseId';
+  static const moroPrecheck = '/training/moro/precheck';
   static const forum = '/forum';
   static const achievements = '/achievements';
 }
@@ -29,6 +30,7 @@ class AppRouteNames {
   static const training = 'training';
   static const trainingCompleted = 'trainingCompleted';
   static const moroExercise = 'moroExercise';
+  static const moroPrecheck = 'moroPrecheck';
   static const calendar = 'calendar';
   static const profile = 'profile';
   static const profileDetail = 'profileDetail';

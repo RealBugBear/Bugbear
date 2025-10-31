@@ -43,6 +43,7 @@ class MoroExercise {
   final int repeats; // 1-5: 3 ; 6-7: 6
   final int phasesPerRepeat; // 1-5: 4 ; 6-7: 1
   final int baseSeconds; // 1-5: 3 (per phase) ; 6-7: 7 (per repeat)
+  final int autoplayDefault; // seconds used for default autoplay pause
   final String goal;
   final String startPosition;
   final String? endPosition;
@@ -54,6 +55,9 @@ class MoroExercise {
   final List<String> tags;
   final String version;
   final MoroMedia media;
+  final String resumeKey;
+  final String? mediaFallbackImage;
+  final int xpReward;
 
   const MoroExercise({
     required this.index,
@@ -62,6 +66,7 @@ class MoroExercise {
     required this.repeats,
     required this.phasesPerRepeat,
     required this.baseSeconds,
+    required this.autoplayDefault,
     required this.goal,
     required this.startPosition,
     this.endPosition,
@@ -73,5 +78,8 @@ class MoroExercise {
     required this.tags,
     required this.version,
     required this.media,
+    required this.resumeKey,
+    this.mediaFallbackImage,
+    required this.xpReward,
   });
 }
