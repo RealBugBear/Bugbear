@@ -25,11 +25,6 @@ import 'package:free_base/features/training/services/exercise_repository.dart';
 import 'package:free_base/features/training/notifier/session_notifier.dart';
 import 'package:free_base/features/training/widgets/session_sync_listener.dart';
 
-import 'package:free_base/features/calendar/models/calendar_event.dart';
-import 'package:free_base/features/calendar/models/calendar_event_adapter.dart';
-import 'package:free_base/features/calendar/notifier/calendar_notifier.dart';
-import 'package:free_base/features/calendar/services/calendar_service.dart';
-import 'package:free_base/features/calendar/services/golden_day_service.dart';
 import 'package:free_base/features/common/state/dashboard_view_model.dart';
 import 'package:free_base/features/questionnaire/questionnaire_screen.dart';
 import 'package:free_base/features/profile/state/profile_shop_notifier.dart';
@@ -38,6 +33,7 @@ import 'package:free_base/services/app_route_guard.dart';
 import 'package:free_base/services/app_router.dart';
 import 'package:free_base/services/feature_flags.dart';
 import 'package:free_base/services/telemetry/telemetry_service.dart';
+import 'package:free_base/features/progress/state/progress_store.dart';
 
 import 'package:free_base/features/onboarding/models/consent_state.dart';
 import 'package:free_base/features/gamification/models/gamification_state.dart';
@@ -100,14 +96,13 @@ Future<void> main() async {
   await Hive.openBox('questionnaire_progress',
       encryptionCipher: HiveAesCipher(encryptionKey));
 
-  Hive.registerAdapter(CalendarEventAdapter());
-  await Hive.openBox<CalendarEvent>('calendar_events',
-      encryptionCipher: HiveAesCipher(encryptionKey));
-
   await Hive.openBox<GamificationState>('gamification_state',
       encryptionCipher: HiveAesCipher(encryptionKey));
 
   final cosmeticsBox = await Hive.openBox('cosmetics_catalog',
+      encryptionCipher: HiveAesCipher(encryptionKey));
+
+  final progressBox = await Hive.openBox<bool>('training_progress',
       encryptionCipher: HiveAesCipher(encryptionKey));
 
   final sessionRepository = SessionRepository();
@@ -131,6 +126,7 @@ Future<void> main() async {
       initialSessionState: initialSessionState,
       consentBox: consentBox,
       cosmeticsBox: cosmeticsBox,
+      progressBox: progressBox,
     ),
   );
 }
@@ -140,6 +136,7 @@ class MyApp extends StatefulWidget {
   final SessionState initialSessionState;
   final Box<ConsentState> consentBox;
   final Box cosmeticsBox;
+  final Box<bool> progressBox;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
 
@@ -149,6 +146,7 @@ class MyApp extends StatefulWidget {
     required this.initialSessionState,
     required this.consentBox,
     required this.cosmeticsBox,
+    required this.progressBox,
   });
 
   @override
@@ -226,12 +224,6 @@ class _MyAppState extends State<MyApp> {
           ),
           dispose: (_, svc) => svc.dispose(),
         ),
-        Provider<CalendarService>(
-          create: (_) => CalendarService(),
-        ),
-        Provider<GoldenDayService>(
-          create: (_) => GoldenDayService(),
-        ),
         Provider<ExerciseRepository>(
           create: (_) => ExerciseRepository(),
         ),
@@ -256,12 +248,8 @@ class _MyAppState extends State<MyApp> {
             );
           },
         ),
-        ChangeNotifierProvider<CalendarNotifier>(
-          create: (ctx) {
-            final notifier = CalendarNotifier(ctx.read<CalendarService>());
-            notifier.loadMonth(DateTime.now());
-            return notifier;
-          },
+        ChangeNotifierProvider<ProgressStore>(
+          create: (_) => ProgressStore(widget.progressBox),
         ),
         ChangeNotifierProvider<ProfileShopNotifier>(
           create: (ctx) => ProfileShopNotifier(
@@ -270,22 +258,22 @@ class _MyAppState extends State<MyApp> {
             cacheBox: widget.cosmeticsBox,
           ),
         ),
-        ChangeNotifierProxyProvider4<SessionNotifier, CalendarNotifier,
+        ChangeNotifierProxyProvider4<SessionNotifier, ProgressStore,
             ReminderService, TelemetryService, DashboardViewModel>(
           create: (ctx) => DashboardViewModel(
             ctx.read<SessionNotifier>(),
-            ctx.read<CalendarNotifier>(),
+            ctx.read<ProgressStore>(),
             ctx.read<ReminderService>(),
             telemetryService: ctx.read<TelemetryService>(),
           ),
-          update: (ctx, session, calendar, reminder, telemetry, previous) {
+          update: (ctx, session, progress, reminder, telemetry, previous) {
             final model = previous ?? DashboardViewModel(
               session,
-              calendar,
+              progress,
               reminder,
               telemetryService: telemetry,
             );
-            model.updateSources(session, calendar, reminder, telemetry);
+            model.updateSources(session, progress, reminder, telemetry);
             return model;
           },
         ),

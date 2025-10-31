@@ -4,9 +4,8 @@ import 'dart:collection';
 ///
 /// The node stores meta information whether the day had
 /// training planned, if it was completed and if it contained
-/// special markers such as a golden day. Reflection data is
-/// derived from the stored notes on the corresponding
-/// calendar event.
+/// special markers such as a golden day. Reflection data can
+/// be derived from persisted notes in future extensions.
 class DayProgressNode {
   DayProgressNode({
     required DateTime date,

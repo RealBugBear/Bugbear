@@ -6,7 +6,6 @@ class AppRoutePaths {
   static const roleSelection = '/select-role';
   static const dashboard = '/dashboard';
   static const training = '/training';
-  static const calendar = '/calendar';
   static const profile = '/profile';
   static const profileShop = '/profile/shop';
   static const settings = '/settings';
@@ -31,7 +30,6 @@ class AppRouteNames {
   static const trainingCompleted = 'trainingCompleted';
   static const moroExercise = 'moroExercise';
   static const moroPrecheck = 'moroPrecheck';
-  static const calendar = 'calendar';
   static const profile = 'profile';
   static const profileDetail = 'profileDetail';
   static const profileShop = 'profileShop';

@@ -109,7 +109,6 @@ class AppRouteGuard {
         location == AppRoutePaths.consent ||
         location == AppRoutePaths.profile ||
         location.startsWith('${AppRoutePaths.profile}/') ||
-        location.startsWith(AppRoutePaths.calendar) ||
         location.startsWith(AppRoutePaths.questionnaireIntro) ||
         location.startsWith(AppRoutePaths.questionnaire)) {
       return false;

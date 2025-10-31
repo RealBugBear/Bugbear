@@ -3,7 +3,6 @@ import 'dart:math' as math;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../models/reflex_profile.dart';
-import '../../calendar/widgets/golden_day_banner.dart';
 import '../mappers/reflex_score_mapper.dart';
 
 class ReflexProfileDetailScreen extends StatelessWidget {
@@ -60,7 +59,6 @@ class ReflexProfileDetailScreen extends StatelessWidget {
             );
           }),
           const SizedBox(height: 24),
-          const GoldenDayBanner(),
           const SizedBox(height: 24),
           const Text(
             'Antworten',

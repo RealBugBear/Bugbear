@@ -1,36 +1,36 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:free_base/features/calendar/notifier/calendar_notifier.dart';
 import 'package:free_base/features/common/utils/day_completion_util.dart';
 import 'package:free_base/features/progress/models/week_progress.dart';
 import 'package:free_base/features/training/notifier/session_notifier.dart';
 import 'package:free_base/services/reminder/reminder_service.dart';
 import 'package:free_base/services/telemetry/telemetry_service.dart';
+import 'package:free_base/features/progress/state/progress_store.dart';
 
 class DashboardViewModel extends ChangeNotifier {
   static const int _xpPerLevel = 100;
 
   DashboardViewModel(
     SessionNotifier sessionNotifier,
-    CalendarNotifier calendarNotifier,
+    ProgressStore progressStore,
     ReminderService reminderService, {
     bool autoplayEnabled = true,
     bool audioEnabled = true,
     TelemetryService? telemetryService,
   })  : _sessionNotifier = sessionNotifier,
-        _calendarNotifier = calendarNotifier,
+        _progressStore = progressStore,
         _reminderService = reminderService,
         _autoplayEnabled = autoplayEnabled,
         _audioEnabled = audioEnabled,
         _telemetry = telemetryService {
     _sessionNotifier.addListener(_sessionListener);
-    _calendarNotifier.addListener(_calendarListener);
+    _progressStore.addListener(_progressListener);
     _reminderService.addListener(_reminderListener);
   }
 
   late SessionNotifier _sessionNotifier;
-  late CalendarNotifier _calendarNotifier;
+  late ProgressStore _progressStore;
   late ReminderService _reminderService;
   TelemetryService? _telemetry;
   bool _autoplayEnabled = true;
@@ -38,7 +38,7 @@ class DashboardViewModel extends ChangeNotifier {
 
   void updateSources(
     SessionNotifier sessionNotifier,
-    CalendarNotifier calendarNotifier,
+    ProgressStore progressStore,
     ReminderService reminderService,
     TelemetryService telemetryService,
   ) {
@@ -47,10 +47,10 @@ class DashboardViewModel extends ChangeNotifier {
       _sessionNotifier = sessionNotifier;
       _sessionNotifier.addListener(_sessionListener);
     }
-    if (!identical(_calendarNotifier, calendarNotifier)) {
-      _calendarNotifier.removeListener(_calendarListener);
-      _calendarNotifier = calendarNotifier;
-      _calendarNotifier.addListener(_calendarListener);
+    if (!identical(_progressStore, progressStore)) {
+      _progressStore.removeListener(_progressListener);
+      _progressStore = progressStore;
+      _progressStore.addListener(_progressListener);
     }
     if (!identical(_reminderService, reminderService)) {
       _reminderService.removeListener(_reminderListener);
@@ -126,74 +126,6 @@ class DashboardViewModel extends ChangeNotifier {
     await _reminderService.cancelDailyReminder();
   }
 
-  Future<bool> startNextWeek() async {
-    final progress = currentWeekProgress;
-    final nextWeekStart =
-        progress.windowEnd.add(const Duration(days: 1));
-    final normalized = DateTime(
-      nextWeekStart.year,
-      nextWeekStart.month,
-      nextWeekStart.day,
-    );
-    await _calendarNotifier.loadMonth(
-      normalized,
-      ensureWeekForDay: normalized,
-    );
-    _calendarNotifier.selectDay(normalized);
-
-    final telemetry = _telemetry;
-    if (telemetry != null) {
-      final stats = progress.stats;
-      unawaited(
-        telemetry.logEvent(
-          'dashboard_start_next_week',
-          properties: {
-            'next_week_start': normalized.toIso8601String(),
-            'planned_days': stats.plannedDays,
-            'completed_days': stats.completedDays,
-            'pending_reflections': stats.pendingReflections,
-          },
-        ),
-      );
-    }
-    return true;
-  }
-
-  Future<bool> openReflection() async {
-    final progress = currentWeekProgress;
-    DayProgressNode? pending;
-    for (final node in progress.days) {
-      if (node.requiresReflection) {
-        pending = node;
-        break;
-      }
-    }
-
-    final telemetry = _telemetry;
-    if (telemetry != null) {
-      final stats = progress.stats;
-      unawaited(
-        telemetry.logEvent(
-          'dashboard_open_reflection',
-          properties: {
-            'has_pending': pending != null,
-            'target_date': pending?.date.toIso8601String(),
-            'pending_reflections': stats.pendingReflections,
-          },
-        ),
-      );
-    }
-    if (pending == null) {
-      return false;
-    }
-    await _calendarNotifier.loadMonth(
-      pending.date,
-      ensureWeekForDay: pending.date,
-    );
-    _calendarNotifier.selectDay(pending.date);
-    return true;
-  }
-
   Future<DayCompletionResult> markTodayComplete({
     DateTime? completionTime,
     int? xpReward,
@@ -201,7 +133,7 @@ class DashboardViewModel extends ChangeNotifier {
     final completion = (completionTime ?? DateTime.now()).toLocal();
     final result = await markDayCompletion(
       sessionNotifier: _sessionNotifier,
-      calendarNotifier: _calendarNotifier,
+      progressStore: _progressStore,
       completionTime: completion,
       xpReward: xpReward,
     );
@@ -231,17 +163,18 @@ class DashboardViewModel extends ChangeNotifier {
     final now = DateTime.now();
     final start = now.subtract(Duration(days: now.weekday - DateTime.monday));
     final days = <DayProgressNode>[];
+    final today = DateTime(now.year, now.month, now.day);
 
     for (var i = 0; i < 7; i++) {
       final day = DateTime(start.year, start.month, start.day + i);
-      final events = _calendarNotifier.eventsForDay(day);
+      final isCompleted = _progressStore.isDayCompleted(day);
       days.add(
         DayProgressNode(
           date: day,
-          isPlanned: events.isNotEmpty,
-          isCompleted: events.any((e) => e.isCompleted),
-          isGoldenDay: events.any((e) => e.isGoldenDay),
-          hasReflection: events.any((e) => e.notes.trim().isNotEmpty),
+          isPlanned: !day.isAfter(today),
+          isCompleted: isCompleted,
+          isGoldenDay: false,
+          hasReflection: false,
         ),
       );
     }
@@ -257,7 +190,7 @@ class DashboardViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void _calendarListener() {
+  void _progressListener() {
     notifyListeners();
   }
 
@@ -268,7 +201,7 @@ class DashboardViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _sessionNotifier.removeListener(_sessionListener);
-    _calendarNotifier.removeListener(_calendarListener);
+    _progressStore.removeListener(_progressListener);
     _reminderService.removeListener(_reminderListener);
     super.dispose();
   }

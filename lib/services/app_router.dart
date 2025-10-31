@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import 'package:free_base/features/calendar/screens/calendar_screen.dart';
 import 'package:free_base/features/common/dashboard_route_args.dart';
 import 'package:free_base/features/common/dashboard_screen.dart';
 import 'package:free_base/features/common/error_screen.dart';
@@ -43,7 +42,6 @@ class AppRouter {
         );
 
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
-  static final _calendarNavigatorKey = GlobalKey<NavigatorState>();
   static final _dashboardNavigatorKey = GlobalKey<NavigatorState>();
   static final _trainingNavigatorKey = GlobalKey<NavigatorState>();
   static final _profileNavigatorKey = GlobalKey<NavigatorState>();
@@ -106,21 +104,6 @@ class AppRouter {
           navigationShell: navigationShell,
         ),
         branches: [
-          StatefulShellBranch(
-            navigatorKey: _calendarNavigatorKey,
-            initialLocation: AppRoutePaths.calendar,
-            routes: [
-              GoRoute(
-                path: AppRoutePaths.calendar,
-                name: AppRouteNames.calendar,
-                builder: (context, state) {
-                  final openReminder =
-                      state.uri.queryParameters['setReminder'] == 'true';
-                  return CalendarScreen(openReminder: openReminder);
-                },
-              ),
-            ],
-          ),
           StatefulShellBranch(
             navigatorKey: _dashboardNavigatorKey,
             initialLocation: AppRoutePaths.dashboard,

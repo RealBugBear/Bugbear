@@ -14,7 +14,6 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   connectivity_plus: ^4.0.1
-  table_calendar: ^3.0.10
 
   # Firebase & Netzwerk
   firebase_core: ^3.13.1
@@ -62,8 +61,6 @@ flutter:
     - assets/images/
     - assets/images/cosmetics/
     - assets/images/placeholder.png
-    - assets/images/paw.png
-    - assets/images/tick.png
     - assets/sounds/
     - assets/moro/moro_exercises.json
     - assets/moro/transcripts/

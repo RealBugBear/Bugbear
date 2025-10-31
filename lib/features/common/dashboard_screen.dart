@@ -93,16 +93,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
               audioEnabled: vm.audioEnabled,
             ),
             builder: (context, data, _) {
-              final stats = data.progress.stats;
               return CoreProgressSection(
                 progress: data.progress,
                 autoplayEnabled: data.autoplayEnabled,
                 audioEnabled: data.audioEnabled,
                 onStartTraining: () => _startTraining(context),
-                onStartNextWeek: () => _startNextWeek(context),
-                onOpenReflection: stats.hasPendingReflections
-                    ? () => _openReflection(context)
-                    : null,
               );
             },
           ),
@@ -138,26 +133,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       AppRouteNames.training,
       extra: TrainingIntent.start(),
     );
-  }
-
-  Future<void> _startNextWeek(BuildContext context) async {
-    final dashboard = context.read<DashboardViewModel>();
-    await dashboard.startNextWeek();
-    if (!mounted) return;
-    context.goNamed(AppRouteNames.calendar);
-  }
-
-  Future<void> _openReflection(BuildContext context) async {
-    final dashboard = context.read<DashboardViewModel>();
-    final opened = await dashboard.openReflection();
-    if (!mounted) return;
-    if (opened) {
-      context.goNamed(AppRouteNames.calendar);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Keine Reflexionen offen.')),
-      );
-    }
   }
 
   Future<void> _handleReminderTap(
