@@ -59,14 +59,14 @@ class _QuestionnaireResultScreenState extends State<QuestionnaireResultScreen> {
   Future<void> _save(BuildContext context, String name) async {
     setState(() => _isSaving = true);
     final trimmed = name.trim().isEmpty ? 'Reflexprofil' : name.trim();
+    final questionnaireState = context.read<QuestionnaireState>();
+    final sessionNotifier = context.read<SessionNotifier>();
+    final telemetry = context.read<TelemetryService>();
+    final featureFlags = context.read<FeatureFlags>();
     try {
-      await context
-          .read<QuestionnaireState>()
-          .saveResult(name: trimmed, context: context);
+      await questionnaireState.saveResult(name: trimmed, context: context);
 
-      context.read<SessionNotifier>().markOnboardingComplete();
-      final telemetry = context.read<TelemetryService>();
-      final featureFlags = context.read<FeatureFlags>();
+      sessionNotifier.markOnboardingComplete();
       final locale = Localizations.maybeLocaleOf(context)?.toLanguageTag() ?? 'de';
       await telemetry.logEvent('onboarding_complete', properties: {
         'locale': locale,

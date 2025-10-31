@@ -184,7 +184,12 @@ abstract class _$$SessionStateImplCopyWith<$Res>
       DateTime? endAt,
       DateTime? plannedFor,
       SessionStatus status,
-      bool onboardingComplete});
+      bool onboardingComplete,
+      int xpTotal,
+      int dailyXp,
+      int streakCount,
+      DateTime? streakFrozenUntil,
+      DateTime? lastCompletedOn});
 }
 
 /// @nodoc

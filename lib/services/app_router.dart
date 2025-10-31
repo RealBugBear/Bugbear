@@ -31,8 +31,7 @@ class AppRouter {
   AppRouter({
     required Listenable refreshListenable,
     required AppRouteGuard guard,
-  })  : _guard = guard,
-        router = GoRouter(
+  })  : router = GoRouter(
           navigatorKey: _rootNavigatorKey,
           initialLocation: AppRoutePaths.splash,
           refreshListenable: refreshListenable,
@@ -46,7 +45,6 @@ class AppRouter {
   static final _trainingNavigatorKey = GlobalKey<NavigatorState>();
   static final _profileNavigatorKey = GlobalKey<NavigatorState>();
 
-  final AppRouteGuard _guard;
   final GoRouter router;
 
   static List<RouteBase> _buildRoutes() {
