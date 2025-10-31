@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'session_state.freezed.dart';
 part 'session_state.g.dart';
