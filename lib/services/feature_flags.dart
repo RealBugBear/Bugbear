@@ -8,12 +8,16 @@ class FeatureFlags {
   final bool trainerTrackEnabled;
   final bool forumEnabled;
   final bool achievementsEnabled;
+  final bool consentRequired;
+  final bool remindersEnabled;
 
   const FeatureFlags({
     this.parentsTrackEnabled = false,
     this.trainerTrackEnabled = false,
     this.forumEnabled = false,
     this.achievementsEnabled = false,
+    this.consentRequired = true,
+    this.remindersEnabled = false,
   });
 
   FeatureFlags copyWith({
@@ -21,6 +25,8 @@ class FeatureFlags {
     bool? trainerTrackEnabled,
     bool? forumEnabled,
     bool? achievementsEnabled,
+    bool? consentRequired,
+    bool? remindersEnabled,
   }) {
     return FeatureFlags(
       parentsTrackEnabled:
@@ -30,6 +36,19 @@ class FeatureFlags {
       forumEnabled: forumEnabled ?? this.forumEnabled,
       achievementsEnabled:
           achievementsEnabled ?? this.achievementsEnabled,
+      consentRequired: consentRequired ?? this.consentRequired,
+      remindersEnabled: remindersEnabled ?? this.remindersEnabled,
     );
+  }
+
+  Map<String, bool> toMap() {
+    return {
+      'parentsTrackEnabled': parentsTrackEnabled,
+      'trainerTrackEnabled': trainerTrackEnabled,
+      'forumEnabled': forumEnabled,
+      'achievementsEnabled': achievementsEnabled,
+      'consentRequired': consentRequired,
+      'remindersEnabled': remindersEnabled,
+    };
   }
 }

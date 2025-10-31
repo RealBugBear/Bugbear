@@ -16,6 +16,7 @@ class SessionState with _$SessionState {
     DateTime? endAt,
     DateTime? plannedFor,
     @Default(SessionStatus.planned) SessionStatus status,
+    @Default(false) bool onboardingComplete,
   }) = _SessionState;
 
   factory SessionState.fromJson(Map<String, dynamic> json) =>

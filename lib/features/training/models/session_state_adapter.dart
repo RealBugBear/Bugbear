@@ -36,9 +36,14 @@ class SessionStateAdapter extends TypeAdapter<SessionState> {
     final status = reader.read() as SessionStatus;
 
     DateTime? plannedFor;
+    bool onboardingComplete = false;
     if (reader.availableBytes > 0) {
       final hasPlannedFor = reader.readBool();
       plannedFor = hasPlannedFor ? reader.read() as DateTime : null;
+    }
+
+    if (reader.availableBytes > 0) {
+      onboardingComplete = reader.readBool();
     }
 
     return SessionState(
@@ -51,6 +56,7 @@ class SessionStateAdapter extends TypeAdapter<SessionState> {
       endAt: endAt,
       status: status,
       plannedFor: plannedFor,
+      onboardingComplete: onboardingComplete,
     );
   }
 
@@ -78,5 +84,7 @@ class SessionStateAdapter extends TypeAdapter<SessionState> {
     } else {
       writer.writeBool(false);
     }
+
+    writer.writeBool(obj.onboardingComplete);
   }
 }

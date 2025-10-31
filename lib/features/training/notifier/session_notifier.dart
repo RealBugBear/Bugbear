@@ -111,8 +111,15 @@ class SessionNotifier extends ChangeNotifier {
       startedAt: plannedFor,
       plannedFor: plannedFor,
       status: SessionStatus.planned,
+      onboardingComplete: state.onboardingComplete,
     );
     _phaseStart = DateTime.now();
+  }
+
+  void markOnboardingComplete() {
+    if (!state.onboardingComplete) {
+      state = state.copyWith(onboardingComplete: true);
+    }
   }
 
   void _tick(Timer timer) {
@@ -226,8 +233,10 @@ class SessionNotifier extends ChangeNotifier {
   void _markFirstSessionCompleted() {
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
+      markOnboardingComplete();
       return;
     }
+    markOnboardingComplete();
     // Fire-and-forget: der Guard liest das Flag beim nächsten Start.
     unawaited(
       FirebaseFirestore.instance
