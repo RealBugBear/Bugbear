@@ -1,30 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:free_base/features/calendar/notifier/calendar_notifier.dart';
+import 'package:free_base/features/progress/models/week_progress.dart';
 import 'package:free_base/features/training/notifier/session_notifier.dart';
 import 'package:free_base/services/reminder/reminder_service.dart';
-
-class CalendarWeekSummary {
-  final DateTime weekStart;
-  final int plannedDays;
-  final int completedDays;
-  final bool hasGoldenDay;
-
-  const CalendarWeekSummary({
-    required this.weekStart,
-    required this.plannedDays,
-    required this.completedDays,
-    required this.hasGoldenDay,
-  });
-
-  double get completionRate {
-    if (plannedDays == 0) {
-      return 0;
-    }
-    return completedDays / plannedDays;
-  }
-
-  DateTime get weekEnd => weekStart.add(const Duration(days: 6));
-}
 
 class DashboardViewModel extends ChangeNotifier {
   static const int _xpPerLevel = 100;
@@ -91,7 +69,13 @@ class DashboardViewModel extends ChangeNotifier {
 
   double get levelProgress => xpIntoLevel / _xpPerLevel;
 
-  CalendarWeekSummary get currentWeekSummary => _calculateCurrentWeekSummary();
+  CoreWeekProgress get currentWeekProgress => _calculateCurrentWeekProgress();
+
+  WeekProgressStats get currentWeekStats => currentWeekProgress.stats;
+
+  double get progressRatio => currentWeekProgress.progressRatio;
+
+  int? get todayIndex => currentWeekProgress.todayIndex;
 
   TimeOfDay? get scheduledReminder => _reminderService.scheduledTime;
 
@@ -105,33 +89,29 @@ class DashboardViewModel extends ChangeNotifier {
     await _reminderService.cancelDailyReminder();
   }
 
-  CalendarWeekSummary _calculateCurrentWeekSummary() {
+  CoreWeekProgress _calculateCurrentWeekProgress() {
     final now = DateTime.now();
     final start = now.subtract(Duration(days: now.weekday - DateTime.monday));
-    var plannedDays = 0;
-    var completedDays = 0;
-    var hasGoldenDay = false;
+    final days = <DayProgressNode>[];
 
     for (var i = 0; i < 7; i++) {
       final day = DateTime(start.year, start.month, start.day + i);
       final events = _calendarNotifier.eventsForDay(day);
-      if (events.isEmpty) {
-        continue;
-      }
-      plannedDays += 1;
-      if (events.any((e) => e.isCompleted)) {
-        completedDays += 1;
-      }
-      if (!hasGoldenDay && events.any((e) => e.isGoldenDay)) {
-        hasGoldenDay = true;
-      }
+      days.add(
+        DayProgressNode(
+          date: day,
+          isPlanned: events.isNotEmpty,
+          isCompleted: events.any((e) => e.isCompleted),
+          isGoldenDay: events.any((e) => e.isGoldenDay),
+          hasReflection: events.any((e) => e.notes.trim().isNotEmpty),
+        ),
+      );
     }
 
-    return CalendarWeekSummary(
-      weekStart: DateTime(start.year, start.month, start.day),
-      plannedDays: plannedDays,
-      completedDays: completedDays,
-      hasGoldenDay: hasGoldenDay,
+    return CoreWeekProgress(
+      windowStart: DateTime(start.year, start.month, start.day),
+      windowEnd: DateTime(start.year, start.month, start.day + 6),
+      days: days,
     );
   }
 

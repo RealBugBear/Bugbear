@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:free_base/features/common/state/dashboard_view_model.dart';
+import 'package:free_base/features/progress/models/week_progress.dart';
 
 class DashboardCalendarCard extends StatelessWidget {
-  final CalendarWeekSummary summary;
+  final CoreWeekProgress weekProgress;
   final VoidCallback onOpenCalendar;
   final VoidCallback onReminderTap;
   final TimeOfDay? reminderTime;
@@ -10,7 +10,7 @@ class DashboardCalendarCard extends StatelessWidget {
 
   const DashboardCalendarCard({
     super.key,
-    required this.summary,
+    required this.weekProgress,
     required this.onOpenCalendar,
     required this.onReminderTap,
     required this.reminderTime,
@@ -21,8 +21,9 @@ class DashboardCalendarCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final secondaryStyle = theme.textTheme.bodyMedium;
-    final plannedDays = summary.plannedDays;
-    final completedDays = summary.completedDays;
+    final stats = weekProgress.stats;
+    final plannedDays = stats.plannedDays;
+    final completedDays = stats.completedDays;
     final completionText = plannedDays == 0
         ? 'Noch keine Trainings geplant'
         : '$completedDays von $plannedDays Tagen abgeschlossen';
@@ -30,6 +31,10 @@ class DashboardCalendarCard extends StatelessWidget {
     final reminderLabel = reminderActive
         ? 'Reminder: ${reminderTime?.format(context) ?? ''}'
         : 'Erinnerung setzen';
+
+    final reflectionText = stats.hasPendingReflections
+        ? 'Reflexion ausstehend für ${stats.pendingReflections} Tag(e).'
+        : null;
 
     return Card(
       elevation: 2,
@@ -46,7 +51,7 @@ class DashboardCalendarCard extends StatelessWidget {
                     style: theme.textTheme.titleMedium,
                   ),
                 ),
-                if (summary.hasGoldenDay)
+                if (weekProgress.hasGoldenDay)
                   Chip(
                     avatar: const Icon(Icons.bug_report_outlined),
                     label: const Text('Golden Day in Sicht'),
@@ -55,13 +60,17 @@ class DashboardCalendarCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             LinearProgressIndicator(
-              value: summary.completionRate.clamp(0, 1),
+              value: weekProgress.progressRatio.clamp(0, 1),
             ),
             const SizedBox(height: 8),
             Text(completionText, style: secondaryStyle),
+            if (reflectionText != null) ...[
+              const SizedBox(height: 4),
+              Text(reflectionText, style: secondaryStyle),
+            ],
             const SizedBox(height: 8),
             Text(
-              'Zeitraum: ${_formatDate(summary.weekStart)} - ${_formatDate(summary.weekEnd)}',
+              'Zeitraum: ${_formatDate(weekProgress.windowStart)} - ${_formatDate(weekProgress.windowEnd)}',
               style: secondaryStyle,
             ),
             const SizedBox(height: 16),

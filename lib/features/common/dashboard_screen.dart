@@ -70,7 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           SessionStatusBanner.fromSession(state),
           const SizedBox(height: 16),
           DashboardCalendarCard(
-            summary: dashboard.currentWeekSummary,
+            weekProgress: dashboard.currentWeekProgress,
             onOpenCalendar: () => context.goNamed(AppRouteNames.calendar),
             onReminderTap: () => _handleReminderTap(context, dashboard),
             reminderTime: dashboard.scheduledReminder,
