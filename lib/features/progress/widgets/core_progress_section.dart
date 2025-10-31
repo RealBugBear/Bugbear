@@ -1,10 +1,6 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
-
-
-import 'package:flutter/foundation.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -93,12 +89,8 @@ class _CoreProgressSectionState extends State<CoreProgressSection> {
   void initState() {
     super.initState();
     _windowKey = _windowKeyFor(widget.progress);
-    _audioPlayer = AudioPlayer(playerId: 'progress_feedback_${hashCode}');
- codex/add-telemetry-service-hooks-to-core_progress_section
+    _audioPlayer = AudioPlayer(playerId: 'progress_feedback_$hashCode');
     unawaited(_audioPlayer.setReleaseMode(ReleaseMode.stop));
-
-    unawaited(_configureAudioPlayer());
- gpt
   }
 
   @override
@@ -173,30 +165,6 @@ class _CoreProgressSectionState extends State<CoreProgressSection> {
     );
   }
 
- codex/add-telemetry-service-hooks-to-core_progress_section
-
-  Future<void> _configureAudioPlayer() async {
-    await _audioPlayer.setReleaseMode(ReleaseMode.stop);
-    if (!kIsWeb) {
-      await _audioPlayer.setAudioContext(
-        const AudioContext(
-          android: AudioContextAndroid(
-            isSpeakerphoneOn: false,
-            stayAwake: false,
-            contentType: AndroidAudioContentType.sonification,
-            usageType: AndroidAudioUsageType.assistanceSonification,
-            audioFocus: AndroidAudioFocus.gainTransientMayDuck,
-          ),
-          iOS: AudioContextIOS(
-            category: AVAudioSessionCategory.ambient,
-            options: {AVAudioSessionOptions.mixWithOthers},
-          ),
-        ),
-      );
-    }
-  }
-
- gpt
   ProgressFeedbackHooks _mergedFeedbackHooks() {
     final external = widget.feedbackHooks;
 
