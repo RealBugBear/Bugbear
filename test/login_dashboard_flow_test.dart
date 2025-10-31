@@ -53,7 +53,7 @@ void main() {
   testWidgets('login success navigates through role selection to dashboard',
       (tester) async {
     final mockAuth = MockAuthService();
-    when(mockAuth.signInWithEmail(any<String>(), any<String>()))
+    when(mockAuth.signInWithEmail('test@example.com', 'password123'))
         .thenAnswer((_) async => FakeUserCredential());
 
     await tester.pumpWidget(
