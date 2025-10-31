@@ -107,6 +107,8 @@ class AppRouteGuard {
         location == AppRoutePaths.trainingCompleted ||
         location == AppRoutePaths.dashboard ||
         location == AppRoutePaths.consent ||
+        location == AppRoutePaths.profile ||
+        location.startsWith('${AppRoutePaths.profile}/') ||
         location.startsWith(AppRoutePaths.calendar) ||
         location.startsWith(AppRoutePaths.questionnaireIntro) ||
         location.startsWith(AppRoutePaths.questionnaire)) {
