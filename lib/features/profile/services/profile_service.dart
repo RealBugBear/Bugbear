@@ -19,6 +19,28 @@ class ProfileService {
     return _db.collection('users').doc(userId).set(data, SetOptions(merge: true));
   }
 
+  Future<void> updateProfileAppearance(
+    String userId,
+    String profileId, {
+    String? avatarItemId,
+    int? xpSpentIncrement,
+  }) async {
+    final updates = <String, dynamic>{};
+    if (avatarItemId != null) {
+      updates['avatarItemId'] = avatarItemId;
+    }
+    if (xpSpentIncrement != null && xpSpentIncrement != 0) {
+      updates['xpSpent'] = FieldValue.increment(xpSpentIncrement);
+    }
+    if (updates.isEmpty) return;
+    await _db
+        .collection('users')
+        .doc(userId)
+        .collection('profiles')
+        .doc(profileId)
+        .set(updates, SetOptions(merge: true));
+  }
+
   /// Streamt alle Profile eines Nutzers sortiert nach Erstellungsdatum.
   Stream<List<ReflexProfile>> watchProfiles(String userId) {
     return _db

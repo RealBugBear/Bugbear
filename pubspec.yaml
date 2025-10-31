@@ -59,6 +59,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/cosmetics/
     - assets/images/placeholder.png
     - assets/images/paw.png
     - assets/images/tick.png

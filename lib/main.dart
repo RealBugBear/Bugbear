@@ -32,6 +32,7 @@ import 'package:free_base/features/calendar/services/calendar_service.dart';
 import 'package:free_base/features/calendar/services/golden_day_service.dart';
 import 'package:free_base/features/common/state/dashboard_view_model.dart';
 import 'package:free_base/features/questionnaire/questionnaire_screen.dart';
+import 'package:free_base/features/profile/state/profile_shop_notifier.dart';
 import 'package:free_base/services/app_intent_handler.dart';
 import 'package:free_base/services/app_route_guard.dart';
 import 'package:free_base/services/app_router.dart';
@@ -106,6 +107,9 @@ Future<void> main() async {
   await Hive.openBox<GamificationState>('gamification_state',
       encryptionCipher: HiveAesCipher(encryptionKey));
 
+  final cosmeticsBox = await Hive.openBox('cosmetics_catalog',
+      encryptionCipher: HiveAesCipher(encryptionKey));
+
   final sessionRepository = SessionRepository();
   final savedSession = await sessionRepository.load();
   final plannedFor = DateTime.now().add(const Duration(days: 1));
@@ -126,6 +130,7 @@ Future<void> main() async {
       sessionRepository: sessionRepository,
       initialSessionState: initialSessionState,
       consentBox: consentBox,
+      cosmeticsBox: cosmeticsBox,
     ),
   );
 }
@@ -134,6 +139,7 @@ class MyApp extends StatefulWidget {
   final SessionRepository sessionRepository;
   final SessionState initialSessionState;
   final Box<ConsentState> consentBox;
+  final Box cosmeticsBox;
   final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
       GlobalKey<ScaffoldMessengerState>();
 
@@ -142,6 +148,7 @@ class MyApp extends StatefulWidget {
     required this.sessionRepository,
     required this.initialSessionState,
     required this.consentBox,
+    required this.cosmeticsBox,
   });
 
   @override
@@ -257,6 +264,13 @@ class _MyAppState extends State<MyApp> {
             notifier.loadMonth(DateTime.now());
             return notifier;
           },
+        ),
+        ChangeNotifierProvider<ProfileShopNotifier>(
+          create: (ctx) => ProfileShopNotifier(
+            firestore: FirebaseFirestore.instance,
+            sessionNotifier: ctx.read<SessionNotifier>(),
+            cacheBox: widget.cosmeticsBox,
+          ),
         ),
         ChangeNotifierProxyProvider3<SessionNotifier, CalendarNotifier,
             ReminderService, DashboardViewModel>(
