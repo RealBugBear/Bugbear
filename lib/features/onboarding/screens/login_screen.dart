@@ -14,7 +14,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
-  final _emailController    = TextEditingController();
+  static const emailFieldKey = ValueKey('login_email_field');
+  static const passwordFieldKey = ValueKey('login_password_field');
+  static const submitButtonKey = ValueKey('login_submit_button');
+
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   String? _error;
@@ -73,11 +77,13 @@ class LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   TextField(
+                    key: emailFieldKey,
                     controller: _emailController,
                     decoration: const InputDecoration(labelText: 'E-Mail'),
                   ),
                   const SizedBox(height: 8),
                   TextField(
+                    key: passwordFieldKey,
                     controller: _passwordController,
                     decoration: const InputDecoration(labelText: 'Passwort'),
                     obscureText: true,
@@ -88,6 +94,7 @@ class LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 8),
                   ],
                   ElevatedButton(
+                    key: submitButtonKey,
                     onPressed: _isLoading ? null : _login,
                     child: _isLoading
                         ? const SizedBox(
