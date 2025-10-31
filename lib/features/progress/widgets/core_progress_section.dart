@@ -1,10 +1,8 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
-
-
+import 'package:audioplayers_platform_interface/audioplayers_platform_interface.dart';
 import 'package:flutter/foundation.dart';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -175,7 +173,7 @@ class _CoreProgressSectionState extends State<CoreProgressSection> {
     await _audioPlayer.setReleaseMode(ReleaseMode.stop);
     if (!kIsWeb) {
       await _audioPlayer.setAudioContext(
-        const AudioContext(
+        AudioContext(
           android: AudioContextAndroid(
             isSpeakerphoneOn: false,
             stayAwake: false,
