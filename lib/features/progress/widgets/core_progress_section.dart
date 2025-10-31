@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
+ codex/fix-100+-errors-in-current-project-ofm0nj
+
 import 'package:audioplayers_platform_interface/audioplayers_platform_interface.dart';
 import 'package:flutter/foundation.dart';
+ gpt
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -91,10 +94,15 @@ class _CoreProgressSectionState extends State<CoreProgressSection> {
   void initState() {
     super.initState();
     _windowKey = _windowKeyFor(widget.progress);
+ codex/fix-100+-errors-in-current-project-ofm0nj
+    _audioPlayer = AudioPlayer(playerId: 'progress_feedback_$hashCode');
+    unawaited(_audioPlayer.setReleaseMode(ReleaseMode.stop));
+
     _audioPlayer = AudioPlayer(playerId: 'progress_feedback_${hashCode}');
     unawaited(_audioPlayer.setReleaseMode(ReleaseMode.stop));
 
     unawaited(_configureAudioPlayer());
+ gpt
   }
 
   @override
@@ -169,6 +177,8 @@ class _CoreProgressSectionState extends State<CoreProgressSection> {
     );
   }
 
+ codex/fix-100+-errors-in-current-project-ofm0nj
+
   Future<void> _configureAudioPlayer() async {
     await _audioPlayer.setReleaseMode(ReleaseMode.stop);
     if (!kIsWeb) {
@@ -189,6 +199,7 @@ class _CoreProgressSectionState extends State<CoreProgressSection> {
       );
     }
   }
+ gpt
   ProgressFeedbackHooks _mergedFeedbackHooks() {
     final external = widget.feedbackHooks;
 
