@@ -89,6 +89,42 @@ class DashboardViewModel extends ChangeNotifier {
     await _reminderService.cancelDailyReminder();
   }
 
+  Future<bool> startNextWeek() async {
+    final nextWeekStart =
+        currentWeekProgress.windowEnd.add(const Duration(days: 1));
+    final normalized = DateTime(
+      nextWeekStart.year,
+      nextWeekStart.month,
+      nextWeekStart.day,
+    );
+    await _calendarNotifier.loadMonth(
+      normalized,
+      ensureWeekForDay: normalized,
+    );
+    _calendarNotifier.selectDay(normalized);
+    return true;
+  }
+
+  Future<bool> openReflection() async {
+    final progress = currentWeekProgress;
+    DayProgressNode? pending;
+    for (final node in progress.days) {
+      if (node.requiresReflection) {
+        pending = node;
+        break;
+      }
+    }
+    if (pending == null) {
+      return false;
+    }
+    await _calendarNotifier.loadMonth(
+      pending.date,
+      ensureWeekForDay: pending.date,
+    );
+    _calendarNotifier.selectDay(pending.date);
+    return true;
+  }
+
   CoreWeekProgress _calculateCurrentWeekProgress() {
     final now = DateTime.now();
     final start = now.subtract(Duration(days: now.weekday - DateTime.monday));
