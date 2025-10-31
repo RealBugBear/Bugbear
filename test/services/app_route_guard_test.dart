@@ -112,6 +112,33 @@ void main() {
       consentNotifier.dispose();
     });
 
+    test('allows profile routes when onboarding is not complete', () async {
+      final consentNotifier = await createNotifier(accepted: true);
+      final auth = MockFirebaseAuth(mockUser: MockUser(uid: 'u2'), signedIn: true);
+      final guard = AppRouteGuard(
+        auth: auth,
+        consentNotifier: consentNotifier,
+        loadSessionState: () async => buildSessionState(onboardingComplete: false),
+        consentRequired: true,
+        userDataLoader: (_) async => const <String, dynamic>{
+          'role': 'member',
+          'firstSessionCompleted': false,
+        },
+      );
+
+      final profileRedirect = await guard.evaluateLocation(AppRoutePaths.profile);
+      expect(profileRedirect, isNull);
+
+      final profileShopRedirect =
+          await guard.evaluateLocation(AppRoutePaths.profileShop);
+      expect(profileShopRedirect, isNull);
+
+      final settingsRedirect = await guard.evaluateLocation(AppRoutePaths.settings);
+      expect(settingsRedirect, AppRoutePaths.training);
+
+      consentNotifier.dispose();
+    });
+
     test('allows dashboard when consent and onboarding are complete', () async {
       final consentNotifier = await createNotifier(accepted: true);
       final auth = MockFirebaseAuth(mockUser: MockUser(uid: 'u3'), signedIn: true);
