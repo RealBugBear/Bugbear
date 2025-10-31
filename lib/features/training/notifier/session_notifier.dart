@@ -165,9 +165,10 @@ class SessionNotifier extends ChangeNotifier {
       start();
     } else {
       // Session komplett fertig
+      final completionDate = DateTime.now();
       state = state.copyWith(
         status: SessionStatus.completed,
-        endAt: DateTime.now(),
+        endAt: completionDate,
         plannedFor: null,
       );
       // Kalender-Event erstellen statt undefined addSessionEvent
@@ -193,6 +194,7 @@ class SessionNotifier extends ChangeNotifier {
       _calendarService.addEvent(gdEvent);
 
       _markFirstSessionCompleted();
+      applyCompletionRewards(completionDate: completionDate);
     }
   }
 
@@ -228,7 +230,100 @@ class SessionNotifier extends ChangeNotifier {
         state = state.copyWith(status: SessionStatus.overdue);
       }
     }
+    _resetDailyXpIfNeeded();
+    updateStreakFreeze();
   }
+
+  void _resetDailyXpIfNeeded() {
+    final lastCompleted = state.lastCompletedOn;
+    final normalizedToday = _normalizeDate(DateTime.now());
+    if (lastCompleted == null) {
+      if (state.dailyXp != 0) {
+        state = state.copyWith(dailyXp: 0);
+      }
+      return;
+    }
+
+    if (!_isSameDay(lastCompleted, normalizedToday) && state.dailyXp != 0) {
+      state = state.copyWith(dailyXp: 0);
+    }
+  }
+
+  @visibleForTesting
+  int computeXp() {
+    if (_exercises.isEmpty) {
+      return 0;
+    }
+    var xp = 0;
+    for (var i = 0; i < _exercises.length; i++) {
+      final isHighTier = i >= _exercises.length - 2;
+      xp += isHighTier ? 60 : 30;
+    }
+    return xp;
+  }
+
+  @visibleForTesting
+  void applyCompletionRewards({DateTime? completionDate}) {
+    final completion = completionDate ?? DateTime.now();
+    final normalizedCompletion = _normalizeDate(completion);
+    final xpEarned = computeXp();
+    final lastCompleted = state.lastCompletedOn;
+    final wasSameDay =
+        lastCompleted != null && _isSameDay(lastCompleted, normalizedCompletion);
+    final wasConsecutive = lastCompleted != null &&
+        normalizedCompletion.difference(lastCompleted).inDays == 1;
+    final freezeUntil = state.streakFrozenUntil != null
+        ? _normalizeDate(state.streakFrozenUntil!)
+        : null;
+
+    final newDailyXp = wasSameDay ? state.dailyXp + xpEarned : xpEarned;
+
+    int newStreakCount;
+    if (wasSameDay) {
+      newStreakCount = state.streakCount;
+    } else if (wasConsecutive) {
+      newStreakCount = state.streakCount + 1;
+    } else if (freezeUntil != null &&
+        !normalizedCompletion.isAfter(freezeUntil)) {
+      newStreakCount = state.streakCount;
+    } else {
+      newStreakCount = 1;
+    }
+
+    state = state.copyWith(
+      xpTotal: state.xpTotal + xpEarned,
+      dailyXp: newDailyXp,
+      streakCount: newStreakCount,
+      lastCompletedOn: normalizedCompletion,
+    );
+
+    updateStreakFreeze(referenceDate: normalizedCompletion);
+  }
+
+  void updateStreakFreeze({DateTime? referenceDate}) {
+    final today = _normalizeDate(referenceDate ?? DateTime.now());
+    final freezeUntil = state.streakFrozenUntil;
+    if (freezeUntil != null) {
+      final normalizedFreeze = _normalizeDate(freezeUntil);
+      if (today.isAfter(normalizedFreeze)) {
+        state = state.copyWith(streakFrozenUntil: null);
+      }
+    }
+
+    if (state.streakCount >= 2 && state.streakFrozenUntil == null) {
+      final baseDate =
+          _normalizeDate(referenceDate ?? state.lastCompletedOn ?? DateTime.now());
+      state = state.copyWith(
+        streakFrozenUntil: baseDate.add(const Duration(days: 1)),
+      );
+    }
+  }
+
+  bool _isSameDay(DateTime a, DateTime b) =>
+      a.year == b.year && a.month == b.month && a.day == b.day;
+
+  DateTime _normalizeDate(DateTime date) =>
+      DateTime(date.year, date.month, date.day);
 
   void _markFirstSessionCompleted() {
     final user = FirebaseAuth.instance.currentUser;

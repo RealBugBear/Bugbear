@@ -27,8 +27,10 @@ import 'package:free_base/features/training/widgets/session_sync_listener.dart';
 
 import 'package:free_base/features/calendar/models/calendar_event.dart';
 import 'package:free_base/features/calendar/models/calendar_event_adapter.dart';
+import 'package:free_base/features/calendar/notifier/calendar_notifier.dart';
 import 'package:free_base/features/calendar/services/calendar_service.dart';
 import 'package:free_base/features/calendar/services/golden_day_service.dart';
+import 'package:free_base/features/common/state/dashboard_view_model.dart';
 import 'package:free_base/features/questionnaire/questionnaire_screen.dart';
 import 'package:free_base/services/app_intent_handler.dart';
 import 'package:free_base/services/app_route_guard.dart';
@@ -37,6 +39,8 @@ import 'package:free_base/services/feature_flags.dart';
 import 'package:free_base/services/telemetry/telemetry_service.dart';
 
 import 'package:free_base/features/onboarding/models/consent_state.dart';
+import 'package:free_base/features/gamification/models/gamification_state.dart';
+import 'package:free_base/services/reminder/reminder_service.dart';
 
 const FeatureFlags _localFeatureFlags = FeatureFlags(
   parentsTrackEnabled: true,
@@ -85,6 +89,7 @@ Future<void> main() async {
   Hive.registerAdapter(SessionStatusAdapter());
   Hive.registerAdapter(SessionStateAdapter());
   Hive.registerAdapter(ConsentStateAdapter());
+  Hive.registerAdapter(GamificationStateAdapter());
   await Hive.openBox<SessionState>('session_state',
       encryptionCipher: HiveAesCipher(encryptionKey));
 
@@ -96,6 +101,9 @@ Future<void> main() async {
 
   Hive.registerAdapter(CalendarEventAdapter());
   await Hive.openBox<CalendarEvent>('calendar_events',
+      encryptionCipher: HiveAesCipher(encryptionKey));
+
+  await Hive.openBox<GamificationState>('gamification_state',
       encryptionCipher: HiveAesCipher(encryptionKey));
 
   final sessionRepository = SessionRepository();
@@ -220,6 +228,13 @@ class _MyAppState extends State<MyApp> {
         Provider<ExerciseRepository>(
           create: (_) => ExerciseRepository(),
         ),
+        ChangeNotifierProvider<ReminderService>(
+          create: (_) {
+            final service = ReminderService();
+            unawaited(service.initialize());
+            return service;
+          },
+        ),
         ChangeNotifierProvider<SessionNotifier>(
           create: (ctx) {
             final exRepo = ctx.read<ExerciseRepository>();
@@ -234,6 +249,27 @@ class _MyAppState extends State<MyApp> {
               initialExercises,
               widget.initialSessionState,
             );
+          },
+        ),
+        ChangeNotifierProvider<CalendarNotifier>(
+          create: (ctx) {
+            final notifier = CalendarNotifier(ctx.read<CalendarService>());
+            notifier.loadMonth(DateTime.now());
+            return notifier;
+          },
+        ),
+        ChangeNotifierProxyProvider3<SessionNotifier, CalendarNotifier,
+            ReminderService, DashboardViewModel>(
+          create: (ctx) => DashboardViewModel(
+            ctx.read<SessionNotifier>(),
+            ctx.read<CalendarNotifier>(),
+            ctx.read<ReminderService>(),
+          ),
+          update: (ctx, session, calendar, reminder, previous) {
+            final model = previous ??
+                DashboardViewModel(session, calendar, reminder);
+            model.updateSources(session, calendar, reminder);
+            return model;
           },
         ),
         createQuestionnaireProvider(),

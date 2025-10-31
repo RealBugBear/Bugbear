@@ -37,6 +37,11 @@ class SessionStateAdapter extends TypeAdapter<SessionState> {
 
     DateTime? plannedFor;
     bool onboardingComplete = false;
+    int xpTotal = 0;
+    int dailyXp = 0;
+    int streakCount = 0;
+    DateTime? streakFrozenUntil;
+    DateTime? lastCompletedOn;
     if (reader.availableBytes > 0) {
       final hasPlannedFor = reader.readBool();
       plannedFor = hasPlannedFor ? reader.read() as DateTime : null;
@@ -44,6 +49,28 @@ class SessionStateAdapter extends TypeAdapter<SessionState> {
 
     if (reader.availableBytes > 0) {
       onboardingComplete = reader.readBool();
+    }
+
+    if (reader.availableBytes > 0) {
+      xpTotal = reader.readInt();
+    }
+
+    if (reader.availableBytes > 0) {
+      dailyXp = reader.readInt();
+    }
+
+    if (reader.availableBytes > 0) {
+      streakCount = reader.readInt();
+    }
+
+    if (reader.availableBytes > 0) {
+      final hasFrozenUntil = reader.readBool();
+      streakFrozenUntil = hasFrozenUntil ? reader.read() as DateTime : null;
+    }
+
+    if (reader.availableBytes > 0) {
+      final hasLastCompleted = reader.readBool();
+      lastCompletedOn = hasLastCompleted ? reader.read() as DateTime : null;
     }
 
     return SessionState(
@@ -57,6 +84,11 @@ class SessionStateAdapter extends TypeAdapter<SessionState> {
       status: status,
       plannedFor: plannedFor,
       onboardingComplete: onboardingComplete,
+      xpTotal: xpTotal,
+      dailyXp: dailyXp,
+      streakCount: streakCount,
+      streakFrozenUntil: streakFrozenUntil,
+      lastCompletedOn: lastCompletedOn,
     );
   }
 
@@ -86,5 +118,22 @@ class SessionStateAdapter extends TypeAdapter<SessionState> {
     }
 
     writer.writeBool(obj.onboardingComplete);
+    writer.writeInt(obj.xpTotal);
+    writer.writeInt(obj.dailyXp);
+    writer.writeInt(obj.streakCount);
+
+    if (obj.streakFrozenUntil != null) {
+      writer.writeBool(true);
+      writer.write(obj.streakFrozenUntil!);
+    } else {
+      writer.writeBool(false);
+    }
+
+    if (obj.lastCompletedOn != null) {
+      writer.writeBool(true);
+      writer.write(obj.lastCompletedOn!);
+    } else {
+      writer.writeBool(false);
+    }
   }
 }

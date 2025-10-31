@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/training_intent.dart';
+import 'package:free_base/services/reminder/reminder_service.dart';
 
 import '../dialogs/edit_training_day_dialog.dart';
 import '../models/calendar_event.dart';
@@ -27,24 +28,21 @@ import '../widgets/month_bracket.dart';
 /// - Einträgen über BottomSheet
 /// - Edit-Dialog beim Tap auf einen Event
 class CalendarScreen extends StatelessWidget {
-  const CalendarScreen({Key? key}) : super(key: key);
+  final bool openReminder;
+
+  const CalendarScreen({Key? key, this.openReminder = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<CalendarNotifier>(
-      create: (ctx) {
-        final service = ctx.read<CalendarService>();
-        final notifier = CalendarNotifier(service);
-        notifier.loadMonth(DateTime.now());
-        return notifier;
-      },
-      child: const _CalendarScreenContent(),
-    );
+    return _CalendarScreenContent(openReminder: openReminder);
   }
 }
 
 class _CalendarScreenContent extends StatefulWidget {
-  const _CalendarScreenContent({Key? key}) : super(key: key);
+  final bool openReminder;
+
+  const _CalendarScreenContent({Key? key, required this.openReminder})
+      : super(key: key);
 
   @override
   State<_CalendarScreenContent> createState() =>
@@ -65,6 +63,12 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
     super.initState();
     _pageController = PageController(initialPage: _initialPage);
     _baseMonth = DateTime(DateTime.now().year, DateTime.now().month);
+    if (widget.openReminder) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        _openReminderSheet();
+      });
+    }
   }
 
   int _monthDiff(DateTime a, DateTime b) =>
@@ -80,6 +84,66 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
 
   void _onPageChanged(int page) {
     context.read<CalendarNotifier>().loadMonth(_monthForIndex(page));
+  }
+
+  Future<void> _openReminderSheet() async {
+    final reminderService = context.read<ReminderService>();
+    if (!reminderService.hasScheduledReminder) {
+      await _pickReminderTime(reminderService);
+      return;
+    }
+
+    final action = await showModalBottomSheet<String>(
+      context: context,
+      builder: (sheetContext) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.schedule),
+                title: const Text('Uhrzeit ändern'),
+                onTap: () => Navigator.of(sheetContext).pop('change'),
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete_outline),
+                title: const Text('Reminder entfernen'),
+                onTap: () => Navigator.of(sheetContext).pop('cancel'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+
+    if (!mounted) return;
+
+    if (action == 'change') {
+      await _pickReminderTime(reminderService);
+    } else if (action == 'cancel') {
+      await reminderService.cancelDailyReminder();
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Reminder deaktiviert.')),
+      );
+    }
+  }
+
+  Future<void> _pickReminderTime(ReminderService service) async {
+    final initial = service.scheduledTime ?? const TimeOfDay(hour: 18, minute: 0);
+    final result = await showTimePicker(
+      context: context,
+      initialTime: initial,
+      helpText: 'Erinnerung auswählen',
+    );
+    if (result != null) {
+      await service.scheduleDailyReminder(result);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Reminder gesetzt für ${result.format(context)}.'),
+        ),
+      );
+    }
   }
 
 
@@ -98,7 +162,16 @@ class _CalendarScreenContentState extends State<_CalendarScreenContent> {
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Dein Trainingskalender')),
+      appBar: AppBar(
+        title: const Text('Dein Trainingskalender'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.alarm),
+            tooltip: 'Reminder setzen',
+            onPressed: _openReminderSheet,
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Container(

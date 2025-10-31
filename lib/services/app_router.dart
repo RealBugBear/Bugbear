@@ -112,7 +112,11 @@ class AppRouter {
               GoRoute(
                 path: AppRoutePaths.calendar,
                 name: AppRouteNames.calendar,
-                builder: (context, state) => const CalendarScreen(),
+                builder: (context, state) {
+                  final openReminder =
+                      state.uri.queryParameters['setReminder'] == 'true';
+                  return CalendarScreen(openReminder: openReminder);
+                },
               ),
             ],
           ),

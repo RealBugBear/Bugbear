@@ -17,6 +17,11 @@ class SessionState with _$SessionState {
     DateTime? plannedFor,
     @Default(SessionStatus.planned) SessionStatus status,
     @Default(false) bool onboardingComplete,
+    @Default(0) int xpTotal,
+    @Default(0) int dailyXp,
+    @Default(0) int streakCount,
+    DateTime? streakFrozenUntil,
+    DateTime? lastCompletedOn,
   }) = _SessionState;
 
   factory SessionState.fromJson(Map<String, dynamic> json) =>
