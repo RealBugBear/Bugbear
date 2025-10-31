@@ -114,7 +114,7 @@ class MoroSessionController extends ChangeNotifier {
     final startRepeat = _repeatIdx.clamp(1, exercise.repeats);
     final startPhase = _phaseIdx.clamp(1, exercise.phasesPerRepeat);
     final initialMs = _remaining.inMilliseconds > 0 ? _remaining.inMilliseconds : null;
-    final timer = exercise.type == MoroExerciseType.phased4x
+    final Stream<dynamic> timer = exercise.type == MoroExerciseType.phased4x
         ? PhasedMoroTimer(
             repeats: exercise.repeats,
             phasesPerRepeat: exercise.phasesPerRepeat,
@@ -135,19 +135,41 @@ class MoroSessionController extends ChangeNotifier {
           );
     final sw = Stopwatch()..start();
     _timerSubscription = timer.listen((event) {
-      if (!event.done) {
-        _repeatIdx = event.repeatIdx;
-        _phaseIdx = exercise.type == MoroExerciseType.phased4x
-            ? event.phaseIdx
-            : 1;
-        _remaining = event.remaining;
-        _sessionDuration = sw.elapsed;
-        _notifyResume();
+      if (exercise.type == MoroExerciseType.phased4x) {
+        final tick = event
+            as ({int repeatIdx, int phaseIdx, Duration remaining, bool done});
+        if (!tick.done) {
+          _repeatIdx = tick.repeatIdx;
+          _phaseIdx = tick.phaseIdx;
+          _remaining = tick.remaining;
+          _sessionDuration = sw.elapsed;
+          _notifyResume();
+        } else {
+          _sessionDuration = sw.elapsed;
+          _remaining = Duration.zero;
+          _notifyResume();
+          _handleActiveCompleted();
+        }
       } else {
-        _sessionDuration = sw.elapsed;
-        _remaining = Duration.zero;
-        _notifyResume();
-        _handleActiveCompleted();
+        final tick = event as ({
+          int repeatIdx,
+          Duration remaining,
+          bool done,
+          bool justStarted,
+          bool justEnded,
+        });
+        if (!tick.done) {
+          _repeatIdx = tick.repeatIdx;
+          _phaseIdx = 1;
+          _remaining = tick.remaining;
+          _sessionDuration = sw.elapsed;
+          _notifyResume();
+        } else {
+          _sessionDuration = sw.elapsed;
+          _remaining = Duration.zero;
+          _notifyResume();
+          _handleActiveCompleted();
+        }
       }
       notifyListeners();
     });

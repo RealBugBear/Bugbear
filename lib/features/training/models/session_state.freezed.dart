@@ -5,9 +5,6 @@
 
 part of 'session_state.dart';
 
-// ignore_for_file: unnecessary_import
-import 'package:collection/collection.dart';
-
 // **************************************************************************
 // FreezedGenerator
 // **************************************************************************
