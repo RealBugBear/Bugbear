@@ -309,28 +309,39 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
                                   ),
                                   const SizedBox(height: 8),
                                 ],
-                                Row(
-                                  children: [
-                                    _SpeedChips(
-                                      value: offs,
-                                      onChanged: isUnlocked ? (v) => _setOffset(ex.index, v) : null,
-                                    ),
-                                    const Spacer(),
-                                    ElevatedButton.icon(
-                                      onPressed: isUnlocked
-                                          ? () => _openExercise(
-                                                context,
-                                                ex,
-                                                offs,
-                                                items.length,
-                                                items,
-                                                source: _MoroExerciseLaunchSource.start,
-                                              )
-                                          : null,
-                                      icon: const Icon(Icons.play_arrow),
-                                      label: const Text('Start'),
-                                    ),
-                                  ],
+                                LayoutBuilder(
+                                  builder: (context, constraints) {
+                                    final alignment = constraints.maxWidth > 420
+                                        ? WrapAlignment.spaceBetween
+                                        : WrapAlignment.start;
+                                    return Wrap(
+                                      spacing: 12,
+                                      runSpacing: 12,
+                                      crossAxisAlignment: WrapCrossAlignment.center,
+                                      alignment: alignment,
+                                      children: [
+                                        _SpeedChips(
+                                          value: offs,
+                                          onChanged:
+                                              isUnlocked ? (v) => _setOffset(ex.index, v) : null,
+                                        ),
+                                        ElevatedButton.icon(
+                                          onPressed: isUnlocked
+                                              ? () => _openExercise(
+                                                    context,
+                                                    ex,
+                                                    offs,
+                                                    items.length,
+                                                    items,
+                                                    source: _MoroExerciseLaunchSource.start,
+                                                  )
+                                              : null,
+                                          icon: const Icon(Icons.play_arrow),
+                                          label: const Text('Start'),
+                                        ),
+                                      ],
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -540,6 +551,7 @@ class _SpeedChips extends StatelessWidget {
     const opts = [0, 1, 2, 3];
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           value == 0 ? 'Standard' : '+${value}s',
@@ -547,10 +559,14 @@ class _SpeedChips extends StatelessWidget {
         ),
         Wrap(
           spacing: 6,
+          runSpacing: 6,
+          alignment: WrapAlignment.start,
           children: opts.map((v) {
             return ChoiceChip(
               label: Text(v == 0 ? 'Std' : '+${v}s'),
               selected: v == value,
+              visualDensity: VisualDensity.compact,
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               onSelected: onChanged == null ? null : (_) => onChanged!(v),
             );
           }).toList(),
