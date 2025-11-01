@@ -9,6 +9,7 @@ import 'package:provider/provider.dart';
 import 'package:free_base/features/training/models/exercise_item.dart';
 import 'package:free_base/features/training/models/session_state.dart';
 import 'package:free_base/features/training/moro/moro_exercise_screen.dart';
+import 'package:free_base/features/training/moro/media_player_service.dart';
 import 'package:free_base/features/training/moro/moro_models.dart';
 import 'package:free_base/features/training/moro/moro_repository.dart';
 import 'package:free_base/features/training/moro/moro_training_screen.dart';
@@ -217,6 +218,13 @@ class _FallbackStubExerciseScreenState
   }
 }
 
+class _FakeMediaPlayerService extends MoroMediaPlayerService {
+  @override
+  Future<MoroMediaLoadResult> loadForExercise(MoroExercise exercise) async {
+    return const MoroMediaLoadResult();
+  }
+}
+
 GoRouter _createRouter(
   ValueNotifier<int> counter, {
   bool useFallback = false,
@@ -415,6 +423,59 @@ void main() {
     expect(counter.value, 0);
     expect(visited, equals([2]));
     expect(find.text('fallback-2'), findsOneWidget);
+  });
+
+  testWidgets('autoplay opens next exercise intro stage', (tester) async {
+    final notifier = _createNotifier();
+    final counter = ValueNotifier<int>(0);
+    final visited = <int>[];
+    final builtScreens = <int>[];
+    final repo = _FakeMoroRepository(_buildFakeExercises(3));
+    final router = _createRouter(
+      counter,
+      useFallback: true,
+      repository: repo,
+      fallbackBuilder: (args) {
+        builtScreens.add(args.exercise.index);
+        if (args.exercise.index == 1) {
+          return _FallbackStubExerciseScreen(
+            args: args,
+            visited: visited,
+            popResult: MoroExerciseResult(
+              completed: true,
+              autoplayEnabled: true,
+              autoplayDelaySeconds: args.autoplayDelaySeconds,
+              exerciseIndex: args.exercise.index,
+              hasNextExercise: true,
+            ),
+          );
+        }
+        return MoroExerciseScreen(
+          exercise: args.exercise,
+          offset: args.offset,
+          autoplay: args.autoplay,
+          autoplayDelaySeconds: args.autoplayDelaySeconds,
+          totalExercises: args.totalExercises,
+          mediaService: _FakeMediaPlayerService(),
+        );
+      },
+    );
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider<SessionNotifier>.value(
+        value: notifier,
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
+
+    router.goNamed(AppRouteNames.training, extra: TrainingIntent.start());
+
+    await tester.pump();
+    await tester.pumpAndSettle();
+
+    expect(visited, equals([1]));
+    expect(builtScreens, equals([1, 2]));
+    expect(find.text('Vorbereitung'), findsOneWidget);
   });
 
   testWidgets('fallback handles autoplay navigation without args', (tester) async {

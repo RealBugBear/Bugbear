@@ -53,12 +53,18 @@ const _preCheckItems = [
   'Augen offen',
 ];
 
+const _safetyNotice =
+    'Bitte arbeite schmerzfrei. Bei Schmerzen Arzt oder Ärztin konsultieren.';
+const _balanceNotice =
+    'Nutze die Pause, um die schwächere Seite bewusst anzugleichen.';
+
 class MoroExerciseScreen extends StatefulWidget {
   final MoroExercise exercise;
   final int offset;
   final bool autoplay;
   final int autoplayDelaySeconds;
   final int totalExercises;
+  final MoroMediaPlayerService mediaService;
 
   const MoroExerciseScreen({
     super.key,
@@ -67,7 +73,8 @@ class MoroExerciseScreen extends StatefulWidget {
     required this.autoplay,
     required this.autoplayDelaySeconds,
     required this.totalExercises,
-  });
+    MoroMediaPlayerService? mediaService,
+  }) : mediaService = mediaService ?? MoroMediaPlayerService();
 
   @override
   State<MoroExerciseScreen> createState() => _MoroExerciseScreenState();
@@ -96,7 +103,7 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
   void initState() {
     super.initState();
     _notesController = TextEditingController();
-    _mediaService = MoroMediaPlayerService();
+    _mediaService = widget.mediaService;
     _checkStates = {
       for (var i = 0; i < _preCheckItems.length; i++) i: false,
     };
@@ -256,6 +263,13 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Vorbereitung', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        _buildInfoBanner(
+          Icons.health_and_safety_outlined,
+          _safetyNotice,
+          tooltip:
+              'Stopp bei Schmerzen oder Taubheitsgefühl – Sicherheit hat Vorrang.',
+        ),
         const SizedBox(height: 12),
         ..._preCheckItems.asMap().entries.map(
           (entry) => CheckboxListTile(
@@ -269,16 +283,19 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
           value: _matReady,
           onChanged: (v) => setState(() => _matReady = v),
           title: const Text('Matte bereitgelegt'),
+          subtitle: const Text('Sorge für eine rutschfeste, stabile Unterlage.'),
         ),
         SwitchListTile(
           value: _timerSound,
           onChanged: (v) => setState(() => _timerSound = v),
           title: const Text('Timer-Sound aktiv'),
+          subtitle: const Text('Hörbare Signale helfen dir bei den Phasenwechseln.'),
         ),
         SwitchListTile(
           value: _musicOff,
           onChanged: (v) => setState(() => _musicOff = v),
           title: const Text('Musik aus / Fokusmodus'),
+          subtitle: const Text('Minimiere Ablenkung für präzise Bewegungen.'),
         ),
         const Spacer(),
         SizedBox(
@@ -333,11 +350,19 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
         if (_mediaLoading)
           const LinearProgressIndicator()
         else if (_mediaResult?.hasVideo == true)
-          _buildMediaBanner(Icons.play_circle_outline, 'Video verfügbar')
+          _buildMediaBanner(
+            Icons.play_circle_outline,
+            'Video verfügbar',
+            tooltip: 'Nutze das Video für ein direktes Bewegungsbeispiel.',
+          )
         else if (_mediaResult?.hasImage == true)
           _buildImagePreview(_mediaResult!.imageAsset!)
         else
-          _buildMediaBanner(Icons.image_not_supported_outlined, 'Visuelle Anleitung nicht verfügbar'),
+          _buildMediaBanner(
+            Icons.image_not_supported_outlined,
+            'Visuelle Anleitung nicht verfügbar',
+            tooltip: 'Greife auf Textbeschreibung und Cues als Ersatz zurück.',
+          ),
         if ((_mediaResult?.hasError ?? false) && !_mediaErrorAcknowledged)
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
@@ -345,6 +370,16 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
               icon: const Icon(Icons.info_outline),
               label: const Text('Fallback anzeigen'),
               onPressed: () => setState(() => _mediaErrorAcknowledged = true),
+            ),
+          ),
+        if ((_mediaResult?.hasError ?? false) && _mediaErrorAcknowledged)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: _buildInfoBanner(
+              Icons.menu_book_outlined,
+              'Video konnte nicht geladen werden – orientiere dich an Text, Bild und Cues.',
+              tooltip:
+                  'Nutze die Schritt-für-Schritt-Anleitung als sichere Alternative.',
             ),
           ),
         const SizedBox(height: 12),
@@ -368,6 +403,14 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
                 if (ex.endPosition != null && ex.endPosition!.isNotEmpty)
                   _buildDefinitionTile('Endposition', ex.endPosition!),
                 _buildDefinitionTile('Atmung', _describeBreath(ex.breath)),
+                if (ex.notes != null && ex.notes!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: _buildInfoBanner(
+                      Icons.tips_and_updates_outlined,
+                      ex.notes!,
+                    ),
+                  ),
                 const SizedBox(height: 12),
                 ...ex.steps.map((step) => ListTile(
                       dense: true,
@@ -422,6 +465,13 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
               ? 'Nächste Übung startet automatisch in $remaining s.'
               : 'Bereit für die nächste Übung? Du kannst den Countdown manuell starten.',
         ),
+        const SizedBox(height: 12),
+        _buildInfoBanner(
+          Icons.sync_alt,
+          _balanceNotice,
+          tooltip:
+              'Starte bei Bedarf mit der ruhigeren Seite, um Balance aufzubauen.',
+        ),
         if (!hasAutoplay)
           Padding(
             padding: const EdgeInsets.only(top: 16.0),
@@ -475,16 +525,25 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Session-Log', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        _buildInfoBanner(
+          Icons.health_and_safety_outlined,
+          _safetyNotice,
+          tooltip:
+              'Halte Rücksprache mit Fachpersonal, wenn Beschwerden auftreten.',
+        ),
         const SizedBox(height: 16),
         _buildSlider(
           label: 'Spannung',
           value: _tensionValue,
           onChanged: (v) => setState(() => _tensionValue = v),
+          helperText: 'Bewerte die Spannung auf einer Skala von 1-10.',
         ),
         _buildSlider(
           label: 'Schmerz',
           value: _painValue,
           onChanged: (v) => setState(() => _painValue = v),
+          helperText: 'Steigt der Wert, pausiere und konsultiere medizinische Hilfe.',
         ),
         const SizedBox(height: 12),
         TextField(
@@ -530,8 +589,8 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
     return 1 - remainingMs / (totalSeconds * 1000);
   }
 
-  Widget _buildMediaBanner(IconData icon, String label) {
-    return Container(
+  Widget _buildMediaBanner(IconData icon, String label, {String? tooltip}) {
+    final content = Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -545,6 +604,15 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
           Expanded(child: Text(label)),
         ],
       ),
+    );
+
+    if (tooltip == null || tooltip.isEmpty) {
+      return content;
+    }
+
+    return Tooltip(
+      message: tooltip,
+      child: content,
     );
   }
 
@@ -564,6 +632,7 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
     required String label,
     required double value,
     required ValueChanged<double> onChanged,
+    String? helperText,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -577,8 +646,20 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
           label: value.round().toString(),
           onChanged: onChanged,
         ),
+        if (helperText != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12.0),
+            child: Text(
+              helperText,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
       ],
     );
+  }
+
+  Widget _buildInfoBanner(IconData icon, String label, {String? tooltip}) {
+    return _buildMediaBanner(icon, label, tooltip: tooltip);
   }
 
   Widget _buildDefinitionTile(String title, String body) {
