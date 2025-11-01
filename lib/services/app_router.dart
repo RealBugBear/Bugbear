@@ -43,7 +43,6 @@ class AppRouter {
 
   static final _rootNavigatorKey = GlobalKey<NavigatorState>();
   static final _dashboardNavigatorKey = GlobalKey<NavigatorState>();
-  static final _trainingNavigatorKey = GlobalKey<NavigatorState>();
   static final _profileNavigatorKey = GlobalKey<NavigatorState>();
 
   final GoRouter router;
@@ -127,53 +126,6 @@ class AppRouter {
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _trainingNavigatorKey,
-            initialLocation: AppRoutePaths.training,
-            routes: [
-              GoRoute(
-                path: AppRoutePaths.training,
-                name: AppRouteNames.training,
-                builder: (context, state) {
-                  final extra = state.extra;
-                  return MoroTrainingScreen(
-                    intent: extra is TrainingIntent ? extra : null,
-                  );
-                },
-                routes: [
-                  GoRoute(
-                    path: 'completed',
-                    name: AppRouteNames.trainingCompleted,
-                    builder: (context, state) => const TrainingCompletedScreen(),
-                  ),
-                  GoRoute(
-                    path: 'moro/precheck',
-                    name: AppRouteNames.moroPrecheck,
-                    builder: (context, state) => const MoroPreCheckScreen(),
-                  ),
-                  GoRoute(
-                    path: 'moro/:exerciseId',
-                    name: AppRouteNames.moroExercise,
-                    builder: (context, state) {
-                      final args = state.extra;
-                      if (args is MoroExerciseScreenArgs) {
-                        return MoroExerciseScreen(
-                          exercise: args.exercise,
-                          offset: args.offset,
-                          autoplay: args.autoplay,
-                          autoplayDelaySeconds: args.autoplayDelaySeconds,
-                          totalExercises: args.totalExercises,
-                        );
-                      }
-                      return const ErrorScreen(
-                        message: 'Ungültige Trainingsparameter.',
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          StatefulShellBranch(
             navigatorKey: _profileNavigatorKey,
             initialLocation: AppRoutePaths.profile,
             routes: [
@@ -211,6 +163,51 @@ class AppRouter {
                 ],
               ),
             ],
+          ),
+        ],
+      ),
+      GoRoute(
+        path: AppRoutePaths.training,
+        name: AppRouteNames.training,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final extra = state.extra;
+          return MoroTrainingScreen(
+            intent: extra is TrainingIntent ? extra : null,
+          );
+        },
+        routes: [
+          GoRoute(
+            path: 'completed',
+            name: AppRouteNames.trainingCompleted,
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) => const TrainingCompletedScreen(),
+          ),
+          GoRoute(
+            path: 'moro/precheck',
+            name: AppRouteNames.moroPrecheck,
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) => const MoroPreCheckScreen(),
+          ),
+          GoRoute(
+            path: 'moro/:exerciseId',
+            name: AppRouteNames.moroExercise,
+            parentNavigatorKey: _rootNavigatorKey,
+            builder: (context, state) {
+              final args = state.extra;
+              if (args is MoroExerciseScreenArgs) {
+                return MoroExerciseScreen(
+                  exercise: args.exercise,
+                  offset: args.offset,
+                  autoplay: args.autoplay,
+                  autoplayDelaySeconds: args.autoplayDelaySeconds,
+                  totalExercises: args.totalExercises,
+                );
+              }
+              return const ErrorScreen(
+                message: 'Ungültige Trainingsparameter.',
+              );
+            },
           ),
         ],
       ),
