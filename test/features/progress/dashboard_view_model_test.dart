@@ -25,18 +25,12 @@ void main() {
       progressStore = _MockProgressStore();
       reminderService = _MockReminderService();
 
-      when(sessionNotifier.addListener(any<VoidCallback>()))
-          .thenAnswer((_) {});
-      when(sessionNotifier.removeListener(any<VoidCallback>()))
-          .thenAnswer((_) {});
-      when(progressStore.addListener(any<VoidCallback>()))
-          .thenAnswer((_) {});
-      when(progressStore.removeListener(any<VoidCallback>()))
-          .thenAnswer((_) {});
-      when(reminderService.addListener(any<VoidCallback>()))
-          .thenAnswer((_) {});
-      when(reminderService.removeListener(any<VoidCallback>()))
-          .thenAnswer((_) {});
+      when(sessionNotifier.addListener(any)).thenAnswer((_) {});
+      when(sessionNotifier.removeListener(any)).thenAnswer((_) {});
+      when(progressStore.addListener(any)).thenAnswer((_) {});
+      when(progressStore.removeListener(any)).thenAnswer((_) {});
+      when(reminderService.addListener(any)).thenAnswer((_) {});
+      when(reminderService.removeListener(any)).thenAnswer((_) {});
       when(reminderService.scheduledTime).thenReturn(null);
       when(reminderService.hasScheduledReminder).thenReturn(false);
 

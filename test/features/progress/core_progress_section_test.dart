@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'package:free_base/features/progress/models/week_progress.dart';
 import 'package:free_base/features/progress/widgets/core_progress_section.dart';
@@ -38,8 +37,6 @@ CoreWeekProgress _buildWeekProgress({required bool includePendingReflection}) {
 void main() {
   Widget _wrapWithMaterial(Widget child) {
     return MaterialApp(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
       home: Scaffold(body: child),
     );
   }
@@ -59,12 +56,9 @@ void main() {
     );
     await tester.pump();
 
+    expect(find.text('Golden Day gesichtet'), findsOneWidget);
     expect(
-      find.text('Golden day spotted'),
-      findsOneWidget,
-    );
-    expect(
-      find.text('One reflection pending. Catch up now?'),
+      find.text('Eine Reflexion ausstehend. Jetzt nachbereiten?'),
       findsOneWidget,
     );
   });
@@ -84,9 +78,7 @@ void main() {
     );
     await tester.pump();
 
-    expect(
-      find.text('One reflection pending. Catch up now?'),
-      findsNothing,
-    );
+    expect(find.text('Eine Reflexion ausstehend. Jetzt nachbereiten?'),
+        findsNothing);
   });
 }
