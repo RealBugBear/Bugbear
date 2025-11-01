@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import 'package:free_base/features/common/dashboard_route_args.dart';
 import 'package:free_base/features/onboarding/services/secure_storage_service.dart';
 import 'package:free_base/features/onboarding/state/consent_notifier.dart';
 import 'package:free_base/features/training/services/session_repository.dart';
@@ -44,11 +45,17 @@ class _SplashScreenState extends State<SplashScreen> {
 
       final onboardingComplete = sessionState?.onboardingComplete ?? false;
       if (!onboardingComplete) {
-        context.goNamed(AppRouteNames.training);
+        context.goNamed(
+          AppRouteNames.dashboard,
+          extra: const DashboardRouteArgs(),
+        );
         return;
       }
 
-      context.goNamed(AppRouteNames.dashboard);
+      context.goNamed(
+        AppRouteNames.dashboard,
+        extra: const DashboardRouteArgs(),
+      );
     } else {
       context.goNamed(AppRouteNames.login);
     }
