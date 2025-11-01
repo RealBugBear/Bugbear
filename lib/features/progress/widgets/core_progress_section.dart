@@ -743,60 +743,79 @@ class StatsStrip extends StatelessWidget {
     final theme = Theme.of(context);
 
     Widget buildTile(String label, String value, IconData icon) {
-      return Expanded(
-        child: Semantics(
-          label: '$label: $value',
-          child: Container(
-            height: 72,
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceVariant,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              children: [
-                Icon(icon, color: theme.colorScheme.primary),
-                const SizedBox(width: 12),
-                Flexible(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(label, style: theme.textTheme.labelSmall),
-                      Text(
-                        value,
-                        style: theme.textTheme.titleMedium,
-                      ),
-                    ],
-                  ),
+      return Semantics(
+        label: '$label: $value',
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 72),
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: theme.colorScheme.surfaceVariant,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: theme.colorScheme.primary),
+              const SizedBox(width: 12),
+              Flexible(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(label, style: theme.textTheme.labelSmall),
+                    Text(
+                      value,
+                      style: theme.textTheme.titleMedium,
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
     }
 
-    return Row(
-      children: [
-        buildTile(
-          'Geplant',
-          stats.plannedDays.toString(),
-          Icons.event_available,
-        ),
-        const SizedBox(width: 12),
-        buildTile(
-          'Abgeschlossen',
-          stats.completedDays.toString(),
-          Icons.check_circle_outline,
-        ),
-        const SizedBox(width: 12),
-        buildTile(
-          'Reflexion offen',
-          stats.pendingReflections.toString(),
-          Icons.psychology_alt_outlined,
-        ),
-      ],
+    final tiles = [
+      buildTile(
+        'Geplant',
+        stats.plannedDays.toString(),
+        Icons.event_available,
+      ),
+      buildTile(
+        'Abgeschlossen',
+        stats.completedDays.toString(),
+        Icons.check_circle_outline,
+      ),
+      buildTile(
+        'Reflexion offen',
+        stats.pendingReflections.toString(),
+        Icons.psychology_alt_outlined,
+      ),
+    ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        if (constraints.maxWidth >= 520) {
+          return Row(
+            children: [
+              for (int i = 0; i < tiles.length; i++) ...[
+                Expanded(child: tiles[i]),
+                if (i != tiles.length - 1) const SizedBox(width: 12),
+              ],
+            ],
+          );
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            for (int i = 0; i < tiles.length; i++) ...[
+              tiles[i],
+              if (i != tiles.length - 1) const SizedBox(height: 12),
+            ],
+          ],
+        );
+      },
     );
   }
 }
