@@ -17,42 +17,67 @@ class MoroPreCheckScreen extends StatefulWidget {
   State<MoroPreCheckScreen> createState() => _MoroPreCheckScreenState();
 }
 
+class _ChecklistItem {
+  const _ChecklistItem(this.label, {this.tooltip});
+
+  final String label;
+  final String? tooltip;
+}
+
 class _MoroPreCheckScreenState extends State<MoroPreCheckScreen> {
-  final Map<int, bool> _checkItems = {
-    0: false,
-    1: false,
-    2: false,
-    3: false,
-  };
+  static const _checklistItems = [
+    _ChecklistItem('Ich bin nüchtern oder habe höchstens einen leichten Snack gegessen.'),
+    _ChecklistItem('Ich trage lockere Kleidung und habe ausreichend Platz für das Training.'),
+    _ChecklistItem('Ich habe Wasser bereitgestellt.'),
+    _ChecklistItem(
+      'Optional: Ich habe eine binaurale Musikspur vorbereitet (empfohlen).',
+      tooltip: 'Binaurale Musik kann die Konzentration unterstützen, ist aber nicht verpflichtend.',
+    ),
+    _ChecklistItem(
+      'Optional: Ich habe meine eigene Musik oder Playlist vorbereitet.',
+      tooltip: 'Falls gewünscht, kannst du mit deiner eigenen Musik trainieren.',
+    ),
+    _ChecklistItem(
+      'Optional: Ich kenne den Autoplay-Modus – die Übungen wechseln automatisch nach der Pause.',
+      tooltip: 'Der Autoplay-Modus kann jederzeit während des Trainings angepasst werden.',
+    ),
+  ];
+
+  late final List<bool> _checkItems;
   bool _autoplay = true;
   int _delay = 3;
 
-  static const _items = [
-    'Nüchtern oder mit leichtem Snack',
-    'Lockere Kleidung und ausreichend Platz',
-    'Wasser bereitgestellt',
-    'Optional: Musik oder binaurale Spur vorbereitet',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _checkItems = List<bool>.filled(_checklistItems.length, false);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Pre-Check Moro Training')),
+      appBar: AppBar(title: const Text('Vorbereitung Moro-Training')),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Kurze Vorbereitung',
+              'Bitte bestätige deine Vorbereitungsschritte',
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 12),
-            ..._items.asMap().entries.map((entry) {
+            ..._checklistItems.asMap().entries.map((entry) {
               return CheckboxListTile(
                 value: _checkItems[entry.key],
                 onChanged: (v) => setState(() => _checkItems[entry.key] = v ?? false),
-                title: Text(entry.value),
+                title: Text(entry.value.label),
+                secondary: entry.value.tooltip == null
+                    ? null
+                    : Tooltip(
+                        message: entry.value.tooltip!,
+                        child: const Icon(Icons.info_outline),
+                      ),
               );
             }),
             const Divider(height: 32),
@@ -60,7 +85,11 @@ class _MoroPreCheckScreenState extends State<MoroPreCheckScreen> {
               value: _autoplay,
               onChanged: (v) => setState(() => _autoplay = v),
               title: const Text('Autoplay aktivieren'),
-              subtitle: const Text('Übungen wechseln automatisch nach der Pause'),
+              subtitle: const Text('Bei aktivem Autoplay wechseln die Übungen automatisch nach der Pause.'),
+              secondary: const Tooltip(
+                message: 'Autoplay kann im Training jederzeit pausiert oder deaktiviert werden.',
+                child: Icon(Icons.info_outline),
+              ),
             ),
             AnimatedOpacity(
               duration: const Duration(milliseconds: 250),
@@ -83,7 +112,7 @@ class _MoroPreCheckScreenState extends State<MoroPreCheckScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: _checkItems.values.every((v) => v)
+                onPressed: _checkItems.every((v) => v)
                     ? () => Navigator.of(context).pop(
                           MoroPreCheckResult(
                             autoplayEnabled: _autoplay,
