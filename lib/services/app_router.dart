@@ -22,6 +22,7 @@ import 'package:free_base/features/questionnaire/questionnaire_result_screen.dar
 import 'package:free_base/features/questionnaire/questionnaire_screen.dart';
 import 'package:free_base/features/questionnaire/quiz_intro_screen.dart';
 import 'package:free_base/features/training/moro/moro_exercise_screen.dart';
+import 'package:free_base/features/training/moro/moro_models.dart';
 import 'package:free_base/features/training/moro/moro_repository.dart';
 import 'package:free_base/features/training/moro/moro_speed_store.dart';
 import 'package:free_base/features/training/moro/pre_check_screen.dart';
