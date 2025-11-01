@@ -3,5 +3,230 @@
   "appName": "Free Base",
   "@appName": {
     "description": "Brand name of the Free Base application."
+  },
+  "coreHeaderTitle": "This week",
+  "@coreHeaderTitle": {
+    "description": "Title shown above the weekly progress header"
+  },
+  "coreHeaderGoldenDayChip": "Golden day spotted",
+  "@coreHeaderGoldenDayChip": {
+    "description": "Label for the golden day status chip in the progress header"
+  },
+  "coreHeaderSemanticsLabel": "Weekly progress",
+  "@coreHeaderSemanticsLabel": {
+    "description": "Accessibility label describing the weekly progress header"
+  },
+  "coreHeaderSemanticsValue": "Progress {percent} percent",
+  "@coreHeaderSemanticsValue": {
+    "description": "Accessibility value announcing the current weekly progress percentage",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "coreHeaderWindowSummary": "{period} · {percent}%",
+  "@coreHeaderWindowSummary": {
+    "description": "Summary below the progress bar showing the tracked period and completion percentage",
+    "placeholders": {
+      "period": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "coreHeaderWindowRange": "{start} – {end}",
+  "@coreHeaderWindowRange": {
+    "description": "Label describing the start and end date of the tracked week",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "coreWeekdayShortMonday": "Mon",
+  "@coreWeekdayShortMonday": {
+    "description": "Short weekday label for Monday"
+  },
+  "coreWeekdayShortTuesday": "Tue",
+  "@coreWeekdayShortTuesday": {
+    "description": "Short weekday label for Tuesday"
+  },
+  "coreWeekdayShortWednesday": "Wed",
+  "@coreWeekdayShortWednesday": {
+    "description": "Short weekday label for Wednesday"
+  },
+  "coreWeekdayShortThursday": "Thu",
+  "@coreWeekdayShortThursday": {
+    "description": "Short weekday label for Thursday"
+  },
+  "coreWeekdayShortFriday": "Fri",
+  "@coreWeekdayShortFriday": {
+    "description": "Short weekday label for Friday"
+  },
+  "coreWeekdayShortSaturday": "Sat",
+  "@coreWeekdayShortSaturday": {
+    "description": "Short weekday label for Saturday"
+  },
+  "coreWeekdayShortSunday": "Sun",
+  "@coreWeekdayShortSunday": {
+    "description": "Short weekday label for Sunday"
+  },
+  "coreDaySemanticsDate": "Day {date}",
+  "@coreDaySemanticsDate": {
+    "description": "Accessibility prefix announcing the day label for a progress node",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "coreDaySemanticsToday": "today",
+  "@coreDaySemanticsToday": {
+    "description": "Accessibility fragment indicating that the node represents today"
+  },
+  "coreDaySemanticsTrainingPlanned": "training scheduled",
+  "@coreDaySemanticsTrainingPlanned": {
+    "description": "Accessibility fragment indicating that training was planned"
+  },
+  "coreDaySemanticsTrainingNotPlanned": "no training scheduled",
+  "@coreDaySemanticsTrainingNotPlanned": {
+    "description": "Accessibility fragment indicating that no training was planned"
+  },
+  "coreDaySemanticsCompleted": "completed",
+  "@coreDaySemanticsCompleted": {
+    "description": "Accessibility fragment announcing that the training was completed"
+  },
+  "coreDaySemanticsHasReflection": "reflection available",
+  "@coreDaySemanticsHasReflection": {
+    "description": "Accessibility fragment announcing that a reflection exists for the day"
+  },
+  "coreDayTapHint": "Tap for details",
+  "@coreDayTapHint": {
+    "description": "Hint for tapping a day node"
+  },
+  "coreDayLongPressHint": "Press and hold for details",
+  "@coreDayLongPressHint": {
+    "description": "Hint for long-pressing a day node"
+  },
+  "coreStatsPlannedLabel": "Scheduled",
+  "@coreStatsPlannedLabel": {
+    "description": "Label for the planned days tile"
+  },
+  "coreStatsCompletedLabel": "Completed",
+  "@coreStatsCompletedLabel": {
+    "description": "Label for the completed days tile"
+  },
+  "coreStatsReflectionsLabel": "Reflections pending",
+  "@coreStatsReflectionsLabel": {
+    "description": "Label for the reflections pending tile"
+  },
+  "coreSemanticsLabelValue": "{label}: {value}",
+  "@coreSemanticsLabelValue": {
+    "description": "Accessibility string combining a label with its value",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "coreTrainingActionsLabel": "Training actions",
+  "@coreTrainingActionsLabel": {
+    "description": "Accessibility label grouping the training action buttons"
+  },
+  "coreTrainingStartButton": "Start training",
+  "@coreTrainingStartButton": {
+    "description": "Label for the start training button"
+  },
+  "coreTrainingPlanNextWeekButton": "Plan next week",
+  "@coreTrainingPlanNextWeekButton": {
+    "description": "Label for the plan next week button"
+  },
+  "coreReflectionCardLabel": "{count, plural, one {One reflection pending} other {{count} reflections pending}}",
+  "@coreReflectionCardLabel": {
+    "description": "Summary label describing how many reflections are pending",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "coreReflectionCardMessage": "{count, plural, one {One reflection pending. Catch up now?} other {{count} reflections pending. Catch up now?}}",
+  "@coreReflectionCardMessage": {
+    "description": "Message shown inside the reflection callout",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "coreReflectionCardHint": "Tap to open reflection",
+  "@coreReflectionCardHint": {
+    "description": "Hint announced for the reflection card"
+  },
+  "coreReflectionCardOpenButton": "Open",
+  "@coreReflectionCardOpenButton": {
+    "description": "Label for the reflection call-to-action button"
+  },
+  "coreDetailsTitle": "Details for {date}",
+  "@coreDetailsTitle": {
+    "description": "Title of the bottom sheet displaying day details",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "coreDetailsTrainingPlannedLabel": "Training scheduled",
+  "@coreDetailsTrainingPlannedLabel": {
+    "description": "Label describing whether training was scheduled for the day"
+  },
+  "coreDetailsCompletedLabel": "Completed",
+  "@coreDetailsCompletedLabel": {
+    "description": "Label describing whether the day was completed"
+  },
+  "coreDetailsGoldenDayLabel": "Golden day",
+  "@coreDetailsGoldenDayLabel": {
+    "description": "Label describing the golden day status"
+  },
+  "coreDetailsReflectionLabel": "Reflection",
+  "@coreDetailsReflectionLabel": {
+    "description": "Label describing whether a reflection exists"
+  },
+  "coreDetailsYes": "Yes",
+  "@coreDetailsYes": {
+    "description": "Yes label for boolean rows"
+  },
+  "coreDetailsNo": "No",
+  "@coreDetailsNo": {
+    "description": "No label for boolean rows"
+  },
+  "coreDetailsGoldenDayMarked": "Marked",
+  "@coreDetailsGoldenDayMarked": {
+    "description": "Value displayed when a golden day is marked"
+  },
+  "coreDetailsGoldenDayNotMarked": "Not marked",
+  "@coreDetailsGoldenDayNotMarked": {
+    "description": "Value displayed when no golden day is marked"
+  },
+  "coreDetailsReflectionAvailable": "Available",
+  "@coreDetailsReflectionAvailable": {
+    "description": "Value displayed when a reflection exists"
+  },
+  "coreDetailsReflectionMissing": "Missing",
+  "@coreDetailsReflectionMissing": {
+    "description": "Value displayed when a reflection is missing"
+  },
+  "coreDetailsReflectionTip": "Tip: Reflection still pending.",
+  "@coreDetailsReflectionTip": {
+    "description": "Callout shown when a reflection is still pending"
   }
 }

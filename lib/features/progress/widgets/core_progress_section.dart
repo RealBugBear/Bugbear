@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import 'package:free_base/features/progress/models/week_progress.dart';
@@ -376,13 +377,15 @@ class CoreHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final disableAnimations =
         MediaQuery.maybeOf(context)?.disableAnimations ?? false;
     final ratio = progress.progressRatio.clamp(0.0, 1.0).toDouble();
 
-    final periodLabel =
-        '${_formatDate(progress.windowStart)} – ${_formatDate(progress.windowEnd)}';
+    final startLabel = _formatDate(progress.windowStart);
+    final endLabel = _formatDate(progress.windowEnd);
+    final periodLabel = l10n.coreHeaderWindowRange(startLabel, endLabel);
 
     final goldenDayChip = progress.hasGoldenDay
         ? Padding(
@@ -398,7 +401,7 @@ class CoreHeader extends StatelessWidget {
                   color: theme.colorScheme.onSecondaryContainer,
                 ),
                 label: Text(
-                  'Golden Day gesichtet',
+                  l10n.coreHeaderGoldenDayChip,
                   style: theme.textTheme.labelLarge?.copyWith(
                     color: theme.colorScheme.onSecondaryContainer,
                   ),
@@ -410,8 +413,8 @@ class CoreHeader extends StatelessWidget {
         : const SizedBox.shrink();
 
     return Semantics(
-      label: 'Wochenfortschritt',
-      value: 'Fortschritt ${(ratio * 100).round()} Prozent',
+      label: l10n.coreHeaderSemanticsLabel,
+      value: l10n.coreHeaderSemanticsValue((ratio * 100).round()),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -420,7 +423,7 @@ class CoreHeader extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                  'Diese Woche',
+                  l10n.coreHeaderTitle,
                   style: theme.textTheme.titleLarge,
                 ),
               ),
@@ -444,15 +447,18 @@ class CoreHeader extends StatelessWidget {
                       value: value,
                       minHeight: 12,
                       backgroundColor: theme.colorScheme.surfaceVariant,
-                    ),
                   ),
-                  const SizedBox(height: 6),
-                  Text(
-                    '$periodLabel · ${(value * 100).toStringAsFixed(0)}%',
-                    style: theme.textTheme.labelMedium,
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  l10n.coreHeaderWindowSummary(
+                    periodLabel,
+                    (value * 100).toStringAsFixed(0),
                   ),
-                ],
-              );
+                  style: theme.textTheme.labelMedium,
+                ),
+              ],
+            );
             },
           ),
         ],
@@ -546,6 +552,7 @@ class _WeekProgressBarState extends State<WeekProgressBar>
     ThemeData theme,
     DayProgressNode node,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     final bool isToday = node.isToday;
     final bool isCompleted = node.isCompleted;
     final bool isPlanned = node.isPlanned;
@@ -558,22 +565,27 @@ class _WeekProgressBarState extends State<WeekProgressBar>
 
     const double size = 56.0;
 
-    final semanticsLabel = StringBuffer()
-      ..write('Tag ${_formatDate(node.date)}')
-      ..write(isToday ? ', heute' : '')
-      ..write(isPlanned ? ', Training geplant' : ', kein Training geplant')
-      ..write(isCompleted ? ', abgeschlossen' : '')
-      ..write(node.hasReflection ? ', Reflexion vorhanden' : '');
+    final dateLabel = _formatDate(node.date);
+    final semanticsParts = <String>[
+      l10n.coreDaySemanticsDate(dateLabel),
+      if (isToday) l10n.coreDaySemanticsToday,
+      if (isPlanned)
+        l10n.coreDaySemanticsTrainingPlanned
+      else
+        l10n.coreDaySemanticsTrainingNotPlanned,
+      if (isCompleted) l10n.coreDaySemanticsCompleted,
+      if (node.hasReflection) l10n.coreDaySemanticsHasReflection,
+    ];
 
     final bool disableAnimations = _animationsDisabled;
 
     return Semantics(
       container: true,
-      label: semanticsLabel.toString(),
+      label: semanticsParts.join(', '),
       hint: widget.onNodeTap != null
-          ? 'Tippen für Details'
+          ? l10n.coreDayTapHint
           : widget.onNodeLongPress != null
-              ? 'Gedrückt halten für Details'
+              ? l10n.coreDayLongPressHint
               : null,
       button: widget.onNodeTap != null || widget.onNodeLongPress != null,
       child: Padding(
@@ -677,7 +689,7 @@ class _WeekProgressBarState extends State<WeekProgressBar>
                 const SizedBox(height: 8),
                 ExcludeSemantics(
                   child: Text(
-                    _weekdayLabel(node.date),
+                    _weekdayLabel(l10n, node.date),
                     style: theme.textTheme.labelSmall,
                   ),
                 ),
@@ -701,22 +713,22 @@ class _WeekProgressBarState extends State<WeekProgressBar>
     await widget.onNodeLongPress?.call(context, node);
   }
 
-  String _weekdayLabel(DateTime date) {
+  String _weekdayLabel(AppLocalizations l10n, DateTime date) {
     switch (date.weekday) {
       case DateTime.monday:
-        return 'Mo';
+        return l10n.coreWeekdayShortMonday;
       case DateTime.tuesday:
-        return 'Di';
+        return l10n.coreWeekdayShortTuesday;
       case DateTime.wednesday:
-        return 'Mi';
+        return l10n.coreWeekdayShortWednesday;
       case DateTime.thursday:
-        return 'Do';
+        return l10n.coreWeekdayShortThursday;
       case DateTime.friday:
-        return 'Fr';
+        return l10n.coreWeekdayShortFriday;
       case DateTime.saturday:
-        return 'Sa';
+        return l10n.coreWeekdayShortSaturday;
       case DateTime.sunday:
-        return 'So';
+        return l10n.coreWeekdayShortSunday;
       default:
         return '';
     }
@@ -740,12 +752,13 @@ class StatsStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
     Widget buildTile(String label, String value, IconData icon) {
       return Expanded(
         child: Semantics(
-          label: '$label: $value',
+          label: l10n.coreSemanticsLabelValue(label, value),
           child: Container(
             height: 72,
             padding: const EdgeInsets.all(12),
@@ -780,19 +793,19 @@ class StatsStrip extends StatelessWidget {
     return Row(
       children: [
         buildTile(
-          'Geplant',
+          l10n.coreStatsPlannedLabel,
           stats.plannedDays.toString(),
           Icons.event_available,
         ),
         const SizedBox(width: 12),
         buildTile(
-          'Abgeschlossen',
+          l10n.coreStatsCompletedLabel,
           stats.completedDays.toString(),
           Icons.check_circle_outline,
         ),
         const SizedBox(width: 12),
         buildTile(
-          'Reflexion offen',
+          l10n.coreStatsReflectionsLabel,
           stats.pendingReflections.toString(),
           Icons.psychology_alt_outlined,
         ),
@@ -816,6 +829,7 @@ class TrainingCta extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final bool hasStartTraining = onStartTraining != null;
     final bool hasStartNextWeek = onStartNextWeek != null;
 
@@ -825,7 +839,7 @@ class TrainingCta extends StatelessWidget {
 
     return Semantics(
       container: true,
-      label: 'Training Aktionen',
+      label: l10n.coreTrainingActionsLabel,
       child: Wrap(
         spacing: 12,
         runSpacing: 12,
@@ -840,7 +854,7 @@ class TrainingCta extends StatelessWidget {
                   onStartTraining?.call();
                 },
                 icon: const Icon(Icons.play_arrow_rounded),
-                label: const Text('Training starten'),
+                label: Text(l10n.coreTrainingStartButton),
               ),
             ),
           if (hasStartNextWeek)
@@ -853,7 +867,7 @@ class TrainingCta extends StatelessWidget {
                   onStartNextWeek?.call();
                 },
                 icon: const Icon(Icons.calendar_month_outlined),
-                label: const Text('Nächste Woche planen'),
+                label: Text(l10n.coreTrainingPlanNextWeekButton),
               ),
             ),
         ],
@@ -879,14 +893,14 @@ class ReflectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final label = pendingReflections == 1
-        ? 'Eine Reflexion ausstehend'
-        : '$pendingReflections Reflexionen ausstehend';
+    final summary = l10n.coreReflectionCardLabel(pendingReflections);
+    final message = l10n.coreReflectionCardMessage(pendingReflections);
 
     return Semantics(
-      label: label,
-      hint: 'Tippen um Reflexion zu öffnen',
+      label: summary,
+      hint: l10n.coreReflectionCardHint,
       button: true,
       child: AnimatedScale(
         scale: disableAnimations ? 1.0 : 1.02,
@@ -906,7 +920,7 @@ class ReflectionCard extends StatelessWidget {
                 const SizedBox(width: 16),
                 Expanded(
                   child: Text(
-                    '$label. Jetzt nachbereiten?',
+                    message,
                     style: theme.textTheme.bodyLarge?.copyWith(
                       color: theme.colorScheme.onSecondaryContainer,
                     ),
@@ -925,7 +939,7 @@ class ReflectionCard extends StatelessWidget {
                       feedbackHooks?.onOpenReflectionAudio?.call();
                       onOpenReflection();
                     },
-                    child: const Text('Öffnen'),
+                    child: Text(l10n.coreReflectionCardOpenButton),
                   ),
                 ),
               ],
@@ -943,6 +957,7 @@ Future<void> showProgressNodeDetailsBottomSheet({
   required DayProgressNode node,
 }) {
   final theme = Theme.of(context);
+  final l10n = AppLocalizations.of(context)!;
   final dateLabel =
       '${node.date.day.toString().padLeft(2, '0')}.${node.date.month.toString().padLeft(2, '0')}.${node.date.year}';
 
@@ -958,35 +973,39 @@ Future<void> showProgressNodeDetailsBottomSheet({
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Details für $dateLabel', style: textTheme.titleLarge),
+              Text(l10n.coreDetailsTitle(dateLabel), style: textTheme.titleLarge),
               const SizedBox(height: 16),
               _DetailRow(
                 icon: Icons.event_available,
-                label: 'Training geplant',
-                value: node.isPlanned ? 'Ja' : 'Nein',
+                label: l10n.coreDetailsTrainingPlannedLabel,
+                value: node.isPlanned ? l10n.coreDetailsYes : l10n.coreDetailsNo,
               ),
               const SizedBox(height: 12),
               _DetailRow(
                 icon: Icons.check_circle_outline,
-                label: 'Abgeschlossen',
-                value: node.isCompleted ? 'Ja' : 'Nein',
+                label: l10n.coreDetailsCompletedLabel,
+                value: node.isCompleted ? l10n.coreDetailsYes : l10n.coreDetailsNo,
               ),
               const SizedBox(height: 12),
               _DetailRow(
                 icon: Icons.auto_awesome,
-                label: 'Golden Day',
-                value: node.isGoldenDay ? 'Markiert' : 'Nicht markiert',
+                label: l10n.coreDetailsGoldenDayLabel,
+                value: node.isGoldenDay
+                    ? l10n.coreDetailsGoldenDayMarked
+                    : l10n.coreDetailsGoldenDayNotMarked,
               ),
               const SizedBox(height: 12),
               _DetailRow(
                 icon: Icons.psychology_alt_outlined,
-                label: 'Reflexion',
-                value: node.hasReflection ? 'Vorhanden' : 'Fehlt',
+                label: l10n.coreDetailsReflectionLabel,
+                value: node.hasReflection
+                    ? l10n.coreDetailsReflectionAvailable
+                    : l10n.coreDetailsReflectionMissing,
               ),
               if (node.requiresReflection) ...[
                 const SizedBox(height: 24),
                 Text(
-                  'Tipp: Reflexion noch ausstehend.',
+                  l10n.coreDetailsReflectionTip,
                   style: textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.error,
                   ),
@@ -1014,8 +1033,9 @@ class _DetailRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
     return Semantics(
-      label: '$label: $value',
+      label: l10n.coreSemanticsLabelValue(label, value),
       child: Row(
         children: [
           Icon(icon, color: theme.colorScheme.primary),
