@@ -3,5 +3,230 @@
   "appName": "Free Base",
   "@appName": {
     "description": "Produktname der Free Base Anwendung."
+  },
+  "coreHeaderTitle": "Diese Woche",
+  "@coreHeaderTitle": {
+    "description": "Titel oberhalb des Wochenfortschritts"
+  },
+  "coreHeaderGoldenDayChip": "Golden Day gesichtet",
+  "@coreHeaderGoldenDayChip": {
+    "description": "Label für den Golden-Day-Status"
+  },
+  "coreHeaderSemanticsLabel": "Wochenfortschritt",
+  "@coreHeaderSemanticsLabel": {
+    "description": "Accessibility-Beschreibung für den Wochenfortschritt"
+  },
+  "coreHeaderSemanticsValue": "Fortschritt {percent} Prozent",
+  "@coreHeaderSemanticsValue": {
+    "description": "Accessibility-Wert mit aktuellem Fortschrittsprozentsatz",
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
+  "coreHeaderWindowSummary": "{period} · {percent}%",
+  "@coreHeaderWindowSummary": {
+    "description": "Zusammenfassung unter dem Fortschrittsbalken",
+    "placeholders": {
+      "period": {
+        "type": "String"
+      },
+      "percent": {
+        "type": "String"
+      }
+    }
+  },
+  "coreHeaderWindowRange": "{start} – {end}",
+  "@coreHeaderWindowRange": {
+    "description": "Anzeigezeitraum der Woche",
+    "placeholders": {
+      "start": {
+        "type": "String"
+      },
+      "end": {
+        "type": "String"
+      }
+    }
+  },
+  "coreWeekdayShortMonday": "Mo",
+  "@coreWeekdayShortMonday": {
+    "description": "Wochentag Montag (kurz)"
+  },
+  "coreWeekdayShortTuesday": "Di",
+  "@coreWeekdayShortTuesday": {
+    "description": "Wochentag Dienstag (kurz)"
+  },
+  "coreWeekdayShortWednesday": "Mi",
+  "@coreWeekdayShortWednesday": {
+    "description": "Wochentag Mittwoch (kurz)"
+  },
+  "coreWeekdayShortThursday": "Do",
+  "@coreWeekdayShortThursday": {
+    "description": "Wochentag Donnerstag (kurz)"
+  },
+  "coreWeekdayShortFriday": "Fr",
+  "@coreWeekdayShortFriday": {
+    "description": "Wochentag Freitag (kurz)"
+  },
+  "coreWeekdayShortSaturday": "Sa",
+  "@coreWeekdayShortSaturday": {
+    "description": "Wochentag Samstag (kurz)"
+  },
+  "coreWeekdayShortSunday": "So",
+  "@coreWeekdayShortSunday": {
+    "description": "Wochentag Sonntag (kurz)"
+  },
+  "coreDaySemanticsDate": "Tag {date}",
+  "@coreDaySemanticsDate": {
+    "description": "Accessibility-Präfix für das Tagesdatum",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "coreDaySemanticsToday": "heute",
+  "@coreDaySemanticsToday": {
+    "description": "Accessibility-Fragment für den heutigen Tag"
+  },
+  "coreDaySemanticsTrainingPlanned": "Training geplant",
+  "@coreDaySemanticsTrainingPlanned": {
+    "description": "Accessibility-Fragment für geplantes Training"
+  },
+  "coreDaySemanticsTrainingNotPlanned": "Kein Training geplant",
+  "@coreDaySemanticsTrainingNotPlanned": {
+    "description": "Accessibility-Fragment für kein geplantes Training"
+  },
+  "coreDaySemanticsCompleted": "abgeschlossen",
+  "@coreDaySemanticsCompleted": {
+    "description": "Accessibility-Fragment für abgeschlossene Einheiten"
+  },
+  "coreDaySemanticsHasReflection": "Reflexion vorhanden",
+  "@coreDaySemanticsHasReflection": {
+    "description": "Accessibility-Fragment für vorhandene Reflexion"
+  },
+  "coreDayTapHint": "Tippen für Details",
+  "@coreDayTapHint": {
+    "description": "Hinweis zum Tippen auf einen Tag"
+  },
+  "coreDayLongPressHint": "Gedrückt halten für Details",
+  "@coreDayLongPressHint": {
+    "description": "Hinweis zum Gedrückthalten auf einen Tag"
+  },
+  "coreStatsPlannedLabel": "Geplant",
+  "@coreStatsPlannedLabel": {
+    "description": "Label für geplante Tage"
+  },
+  "coreStatsCompletedLabel": "Abgeschlossen",
+  "@coreStatsCompletedLabel": {
+    "description": "Label für abgeschlossene Tage"
+  },
+  "coreStatsReflectionsLabel": "Reflexion offen",
+  "@coreStatsReflectionsLabel": {
+    "description": "Label für offene Reflexionen"
+  },
+  "coreSemanticsLabelValue": "{label}: {value}",
+  "@coreSemanticsLabelValue": {
+    "description": "Accessibility-String für Label und Wert",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "coreTrainingActionsLabel": "Training Aktionen",
+  "@coreTrainingActionsLabel": {
+    "description": "Accessibility-Label für Trainingsaktionen"
+  },
+  "coreTrainingStartButton": "Training starten",
+  "@coreTrainingStartButton": {
+    "description": "Beschriftung für den Start-Button"
+  },
+  "coreTrainingPlanNextWeekButton": "Nächste Woche planen",
+  "@coreTrainingPlanNextWeekButton": {
+    "description": "Beschriftung für den Planen-Button"
+  },
+  "coreReflectionCardLabel": "{count, plural, one {Eine Reflexion ausstehend} other {{count} Reflexionen ausstehend}}",
+  "@coreReflectionCardLabel": {
+    "description": "Zusammenfassung der offenen Reflexionen",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "coreReflectionCardMessage": "{count, plural, one {Eine Reflexion ausstehend. Jetzt nachbereiten?} other {{count} Reflexionen ausstehend. Jetzt nachbereiten?}}",
+  "@coreReflectionCardMessage": {
+    "description": "Text innerhalb der Reflexionskarte",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "coreReflectionCardHint": "Tippen um Reflexion zu öffnen",
+  "@coreReflectionCardHint": {
+    "description": "Hinweis zum Öffnen der Reflexion"
+  },
+  "coreReflectionCardOpenButton": "Öffnen",
+  "@coreReflectionCardOpenButton": {
+    "description": "Beschriftung für den Öffnen-Button"
+  },
+  "coreDetailsTitle": "Details für {date}",
+  "@coreDetailsTitle": {
+    "description": "Titel des Detail-Bottom-Sheets",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "coreDetailsTrainingPlannedLabel": "Training geplant",
+  "@coreDetailsTrainingPlannedLabel": {
+    "description": "Label für geplantes Training"
+  },
+  "coreDetailsCompletedLabel": "Abgeschlossen",
+  "@coreDetailsCompletedLabel": {
+    "description": "Label für abgeschlossene Tage"
+  },
+  "coreDetailsGoldenDayLabel": "Golden Day",
+  "@coreDetailsGoldenDayLabel": {
+    "description": "Label für den Golden-Day-Status"
+  },
+  "coreDetailsReflectionLabel": "Reflexion",
+  "@coreDetailsReflectionLabel": {
+    "description": "Label für Reflexionsstatus"
+  },
+  "coreDetailsYes": "Ja",
+  "@coreDetailsYes": {
+    "description": "Ja-Wert für boolesche Angaben"
+  },
+  "coreDetailsNo": "Nein",
+  "@coreDetailsNo": {
+    "description": "Nein-Wert für boolesche Angaben"
+  },
+  "coreDetailsGoldenDayMarked": "Markiert",
+  "@coreDetailsGoldenDayMarked": {
+    "description": "Wert wenn Golden Day markiert ist"
+  },
+  "coreDetailsGoldenDayNotMarked": "Nicht markiert",
+  "@coreDetailsGoldenDayNotMarked": {
+    "description": "Wert wenn kein Golden Day markiert ist"
+  },
+  "coreDetailsReflectionAvailable": "Vorhanden",
+  "@coreDetailsReflectionAvailable": {
+    "description": "Wert wenn eine Reflexion vorhanden ist"
+  },
+  "coreDetailsReflectionMissing": "Fehlt",
+  "@coreDetailsReflectionMissing": {
+    "description": "Wert wenn eine Reflexion fehlt"
+  },
+  "coreDetailsReflectionTip": "Tipp: Reflexion noch ausstehend.",
+  "@coreDetailsReflectionTip": {
+    "description": "Hinweis auf fehlende Reflexion"
   }
 }

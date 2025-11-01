@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:go_router/go_router.dart';
@@ -302,6 +303,10 @@ class _MyAppState extends State<MyApp> {
 
           return MaterialApp.router(
             title: AppStrings.appName,
+            onGenerateTitle: (context) =>
+                AppLocalizations.of(context)?.appName ?? AppStrings.appName,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
             theme: ThemeData(primarySwatch: Colors.blue),
             scaffoldMessengerKey: widget.scaffoldMessengerKey,
             routerConfig: _router!,

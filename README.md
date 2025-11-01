@@ -11,7 +11,7 @@ coaches always have the latest information.
   parent/child, or trainer journeys.
 - **Daily training companion** featuring phase-based exercise plans, timers, and offline persistence through Hive, with automatic
   background synchronisation handled by the `SyncService` once connectivity returns.
-- **Weekly progress overview** driven by the Hive-backed `ProgressStore` to monitor adherence and celebrate milestone streaks.
+- **Weekly progress overview** driven by the Hive-backed `ProgressStore`, now presented as a localized "Core line" with golden day callouts, completion telemetry, and reflection reminders directly on the dashboard.
 - **Questionnaire and reflex profiles** that pull structured content from local JSON assets, store state securely, and surface
   insights through the profile screens.
 - **Cross-platform shell** with platform-specific assets (icons, splash screens) ready to be replaced with branded Free Base
@@ -26,6 +26,16 @@ coaches always have the latest information.
 - Modular services (`SessionRepository`, `ExerciseRepository`, `SyncService`, `ProfileService`) plus stores such as the
   `ProgressStore` that keep UI widgets declarative and easy to test.
 - Localisation scaffolding (`lib/l10n/*.arb`) prepared for English and German with the shared `appName` key.
+
+### Dashboard Experience
+The home screen now centres on the **Core progress line** instead of the legacy calendar. The refreshed dashboard delivers:
+
+- A responsive header that announces the tracked week, completion ratio, and golden-day streaks.
+- A tappable seven-day progress bar with accessibility hints that respect system "Reduce Motion" preferences and provide haptic/audio feedback hooks.
+- Inline stats tiles for planned, completed, and outstanding reflection days plus contextual CTAs to start training or plan the next week.
+- A reflection card that surfaces pending follow-ups and invites users to catch up without leaving the dashboard.
+
+All copy is provided through the new localisation strings (`intl_en.arb`, `intl_de.arb`), and the previous calendar view and its alt texts were removed to reduce duplication.
 
 ## Getting Started
 

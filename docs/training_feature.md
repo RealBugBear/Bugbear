@@ -3,6 +3,8 @@
 ## Overview
 Mode 1 now centres on the Moro training experience: athletes step through rich multimedia exercises, optionally resume where they left off, and earn XP as they progress. A notifier-driven architecture persists every change, keeping the dashboard and profile areas in sync even when the device is offline.
 
+The dashboard now mirrors this progress through the Core line widgets. Each completion that flows through `DashboardViewModel` instantly updates the seven-day overview, the stats strip, and the reflection prompts without relying on the removed calendar module.
+
 ## Architecture Summary
 - **State management** – `SessionNotifier` owns the persisted `SessionState`, exposes planning helpers, manages Moro resume points, and applies XP or streak updates whenever training activity is recorded.【F:lib/features/training/notifier/session_notifier.dart†L16-L157】
 - **Session model** – `SessionState` stores phase metadata, counts, scheduling details, and the Moro resume map. Each `ExerciseItem` describes timing defaults and assets for a single exercise step.【F:lib/features/training/models/session_state.dart†L1-L22】【F:lib/features/training/models/exercise_item.dart†L1-L19】
@@ -30,6 +32,10 @@ Mode 1 now centres on the Moro training experience: athletes step through rich m
 ### Offline Usage Notes
 - Session state is saved locally so progress survives app restarts or network outages.【F:lib/features/training/notifier/session_notifier.dart†L34-L61】【F:lib/features/training/services/session_repository.dart†L1-L23】
 - Once connectivity returns, queued changes propagate automatically via `SyncService`—no manual action required.【F:lib/features/training/services/sync_service.dart†L1-L74】
+
+## Dashboard Integration
+- `DashboardViewModel` aggregates the `ProgressStore` flags into a `CoreWeekProgress` object that powers the new Core line UI.【F:lib/features/common/state/dashboard_view_model.dart†L89-L207】
+- `CoreProgressSection` renders the header, progress bar, stats, CTAs, and reflection card, pulling its copy from the updated localisation bundle.【F:lib/features/progress/widgets/core_progress_section.dart†L47-L1011】
 
 ### Tips for Practitioners
 - Extend the Moro catalog or adjust defaults by editing `MoroRepository` data and exercise definitions.【F:lib/features/training/moro/moro_repository.dart†L9-L96】
