@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -15,6 +16,8 @@ import 'moro_progress_store.dart';
 import 'moro_repository.dart';
 import 'moro_speed_store.dart';
 import 'pre_check_screen.dart';
+
+enum _MoroExerciseLaunchSource { start, autoplay, resume }
 
 class MoroTrainingScreen extends StatefulWidget {
   final TrainingIntent? intent;
@@ -167,7 +170,14 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
     final startExercise = _determineStartExercise(items, progress, notifier);
     final offset = await _getOffset(startExercise.index);
     if (!mounted) return;
-    await _openExercise(context, startExercise, offset, items.length, items);
+    await _openExercise(
+      context,
+      startExercise,
+      offset,
+      items.length,
+      items,
+      source: _MoroExerciseLaunchSource.start,
+    );
   }
 
   @override
@@ -314,6 +324,7 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
                                                 offs,
                                                 items.length,
                                                 items,
+                                                source: _MoroExerciseLaunchSource.start,
                                               )
                                           : null,
                                       icon: const Icon(Icons.play_arrow),
@@ -352,19 +363,26 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
     MoroExercise ex,
     int offset,
     int totalExercises,
-    List<MoroExercise> allExercises,
-  ) async {
+    List<MoroExercise> allExercises, {
+    _MoroExerciseLaunchSource source = _MoroExerciseLaunchSource.start,
+  }) async {
     context.read<SessionNotifier>().startMoroSession();
+    final args = MoroExerciseScreenArgs(
+      exercise: ex,
+      offset: offset,
+      autoplay: _autoplayEnabled,
+      autoplayDelaySeconds: _autoplayDelaySeconds,
+      totalExercises: totalExercises,
+    );
+    developer.log(
+      'Opening Moro exercise ${ex.index} via ${source.name} '
+      '(offset=$offset autoplay=${args.autoplay} delay=${args.autoplayDelaySeconds})',
+      name: 'MoroTrainingScreen',
+    );
     final result = await context.pushNamed(
       AppRouteNames.moroExercise,
       pathParameters: {'exerciseId': '${ex.index}'},
-      extra: MoroExerciseScreenArgs(
-        exercise: ex,
-        offset: offset,
-        autoplay: _autoplayEnabled,
-        autoplayDelaySeconds: _autoplayDelaySeconds,
-        totalExercises: totalExercises,
-      ),
+      extra: args,
     );
     if (!context.mounted) return;
     if (result is MoroExerciseResult) {
@@ -392,6 +410,7 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
             nextOffset,
             totalExercises,
             allExercises,
+            source: _MoroExerciseLaunchSource.autoplay,
           );
           return;
         }
@@ -454,7 +473,14 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
     }
     final offset = await _getOffset(exercise.index);
     if (!mounted) return;
-    await _openExercise(context, exercise, offset, items.length, items);
+    await _openExercise(
+      context,
+      exercise,
+      offset,
+      items.length,
+      items,
+      source: _MoroExerciseLaunchSource.resume,
+    );
   }
 
   String? _resolveResumeKey(

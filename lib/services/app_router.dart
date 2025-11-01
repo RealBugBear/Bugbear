@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -20,6 +22,8 @@ import 'package:free_base/features/questionnaire/questionnaire_result_screen.dar
 import 'package:free_base/features/questionnaire/questionnaire_screen.dart';
 import 'package:free_base/features/questionnaire/quiz_intro_screen.dart';
 import 'package:free_base/features/training/moro/moro_exercise_screen.dart';
+import 'package:free_base/features/training/moro/moro_repository.dart';
+import 'package:free_base/features/training/moro/moro_speed_store.dart';
 import 'package:free_base/features/training/moro/pre_check_screen.dart';
 import 'package:free_base/features/training/moro/moro_training_screen.dart';
 import 'package:free_base/features/training/training_completed_screen.dart';
@@ -204,8 +208,23 @@ class AppRouter {
                   totalExercises: args.totalExercises,
                 );
               }
-              return const ErrorScreen(
-                message: 'Ungültige Trainingsparameter.',
+              final idParam = state.pathParameters['exerciseId'];
+              final exerciseId = int.tryParse(idParam ?? '');
+              if (exerciseId == null) {
+                developer.log(
+                  'Failed to parse exerciseId "$idParam" for MoroExercise route without extra.',
+                  name: 'AppRouter',
+                );
+                return const ErrorScreen(
+                  message: 'Ungültige Trainingsparameter.',
+                );
+              }
+              developer.log(
+                'Missing MoroExerciseScreenArgs for exercise $exerciseId – loading fallback.',
+                name: 'AppRouter',
+              );
+              return MoroExerciseRouteLoader(
+                exerciseId: exerciseId,
               );
             },
           ),
@@ -246,5 +265,76 @@ class AppRouter {
         },
       ),
     ];
+  }
+}
+
+class MoroExerciseRouteLoader extends StatelessWidget {
+  final int exerciseId;
+  final MoroRepository? repository;
+  final Widget Function(MoroExerciseScreenArgs args)? screenBuilder;
+
+  const MoroExerciseRouteLoader({
+    super.key,
+    required this.exerciseId,
+    this.repository,
+    this.screenBuilder,
+  });
+
+  Future<MoroExerciseScreenArgs> _loadArgs() async {
+    final repo = repository ?? MoroRepository();
+    final exercises = await repo.load();
+    MoroExercise? exercise;
+    for (final ex in exercises) {
+      if (ex.index == exerciseId) {
+        exercise = ex;
+        break;
+      }
+    }
+    if (exercise == null) {
+      throw StateError('Moro exercise $exerciseId nicht gefunden.');
+    }
+    final offset = await MoroSpeedStore.getOffsetForExercise(exercise.index);
+    return MoroExerciseScreenArgs(
+      exercise: exercise,
+      offset: offset,
+      autoplay: true,
+      autoplayDelaySeconds: exercise.autoplayDefault,
+      totalExercises: exercises.length,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<MoroExerciseScreenArgs>(
+      future: _loadArgs(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState != ConnectionState.done) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (!snapshot.hasData || snapshot.hasError) {
+          developer.log(
+            'Fallback für Moro-Training fehlgeschlagen: ${snapshot.error}',
+            name: 'AppRouter',
+          );
+          return const ErrorScreen(
+            message: 'Das Training konnte nicht geladen werden.',
+          );
+        }
+        final args = snapshot.data!;
+        final builder = screenBuilder;
+        if (builder != null) {
+          return builder(args);
+        }
+        return MoroExerciseScreen(
+          exercise: args.exercise,
+          offset: args.offset,
+          autoplay: args.autoplay,
+          autoplayDelaySeconds: args.autoplayDelaySeconds,
+          totalExercises: args.totalExercises,
+        );
+      },
+    );
   }
 }
