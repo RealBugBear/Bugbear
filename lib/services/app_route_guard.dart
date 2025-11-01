@@ -103,7 +103,8 @@ class AppRouteGuard {
   }
 
   bool _requiresOnboardingComplete(String location) {
-    if (location == AppRoutePaths.training ||
+    if (location == AppRoutePaths.splash ||
+        location == AppRoutePaths.training ||
         location == AppRoutePaths.trainingCompleted ||
         location == AppRoutePaths.dashboard ||
         location == AppRoutePaths.consent ||
