@@ -8,12 +8,16 @@ import 'package:provider/provider.dart';
 
 import 'package:free_base/features/training/models/exercise_item.dart';
 import 'package:free_base/features/training/models/session_state.dart';
+import 'package:free_base/features/training/moro/moro_exercise_screen.dart';
+import 'package:free_base/features/training/moro/moro_models.dart';
+import 'package:free_base/features/training/moro/moro_repository.dart';
 import 'package:free_base/features/training/moro/moro_training_screen.dart';
 import 'package:free_base/features/training/moro/pre_check_screen.dart';
 import 'package:free_base/features/training/notifier/session_notifier.dart';
 import 'package:free_base/features/training/services/exercise_repository.dart';
 import 'package:free_base/features/training/services/session_repository.dart';
 import 'package:free_base/features/training/services/sync_service.dart';
+import 'package:free_base/services/app_router.dart';
 import 'package:free_base/services/app_routes.dart';
 import 'package:free_base/services/training_intent.dart';
 
@@ -52,6 +56,43 @@ class _TestExerciseRepository extends ExerciseRepository {
 
   @override
   List<ExerciseItem> getExercisesForPhase(String phaseId) => _items;
+}
+
+class _FakeMoroRepository extends MoroRepository {
+  final List<MoroExercise> _items;
+
+  _FakeMoroRepository(this._items);
+
+  @override
+  Future<List<MoroExercise>> load() async => _items;
+}
+
+List<MoroExercise> _buildFakeExercises(int count) {
+  return List.generate(count, (index) {
+    final idx = index + 1;
+    return MoroExercise(
+      index: idx,
+      title: 'Übung $idx',
+      type: MoroExerciseType.simple,
+      repeats: 1,
+      phasesPerRepeat: 1,
+      baseSeconds: 5,
+      autoplayDefault: 3,
+      goal: 'Ziel $idx',
+      startPosition: 'Start',
+      steps: const [],
+      cues: const [],
+      breath: const MoroBreathPattern(pattern: 'breath'),
+      abortRules: const [],
+      notes: null,
+      tags: const [],
+      version: '1.0.0',
+      media: const MoroMedia(),
+      resumeKey: 'moro_$idx',
+      mediaFallbackImage: null,
+      xpReward: 10,
+    );
+  });
 }
 
 SessionNotifier _createNotifier() {
@@ -135,7 +176,53 @@ class _StubExerciseScreen extends StatelessWidget {
   }
 }
 
-GoRouter _createRouter(ValueNotifier<int> counter) {
+class _FallbackStubExerciseScreen extends StatefulWidget {
+  const _FallbackStubExerciseScreen({
+    required this.args,
+    required this.visited,
+    this.popResult,
+  });
+
+  final MoroExerciseScreenArgs args;
+  final List<int> visited;
+  final MoroExerciseResult? popResult;
+
+  @override
+  State<_FallbackStubExerciseScreen> createState() =>
+      _FallbackStubExerciseScreenState();
+}
+
+class _FallbackStubExerciseScreenState
+    extends State<_FallbackStubExerciseScreen> {
+  @override
+  void initState() {
+    super.initState();
+    widget.visited.add(widget.args.exercise.index);
+    final result = widget.popResult;
+    if (result != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.of(context).pop(result);
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Text('fallback-${widget.args.exercise.index}'),
+      ),
+    );
+  }
+}
+
+GoRouter _createRouter(
+  ValueNotifier<int> counter, {
+  bool useFallback = false,
+  MoroRepository? repository,
+  Widget Function(MoroExerciseScreenArgs args)? fallbackBuilder,
+}) {
   return GoRouter(
     initialLocation: '/',
     routes: [
@@ -160,6 +247,14 @@ GoRouter _createRouter(ValueNotifier<int> counter) {
                 name: AppRouteNames.moroExercise,
                 builder: (context, state) {
                   final id = state.pathParameters['exerciseId']!;
+                  if (useFallback) {
+                    final exerciseId = int.tryParse(id) ?? 0;
+                    return MoroExerciseRouteLoader(
+                      exerciseId: exerciseId,
+                      repository: repository,
+                      screenBuilder: fallbackBuilder,
+                    );
+                  }
                   return _StubExerciseScreen(
                     exerciseId: id,
                   );
@@ -188,6 +283,12 @@ void main() {
     }
     try {
       await Hive.deleteBoxFromDisk('moro_progress');
+    } catch (_) {}
+    if (Hive.isBoxOpen('moro_speed_offsets')) {
+      await Hive.box('moro_speed_offsets').close();
+    }
+    try {
+      await Hive.deleteBoxFromDisk('moro_speed_offsets');
     } catch (_) {}
   });
 
@@ -244,5 +345,123 @@ void main() {
 
     expect(counter.value, 0);
     expect(find.text('exercise-2'), findsOneWidget);
+  });
+
+  testWidgets('fallback opens exercise when args missing on start', (tester) async {
+    final notifier = _createNotifier();
+    final counter = ValueNotifier<int>(0);
+    final visited = <int>[];
+    final repo = _FakeMoroRepository(_buildFakeExercises(3));
+    final router = _createRouter(
+      counter,
+      useFallback: true,
+      repository: repo,
+      fallbackBuilder: (args) => _FallbackStubExerciseScreen(
+        args: args,
+        visited: visited,
+      ),
+    );
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider<SessionNotifier>.value(
+        value: notifier,
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
+
+    router.goNamed(AppRouteNames.training, extra: TrainingIntent.start());
+
+    await tester.pump();
+    await tester.pumpAndSettle();
+
+    expect(counter.value, greaterThanOrEqualTo(1));
+    expect(visited, equals([1]));
+    expect(find.text('fallback-1'), findsOneWidget);
+  });
+
+  testWidgets('fallback resume opens stored exercise without args', (tester) async {
+    final notifier = _createNotifier();
+    notifier.saveResumePoint('moro_2', const {
+      'stage': 'active',
+      'repeatIdx': 1,
+      'phaseIdx': 1,
+      'remainingMs': 5000,
+    });
+    final counter = ValueNotifier<int>(0);
+    final visited = <int>[];
+    final repo = _FakeMoroRepository(_buildFakeExercises(3));
+    final router = _createRouter(
+      counter,
+      useFallback: true,
+      repository: repo,
+      fallbackBuilder: (args) => _FallbackStubExerciseScreen(
+        args: args,
+        visited: visited,
+      ),
+    );
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider<SessionNotifier>.value(
+        value: notifier,
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
+
+    router.goNamed(AppRouteNames.training, extra: TrainingIntent.resume('moro_2'));
+
+    await tester.pump();
+    await tester.pumpAndSettle();
+
+    expect(counter.value, 0);
+    expect(visited, equals([2]));
+    expect(find.text('fallback-2'), findsOneWidget);
+  });
+
+  testWidgets('fallback handles autoplay navigation without args', (tester) async {
+    final notifier = _createNotifier();
+    final counter = ValueNotifier<int>(0);
+    final visited = <int>[];
+    final repo = _FakeMoroRepository(_buildFakeExercises(3));
+    final router = _createRouter(
+      counter,
+      useFallback: true,
+      repository: repo,
+      fallbackBuilder: (args) {
+        final shouldAutoplay = args.exercise.index == 1;
+        return _FallbackStubExerciseScreen(
+          args: args,
+          visited: visited,
+          popResult: shouldAutoplay
+              ? MoroExerciseResult(
+                  completed: true,
+                  autoplayEnabled: true,
+                  autoplayDelaySeconds: args.autoplayDelaySeconds,
+                  exerciseIndex: args.exercise.index,
+                  hasNextExercise: true,
+                )
+              : null,
+        );
+      },
+    );
+
+    await tester.pumpWidget(
+      ChangeNotifierProvider<SessionNotifier>.value(
+        value: notifier,
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
+
+    router.goNamed(AppRouteNames.training, extra: TrainingIntent.start());
+
+    await tester.pump();
+    await tester.pumpAndSettle();
+
+    // allow autoplay result to propagate and open next exercise
+    await tester.pump();
+    await tester.pumpAndSettle();
+
+    expect(counter.value, greaterThanOrEqualTo(1));
+    expect(visited, equals([1, 2]));
+    expect(find.text('fallback-2'), findsOneWidget);
   });
 }
