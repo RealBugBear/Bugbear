@@ -14,10 +14,10 @@
     "startPosition": "Rückenlage mit ausgestreckten Beinen, Hände flach neben dem Körper, Augen offen.",
     "endPosition": "Knie abwechselnd zur Seite geführt, anschließend zurück in Ausgangsposition.",
     "steps": [
-      {"order": 1, "text": "Atme ruhig ein, lege Hände offen ab und stabilisiere den Kopf neutral."},
-      {"order": 2, "text": "Führe beide Knie in etwa drei Sekunden zur rechten Seite, Schultern bleiben am Boden.", "durationSec": 3},
-      {"order": 3, "text": "Ziehe die Knie in drei Sekunden zurück zur Mitte und wiederhole zur linken Seite.", "durationSec": 3},
-      {"order": 4, "text": "Rolle kontrolliert weiter, bis drei Wiederholungen pro Seite abgeschlossen sind."}
+      {"order": 1, "text": "Atme drei Sekunden ruhig ein, lege Hände offen ab und stabilisiere den Kopf neutral.", "durationSec": 3},
+      {"order": 2, "text": "Lass beide Knie in drei Sekunden nach rechts sinken, während Schultern am Boden bleiben.", "durationSec": 3},
+      {"order": 3, "text": "Führe die Knie in drei Sekunden zurück zur Mitte und bereite den Wechsel vor.", "durationSec": 3},
+      {"order": 4, "text": "Wiederhole die Bewegung in drei Sekunden nach links und kehre danach zur Mitte zurück.", "durationSec": 3}
     ],
     "cues": [
       "Lass die Bewegung weich aus dem Becken starten.",
@@ -50,9 +50,9 @@
     "startPosition": "Rückenlage, Beine hüftbreit angewinkelt, Hände fassen nicht, sondern liegen flach neben dem Körper.",
     "endPosition": "Oberkörper und Kopf rollen Richtung Knie, Stirn nähert sich den Knien, danach kontrolliert ablegen.",
     "steps": [
-      {"order": 1, "text": "Bereite dich mit ruhiger Einatmung vor und entspanne Schultern und Gesicht."},
+      {"order": 1, "text": "Bereite dich in drei Sekunden mit ruhiger Einatmung vor und entspanne Schultern sowie Gesicht.", "durationSec": 3},
       {"order": 2, "text": "Atme lang aus und rolle Oberkörper sowie Kopf innerhalb von drei Sekunden Richtung Knie.", "durationSec": 3},
-      {"order": 3, "text": "Halte die Position für drei Sekunden mit sanfter Bauchspannung."},
+      {"order": 3, "text": "Halte die Position für drei Sekunden mit sanfter Bauchspannung.", "durationSec": 3},
       {"order": 4, "text": "Lege dich in drei Sekunden wieder Wirbel für Wirbel zurück auf die Matte.", "durationSec": 3}
     ],
     "cues": [
@@ -86,10 +86,10 @@
     "startPosition": "Rückenlage, ein Bein ausgestreckt, anderes Bein beginnt gleitend an der Innenseite entlang.",
     "endPosition": "Fußsohle gleitet bis zur Leiste und kehrt dann entlang des Beins zurück.",
     "steps": [
-      {"order": 1, "text": "Lege Hände offen ab, Blick zur Decke, halte Becken zentriert."},
+      {"order": 1, "text": "Finde in drei Sekunden mit ruhigem Atem die neutrale Rückenlage und lege die Hände weich ab.", "durationSec": 3},
       {"order": 2, "text": "Führe die Fußsohle in drei Sekunden entlang des gestreckten Beins nach oben – der Kontakt bleibt erhalten.", "durationSec": 3},
-      {"order": 3, "text": "Gleite in drei Sekunden zurück nach unten, ohne das Becken zu drehen.", "durationSec": 3},
-      {"order": 4, "text": "Wechsle kontrolliert nach jeder Wiederholung die Seite."}
+      {"order": 3, "text": "Halte die Öffnung für drei Sekunden, ohne das Becken zu drehen.", "durationSec": 3},
+      {"order": 4, "text": "Gleite in drei Sekunden kontrolliert zurück nach unten und bereite den Seitenwechsel vor.", "durationSec": 3}
     ],
     "cues": [
       "Nur so weit öffnen, wie der Fuß Kontakt hält.",
@@ -122,10 +122,10 @@
     "startPosition": "Rückenlage, Fußsohlen berühren sich, Knie fallen entspannt nach außen.",
     "endPosition": "Fersen gleiten Richtung Becken und kehren zurück, Fußsohlen bleiben komplett in Kontakt.",
     "steps": [
-      {"order": 1, "text": "Lege Hände offen neben dem Körper und richte Blick nach oben."},
+      {"order": 1, "text": "Atme drei Sekunden weich ein, lege Hände offen neben dem Körper und richte den Blick nach oben.", "durationSec": 3},
       {"order": 2, "text": "Ziehe die Fersen in drei Sekunden Richtung Körper, ohne den Fußkontakt zu verlieren.", "durationSec": 3},
-      {"order": 3, "text": "Lass die Beine in drei Sekunden kontrolliert wieder nach außen gleiten.", "durationSec": 3},
-      {"order": 4, "text": "Halte Schultern und Bauch entspannt, wiederhole drei Durchgänge."}
+      {"order": 3, "text": "Halte die Fußsohlen für drei Sekunden verbunden und atme in die Leisten.", "durationSec": 3},
+      {"order": 4, "text": "Lass die Beine in drei Sekunden kontrolliert wieder nach außen gleiten.", "durationSec": 3}
     ],
     "cues": [
       "Nur so weit ziehen, wie die Fußsohlen flächig bleiben.",
@@ -158,9 +158,9 @@
     "startPosition": "Rückenlage, ein Bein bleibt lang, das andere hebt zur Auflage auf dem Schienbein.",
     "endPosition": "Aktives Bein liegt vollständig auf dem anderen Schienbein, danach zurückführen und Seite wechseln.",
     "steps": [
-      {"order": 1, "text": "Stabilisiere Arme und Hände in der Preroll-Position, Blick zur Decke."},
+      {"order": 1, "text": "Stabilisiere Arme und Hände in drei Sekunden in der Preroll-Position, Blick zur Decke.", "durationSec": 3},
       {"order": 2, "text": "Hebe ein Bein in drei Sekunden an und führe es kontrolliert über das andere Bein.", "durationSec": 3},
-      {"order": 3, "text": "Lege den Unterschenkel vollständig ab, halte kurz Kontakt.", "durationSec": 3},
+      {"order": 3, "text": "Halte die Auflage für drei Sekunden mit gleichmäßigem Atem.", "durationSec": 3},
       {"order": 4, "text": "Führe das Bein in drei Sekunden zurück und wechsle die Seite.", "durationSec": 3}
     ],
     "cues": [
