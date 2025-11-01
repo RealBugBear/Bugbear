@@ -152,6 +152,10 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
   ) async {
     final result = await context.pushNamed(AppRouteNames.moroPrecheck);
     if (result is! MoroPreCheckResult) {
+      final intent = widget.intent;
+      if (intent?.type == TrainingIntentType.start && mounted) {
+        context.goNamed(AppRouteNames.dashboard);
+      }
       return;
     }
     setState(() {
