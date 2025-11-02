@@ -5,7 +5,15 @@ import 'package:flutter/foundation.dart';
 import 'moro_models.dart';
 import 'timers.dart';
 
-enum MoroSessionStage { intro, delay, active, pause, cooldown, log }
+enum MoroSessionStage {
+  intro,
+  delay,
+  active,
+  pause,
+  manualPause,
+  cooldown,
+  log,
+}
 
 class MoroSessionSnapshot {
   final MoroSessionStage stage;
@@ -54,6 +62,7 @@ class MoroSessionController extends ChangeNotifier {
   StreamSubscription? _timerSubscription;
   Timer? _delayTimer;
   Timer? _pauseTimer;
+  MoroSessionStage? _manualPauseSource;
 
   int _repeatIdx = 1;
   int _phaseIdx = 1;
@@ -77,6 +86,7 @@ class MoroSessionController extends ChangeNotifier {
   Duration get pauseRemaining => _pauseRemaining;
   Duration get sessionDuration => _sessionDuration;
   bool get isCompleted => _completed;
+  bool get isManuallyPaused => _stage == MoroSessionStage.manualPause;
 
   void startIntro() {
     _setStage(MoroSessionStage.intro);
@@ -86,6 +96,7 @@ class MoroSessionController extends ChangeNotifier {
     _cancelTimers();
     final delay = duration ?? const Duration(seconds: 3);
     _pauseRemaining = delay;
+    _manualPauseSource = null;
     _setStage(MoroSessionStage.delay);
     _delayTimer = Timer.periodic(const Duration(milliseconds: 250), (timer) {
       final ms = _pauseRemaining.inMilliseconds - 250;
@@ -105,6 +116,7 @@ class MoroSessionController extends ChangeNotifier {
 
   void startActive() {
     _cancelTimers();
+    _manualPauseSource = null;
     _setStage(MoroSessionStage.active);
     _repeatIdx = (_repeatIdx <= 0) ? 1 : _repeatIdx;
     _phaseIdx = (_phaseIdx <= 0) ? 1 : _phaseIdx;
@@ -178,6 +190,7 @@ class MoroSessionController extends ChangeNotifier {
   void skipToCooldown() {
     _cancelTimers();
     _completed = true;
+    _manualPauseSource = null;
     _setStage(MoroSessionStage.cooldown);
     _notifyResume(null);
   }
@@ -185,6 +198,7 @@ class MoroSessionController extends ChangeNotifier {
   void markLogged() {
     _setStage(MoroSessionStage.log);
     _completed = true;
+    _manualPauseSource = null;
     _notifyResume(null);
   }
 
@@ -192,6 +206,7 @@ class MoroSessionController extends ChangeNotifier {
     if (_stage == MoroSessionStage.pause) {
       _cancelPauseTimer();
       _pauseRemaining = Duration.zero;
+      _manualPauseSource = null;
       _setStage(MoroSessionStage.cooldown);
       _notifyResume(null);
     }
@@ -200,6 +215,32 @@ class MoroSessionController extends ChangeNotifier {
   void abort() {
     _cancelTimers();
     _completed = false;
+    _manualPauseSource = null;
+    _notifyResume(null);
+  }
+
+  bool toggleManualPause() {
+    if (_stage == MoroSessionStage.manualPause) {
+      _resumeFromManualPause();
+      return false;
+    }
+    if (_stage == MoroSessionStage.active || _stage == MoroSessionStage.delay) {
+      _enterManualPause();
+      return true;
+    }
+    return _stage == MoroSessionStage.manualPause;
+  }
+
+  void restart() {
+    _cancelTimers();
+    _manualPauseSource = null;
+    _repeatIdx = 1;
+    _phaseIdx = 1;
+    _remaining = Duration.zero;
+    _pauseRemaining = Duration.zero;
+    _sessionDuration = Duration.zero;
+    _completed = false;
+    startIntro();
     _notifyResume(null);
   }
 
@@ -270,13 +311,19 @@ class MoroSessionController extends ChangeNotifier {
         _stage == MoroSessionStage.intro) {
       return null;
     }
+    final effectiveStage =
+        _stage == MoroSessionStage.manualPause ? _manualPauseSource : _stage;
+    if (effectiveStage == null) {
+      return null;
+    }
+    final remainingMs = effectiveStage == MoroSessionStage.delay
+        ? _pauseRemaining.inMilliseconds
+        : _remaining.inMilliseconds;
     return MoroSessionSnapshot(
-      stage: _stage,
+      stage: effectiveStage,
       repeatIdx: _repeatIdx,
       phaseIdx: _phaseIdx,
-      remainingMilliseconds: _stage == MoroSessionStage.delay
-          ? _pauseRemaining.inMilliseconds
-          : _remaining.inMilliseconds,
+      remainingMilliseconds: remainingMs,
     );
   }
 
@@ -303,10 +350,41 @@ class MoroSessionController extends ChangeNotifier {
           _handleActiveCompleted();
         }
         break;
+      case MoroSessionStage.manualPause:
+        _manualPauseSource = MoroSessionStage.active;
+        _setStage(MoroSessionStage.manualPause);
+        break;
       case MoroSessionStage.cooldown:
       case MoroSessionStage.log:
       case MoroSessionStage.intro:
         _setStage(snapshot.stage);
+        break;
+    }
+  }
+
+  void _enterManualPause() {
+    _manualPauseSource = _stage;
+    _cancelTimers();
+    _setStage(MoroSessionStage.manualPause);
+    _notifyResume();
+  }
+
+  void _resumeFromManualPause() {
+    final source = _manualPauseSource;
+    if (source == null) {
+      beginDelay();
+      return;
+    }
+    _manualPauseSource = null;
+    switch (source) {
+      case MoroSessionStage.delay:
+        beginDelay(duration: _pauseRemaining);
+        break;
+      case MoroSessionStage.active:
+        startActive();
+        break;
+      default:
+        _setStage(source);
         break;
     }
   }

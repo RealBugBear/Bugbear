@@ -397,6 +397,28 @@ class _MoroTrainingScreenState extends State<MoroTrainingScreen> {
     );
     if (!context.mounted) return;
     if (result is MoroExerciseResult) {
+      if (result.jumpToNextIntro && result.hasNextExercise) {
+        setState(() {
+          _autoplayEnabled = result.autoplayEnabled;
+          _autoplayDelaySeconds = result.autoplayDelaySeconds;
+        });
+        final nextIndex = ex.index + 1;
+        final nextExercise = allExercises.firstWhere(
+          (element) => element.index == nextIndex,
+          orElse: () => allExercises.last,
+        );
+        final nextOffset = await _getOffset(nextExercise.index);
+        if (!context.mounted) return;
+        await _openExercise(
+          context,
+          nextExercise,
+          nextOffset,
+          totalExercises,
+          allExercises,
+          source: _MoroExerciseLaunchSource.start,
+        );
+        return;
+      }
       if (result.completed) {
         context.read<SessionNotifier>().applyXpReward(xp: ex.xpReward);
         await MoroProgressStore.markCompleted(ex.index, totalExercises);

@@ -33,6 +33,7 @@ class MoroExerciseResult {
   final int? tension;
   final int? pain;
   final String? notes;
+  final bool jumpToNextIntro;
 
   const MoroExerciseResult({
     required this.completed,
@@ -44,6 +45,7 @@ class MoroExerciseResult {
     this.tension,
     this.pain,
     this.notes,
+    this.jumpToNextIntro = false,
   });
 }
 
@@ -163,6 +165,7 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
         autoplayDelaySeconds: widget.autoplayDelaySeconds,
         exerciseIndex: widget.exercise.index,
         hasNextExercise: widget.exercise.index < widget.totalExercises,
+        jumpToNextIntro: false,
       ),
     );
   }
@@ -189,6 +192,7 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
         tension: entry.tension,
         pain: entry.pain,
         notes: entry.notes,
+        jumpToNextIntro: false,
       ),
     );
   }
@@ -203,6 +207,8 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
         return _buildActive(controller);
       case MoroSessionStage.pause:
         return _buildPause(controller);
+      case MoroSessionStage.manualPause:
+        return _buildManualPause(controller);
       case MoroSessionStage.cooldown:
         return _buildCooldown(controller);
       case MoroSessionStage.log:
@@ -431,6 +437,23 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
     );
   }
 
+  Widget _buildManualPause(MoroSessionController controller) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Pausiert', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 12),
+        const Text('Countdown und Timer sind angehalten.'),
+        const SizedBox(height: 12),
+        _buildInfoBanner(
+          Icons.access_time_outlined,
+          'Tippe auf „Weiter“, um an derselben Stelle fortzufahren.',
+        ),
+        const Spacer(),
+      ],
+    );
+  }
+
   Widget _buildCooldown(MoroSessionController controller) {
     final duration = controller.sessionDuration;
     if (!_didComplete) {
@@ -517,6 +540,7 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
                 exerciseIndex: widget.exercise.index,
                 hasNextExercise: widget.exercise.index < widget.totalExercises,
                 duration: _controller?.sessionDuration,
+                jumpToNextIntro: false,
               ),
             );
           },
@@ -641,6 +665,66 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
     return minutes > 0 ? '$minutes:$seconds min' : '$seconds s';
   }
 
+  void _handleNextIntro() {
+    final controller = _controller;
+    if (controller == null) return;
+    controller.abort();
+    setState(() {
+      _didComplete = false;
+    });
+    context.read<SessionNotifier>().clearResumePoint(widget.exercise.resumeKey);
+    Navigator.of(context).maybePop(
+      MoroExerciseResult(
+        completed: false,
+        autoplayEnabled: widget.autoplay,
+        autoplayDelaySeconds: widget.autoplayDelaySeconds,
+        exerciseIndex: widget.exercise.index,
+        hasNextExercise: widget.exercise.index < widget.totalExercises,
+        jumpToNextIntro: true,
+      ),
+    );
+  }
+
+  Widget _buildControlBar(MoroSessionController controller) {
+    final stage = controller.stage;
+    final canPause = stage == MoroSessionStage.active ||
+        stage == MoroSessionStage.delay ||
+        stage == MoroSessionStage.manualPause;
+    final isPaused = controller.isManuallyPaused;
+    final hasNext = widget.exercise.index < widget.totalExercises;
+
+    return Wrap(
+      spacing: 12,
+      runSpacing: 12,
+      children: [
+        FilledButton.icon(
+          icon: Icon(isPaused ? Icons.play_arrow_rounded : Icons.pause_rounded),
+          label: Text(isPaused ? 'Weiter' : 'Pause'),
+          onPressed: canPause
+              ? () {
+                  controller.toggleManualPause();
+                }
+              : null,
+        ),
+        OutlinedButton.icon(
+          icon: const Icon(Icons.restart_alt_rounded),
+          label: const Text('Neustart'),
+          onPressed: () {
+            controller.restart();
+            setState(() {
+              _didComplete = false;
+            });
+          },
+        ),
+        OutlinedButton.icon(
+          icon: const Icon(Icons.skip_next_rounded),
+          label: const Text('Nächste Seite'),
+          onPressed: hasNext ? _handleNextIntro : null,
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = _controller;
@@ -663,7 +747,14 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
           padding: const EdgeInsets.all(24.0),
           child: controller == null
               ? const Center(child: CircularProgressIndicator())
-              : _buildStageContent(controller),
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildControlBar(controller),
+                    const SizedBox(height: 16),
+                    Expanded(child: _buildStageContent(controller)),
+                  ],
+                ),
         ),
       ),
     );
