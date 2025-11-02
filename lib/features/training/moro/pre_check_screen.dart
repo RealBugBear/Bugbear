@@ -48,6 +48,15 @@ class _MoroPreCheckScreenState extends State<MoroPreCheckScreen> {
   bool _autoplay = true;
   int _delay = 3;
 
+  void _completePrecheck() {
+    Navigator.of(context).pop(
+      MoroPreCheckResult(
+        autoplayEnabled: _autoplay,
+        autoplayDelaySeconds: _delay,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +69,15 @@ class _MoroPreCheckScreenState extends State<MoroPreCheckScreen> {
             Text(
               'Bitte bestätige deine Vorbereitungsschritte',
               style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerRight,
+              child: FilledButton.icon(
+                icon: const Icon(Icons.arrow_forward_rounded),
+                label: const Text('Weiter'),
+                onPressed: _completePrecheck,
+              ),
             ),
             const SizedBox(height: 12),
             ..._checklistItems.map(
@@ -115,12 +133,7 @@ class _MoroPreCheckScreenState extends State<MoroPreCheckScreen> {
                 style: FilledButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
-                onPressed: () => Navigator.of(context).pop(
-                  MoroPreCheckResult(
-                    autoplayEnabled: _autoplay,
-                    autoplayDelaySeconds: _delay,
-                  ),
-                ),
+                onPressed: _completePrecheck,
               ),
             ),
           ],
