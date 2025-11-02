@@ -23,6 +23,8 @@ class MoroMediaLoadResult {
 }
 
 class MoroMediaPlayerService {
+  const MoroMediaPlayerService();
+
   Future<MoroMediaLoadResult> loadForExercise(MoroExercise exercise) async {
     String? videoAsset;
     String? imageAsset = exercise.media.image ?? exercise.mediaFallbackImage;

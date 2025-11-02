@@ -74,7 +74,7 @@ class MoroExerciseScreen extends StatefulWidget {
     required this.autoplayDelaySeconds,
     required this.totalExercises,
     MoroMediaPlayerService? mediaService,
-  }) : mediaService = mediaService ?? MoroMediaPlayerService();
+  }) : mediaService = mediaService ?? const MoroMediaPlayerService();
 
   @override
   State<MoroExerciseScreen> createState() => _MoroExerciseScreenState();
