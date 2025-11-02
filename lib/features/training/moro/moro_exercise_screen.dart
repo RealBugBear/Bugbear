@@ -94,8 +94,6 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
   double _painValue = 1;
 
   MoroSessionController? _controller;
-  MoroSessionSnapshot? _pendingSnapshot;
-  bool _resumePromptShown = false;
   bool _didComplete = false;
 
   @override
@@ -121,7 +119,6 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
     final notifier = context.read<SessionNotifier>();
     if (_controller == null) {
       final resumeJson = notifier.getResumePoint(widget.exercise.resumeKey);
-      _pendingSnapshot = MoroSessionSnapshot.fromJson(resumeJson);
       _controller = MoroSessionController(
         exercise: widget.exercise,
         offset: widget.offset,
@@ -136,57 +133,16 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
         },
       );
       _controller!.addListener(_onControllerChanged);
-      if (_pendingSnapshot == null) {
-        _controller!.startIntro();
-      } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (!mounted || _resumePromptShown) return;
-          _resumePromptShown = true;
-          _showResumeDialog();
-        });
+      if (resumeJson != null) {
+        notifier.clearResumePoint(widget.exercise.resumeKey);
       }
+      _controller!.startIntro();
     }
   }
 
   void _onControllerChanged() {
     if (mounted) {
       setState(() {});
-    }
-  }
-
-  Future<void> _showResumeDialog() async {
-    if (_pendingSnapshot == null) {
-      _controller?.startIntro();
-      return;
-    }
-    final shouldResume = await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Fortsetzen?'),
-            content: const Text(
-              'Wir haben einen Zwischenspeicher gefunden. Möchtest du an der letzten Stelle fortfahren?',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text('Neu starten'),
-              ),
-              ElevatedButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text('Fortsetzen'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-    final notifier = context.read<SessionNotifier>();
-    if (shouldResume) {
-      _controller?.restoreFrom(_pendingSnapshot!);
-      _pendingSnapshot = null;
-    } else {
-      notifier.clearResumePoint(widget.exercise.resumeKey);
-      _controller?.startIntro();
-      _pendingSnapshot = null;
     }
   }
 
