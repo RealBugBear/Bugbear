@@ -51,6 +51,9 @@ const _preCheckItems = [
   'Beine parallel, nicht überkreuzen',
   'Handflächen flach/offen auflegen',
   'Augen offen',
+  'Matte bereitgelegt',
+  'Timer-Sound aktiv',
+  'Musik aus / Fokusmodus',
 ];
 
 const _safetyNotice =
@@ -87,10 +90,6 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
   bool _mediaLoading = true;
   bool _mediaErrorAcknowledged = false;
 
-  late final Map<int, bool> _checkStates;
-  bool _matReady = false;
-  bool _timerSound = true;
-  bool _musicOff = true;
   double _tensionValue = 5;
   double _painValue = 1;
 
@@ -104,9 +103,6 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
     super.initState();
     _notesController = TextEditingController();
     _mediaService = widget.mediaService;
-    _checkStates = {
-      for (var i = 0; i < _preCheckItems.length; i++) i: false,
-    };
     _loadMedia();
   }
 
@@ -271,45 +267,37 @@ class _MoroExerciseScreenState extends State<MoroExerciseScreen> {
               'Stopp bei Schmerzen oder Taubheitsgefühl – Sicherheit hat Vorrang.',
         ),
         const SizedBox(height: 12),
-        ..._preCheckItems.asMap().entries.map(
-          (entry) => CheckboxListTile(
-            value: _checkStates[entry.key],
-            onChanged: (v) => setState(() => _checkStates[entry.key] = v ?? false),
-            title: Text(entry.value),
+        ..._preCheckItems.map(
+          (item) => Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 2.0),
+                  child: Icon(Icons.check_circle_outline, size: 20),
+                ),
+                const SizedBox(width: 12),
+                Expanded(child: Text(item)),
+              ],
+            ),
           ),
-        ),
-        const Divider(height: 32),
-        SwitchListTile(
-          value: _matReady,
-          onChanged: (v) => setState(() => _matReady = v),
-          title: const Text('Matte bereitgelegt'),
-          subtitle: const Text('Sorge für eine rutschfeste, stabile Unterlage.'),
-        ),
-        SwitchListTile(
-          value: _timerSound,
-          onChanged: (v) => setState(() => _timerSound = v),
-          title: const Text('Timer-Sound aktiv'),
-          subtitle: const Text('Hörbare Signale helfen dir bei den Phasenwechseln.'),
-        ),
-        SwitchListTile(
-          value: _musicOff,
-          onChanged: (v) => setState(() => _musicOff = v),
-          title: const Text('Musik aus / Fokusmodus'),
-          subtitle: const Text('Minimiere Ablenkung für präzise Bewegungen.'),
         ),
         const Spacer(),
         SizedBox(
           width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _checkStates.values.every((v) => v) && _matReady && _timerSound && _musicOff
-                ? () {
-                    setState(() {
-                      _didComplete = false;
-                    });
-                    controller.beginDelay();
-                  }
-                : null,
-            child: const Text('Übung starten'),
+          child: FilledButton.icon(
+            icon: const Icon(Icons.play_arrow_rounded),
+            label: const Text('Übung starten'),
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
+            onPressed: () {
+              setState(() {
+                _didComplete = false;
+              });
+              controller.beginDelay();
+            },
           ),
         ),
       ],
